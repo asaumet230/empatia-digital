@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Design tokens — EmpatIA Digital                                    */
+/*  60% navy · 20% white/gray · 15% green · 5% yellow (impact only)    */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --navy: #142738;
+  --navy-dark: #0f1f2c;
+  --navy-deep: #0a1620;
+  --green: #249d4a;
+  --green-bright: #35c95e;
+  --yellow: #fff200;
+  --white: #ffffff;
+  --gray-light: #f4f6f8;
+  --gray-text: #c9d1d9;
+  --gray-muted: #7d8b99;
+  --line: rgb(201 209 217 / 0.12);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-dark: var(--navy-dark);
+  --color-navy-deep: var(--navy-deep);
+  --color-green: var(--green);
+  --color-green-bright: var(--green-bright);
+  --color-yellow: var(--yellow);
+  --color-gray-light: var(--gray-light);
+  --color-gray-text: var(--gray-text);
+  --color-gray-muted: var(--gray-muted);
+  --color-line: var(--line);
+
+  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --ease-out-expo: var(--ease-out-expo);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                               */
+/* ------------------------------------------------------------------ */
+
+html {
+  background: var(--navy-dark);
+  color: var(--white);
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* While the intro boots, the page is held in place */
+html[data-intro="booting"] {
+  overflow: hidden;
+}
+
+body {
+  background: var(--navy-dark);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--green-bright);
+  color: var(--navy-dark);
+}
+
+:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable visual utilities                                          */
+/* ------------------------------------------------------------------ */
+
+@utility hud-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gray-muted);
+}
+
+@utility text-glow-green {
+  text-shadow:
+    0 0 24px rgb(53 201 94 / 0.45),
+    0 0 64px rgb(53 201 94 / 0.2);
+}
+
+@utility text-glow-yellow {
+  text-shadow:
+    0 0 18px rgb(255 242 0 / 0.35),
+    0 0 56px rgb(255 242 0 / 0.15);
+}
+
+/* Subtle film grain to avoid flat banding on projectors */
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Faint technical grid, masked to fade out at the edges */
+@utility tech-grid {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes nudge-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@utility animate-pulse-ring {
+  animation: pulse-ring 1.8s var(--ease-out-expo) infinite;
+}
+
+@utility animate-caret {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@utility animate-nudge {
+  animation: nudge-down 1.8s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced motion                                                     */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
