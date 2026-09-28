@@ -6,6 +6,16 @@ export const BRAND = {
   scrollHint: "Desliza para comenzar",
 } as const;
 
+/** Files live in `public/assets/logos`. */
+export const LOGOS = {
+  alcaldia: {
+    src: "/assets/logos/alcaldia-barranquilla-blanco.png",
+    alt: "Alcaldía de Barranquilla",
+    width: 354,
+    height: 58,
+  },
+} as const;
+
 export const COLORS = {
   navy: "#142738",
   navyDark: "#0F1F2C",

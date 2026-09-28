@@ -18,7 +18,12 @@ components/ui/            piezas reutilizables (Eyebrow, PulseDot)
 hooks/                    useIntroTimeline, useActiveSection
 lib/                      constants, animations, intro-timeline, sections
 types/                    tipos compartidos
+public/assets/logos/      logos (originales + versiones adaptadas)
+public/assets/images/     imágenes para las secciones
+scripts/                  utilidades (p. ej. logo-to-white.py)
 ```
+
+Los archivos de `public/assets` se referencian desde la raíz: `/assets/logos/archivo.png`.
 
 ## Agregar una sección
 

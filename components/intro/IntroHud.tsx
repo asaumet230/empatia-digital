@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { DURATION, transition } from "@/lib/animations";
-import { BRAND } from "@/lib/constants";
+import { BRAND, LOGOS } from "@/lib/constants";
 import { isAtLeast } from "@/lib/intro-timeline";
 import type { IntroPhase } from "@/types/presentation";
 
@@ -11,10 +12,11 @@ interface IntroHudProps {
   onSkip: () => void;
 }
 
-/** Minimal corner interface: brand mark and skip control. */
+/** Minimal corner interface: brand mark, institutional logo and skip control. */
 export function IntroHud({ phase, onSkip }: IntroHudProps) {
   const visible = isAtLeast(phase, "boot");
   const ready = phase === "ready";
+  const branded = isAtLeast(phase, "brand");
 
   const fade = {
     initial: { opacity: 0 },
@@ -30,6 +32,22 @@ export function IntroHud({ phase, onSkip }: IntroHudProps) {
       >
         <span aria-hidden="true" className="size-1.5 rounded-full bg-green-bright" />
         <span className="hud-label text-gray-text">{BRAND.name}</span>
+      </motion.div>
+
+      {/* Institutional mark, arrives with the title */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={branded ? { opacity: 0.85, y: 0 } : { opacity: 0, y: 8 }}
+        transition={transition(DURATION.slow, 1.4)}
+        className="absolute inset-x-0 bottom-6 flex justify-center sm:bottom-8 md:bottom-10"
+      >
+        <Image
+          src={LOGOS.alcaldia.src}
+          alt={LOGOS.alcaldia.alt}
+          width={LOGOS.alcaldia.width}
+          height={LOGOS.alcaldia.height}
+          className="h-auto w-36 sm:w-44 md:w-48"
+        />
       </motion.div>
 
       {!ready && (
