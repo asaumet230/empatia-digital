@@ -16,6 +16,8 @@ type Stage = "inicio" | number | "resultado" | "valentina" | "leccion";
 const GAME = ALGORITHM_GAME;
 const ROUNDS = GAME.rounds;
 const EMPTY: readonly (number | null)[] = ROUNDS.map(() => null);
+/** How long a round's outcome stays on screen before the next round starts by itself. */
+const AUTO_NEXT_MS = 2500;
 
 const formatNumber = (n: number) => n.toLocaleString("es-CO");
 
@@ -101,7 +103,7 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
             ) : stage === "resultado" ? (
               <ResultStep likes={likes} onNext={() => setStage("valentina")} />
             ) : stage === "valentina" ? (
-              <ValentinaStep harm={harm} onNext={() => setStage("leccion")} />
+              <ValentinaStep harm={harm} chosen={chosen} onNext={() => setStage("leccion")} />
             ) : (
               <LessonStep onRestart={restart} />
             )}
@@ -227,6 +229,18 @@ function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepProps) {
   const { title, seconds, posts } = ROUNDS[round];
   const boss = "boss" in ROUNDS[round] ? ROUNDS[round].boss : undefined;
   const [auto, setAuto] = useState(false);
+  const next = useRef(onNext);
+
+  useEffect(() => {
+    next.current = onNext;
+  });
+
+  // Once a post is boosted, the next round (or the result) comes by itself
+  useEffect(() => {
+    if (picked === null) return;
+    const t = window.setTimeout(() => next.current(), AUTO_NEXT_MS);
+    return () => window.clearTimeout(t);
+  }, [picked]);
 
   // Time's up: the algorithm does what algorithms do — it shows what gets the most likes
   const pickByItself = () => {
@@ -235,7 +249,6 @@ function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepProps) {
     onPick(best);
   };
 
-  const last = round === ROUNDS.length - 1;
   const post = picked === null ? null : posts[picked];
   const missing = GAME.goal - likes;
   const topLikes = Math.max(...posts.map((p) => p.likes));
@@ -282,16 +295,20 @@ function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepProps) {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: transition(DURATION.base, 0.5) }}
-            className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            className="mt-6"
           >
             <p className={cn("flex items-center gap-2 text-base font-semibold", auto ? "text-[#FF8A8A]" : "text-gray-text")}>
               {auto && <Timer aria-hidden="true" className="size-5" strokeWidth={2.25} />}
               {auto ? GAME.autoPick : `+${formatNumber(post.likes)} «me gusta». ${GAME.toGoal(missing)}`}
             </p>
-            <PrimaryButton onClick={onNext}>
-              {last ? GAME.finish : GAME.next}
-              <ArrowRight aria-hidden="true" className="size-5" strokeWidth={2} />
-            </PrimaryButton>
+            {/* Fills up while the next round loads by itself */}
+            <div aria-hidden="true" className="mt-3 h-1 overflow-hidden rounded-full bg-white/10">
+              <motion.div
+                className="h-full origin-left rounded-full bg-yellow"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1, transition: { duration: AUTO_NEXT_MS / 1000, ease: "linear" } }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -445,10 +462,14 @@ function ResultStep({ likes, onNext }: { likes: number; onNext: () => void }) {
 }
 
 /** The twist: her messages, one by one, depending on how much the boosted posts hurt her. */
-function ValentinaStep({ harm, onNext }: { harm: number; onNext: () => void }) {
+function ValentinaStep({ harm, chosen, onNext }: { harm: number; chosen: readonly FeedPost[]; onNext: () => void }) {
   const { valentina } = GAME;
-  const level = harm >= valentina.high.min ? valentina.high : harm >= valentina.medium.min ? valentina.medium : valentina.low;
+  const { story } = valentina;
+  const levelId = harm >= valentina.high.min ? "high" : harm >= valentina.medium.min ? "medium" : "low";
+  const level = valentina[levelId];
   const delay = (i: number) => 0.6 + i * 1.4;
+  const storyDelay = delay(level.messages.length) + 0.4;
+  const hurtful = chosen.filter((post) => post.harm > 0);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -474,8 +495,32 @@ function ValentinaStep({ harm, onNext }: { harm: number; onNext: () => void }) {
         </ul>
       </div>
       <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0, transition: transition(DURATION.base, storyDelay) }}
+        className="mt-6 rounded-3xl border border-yellow/40 bg-yellow/[0.05] p-5 md:p-7"
+      >
+        <p className="font-display text-xl font-bold text-yellow md:text-2xl">{story.title}</p>
+        <p className="mt-3 text-lg leading-snug text-white md:text-xl">{story.intro}</p>
+        <p className="mt-3 text-base font-semibold text-gray-light md:text-lg">
+          {hurtful.length > 0 ? story.boosted : story.none}
+        </p>
+        {hurtful.length > 0 && (
+          <ul className="mt-3 flex flex-wrap items-center gap-2">
+            {hurtful.map((post, i) => (
+              <li key={post.id} className="flex items-center gap-2">
+                {i > 0 && <span aria-hidden="true" className="text-gray-muted">→</span>}
+                <span className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold text-white md:text-base">
+                  {post.caption}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-4 text-lg leading-snug text-gray-light md:text-xl">{story[levelId]}</p>
+      </motion.div>
+      <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: transition(DURATION.base, delay(level.messages.length) + 0.4) }}
+        animate={{ opacity: 1, transition: transition(DURATION.base, storyDelay + 1.2) }}
         className="mt-8 flex justify-center"
       >
         <PrimaryButton onClick={onNext}>

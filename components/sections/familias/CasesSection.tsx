@@ -1,10 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRef, useState, type ReactNode } from "react";
 import { Section } from "@/components/presentation/Section";
-import { CopyButton } from "@/components/ui/CopyButton";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, EASE, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
@@ -196,33 +195,15 @@ function CaseDetail({ number, c, speaker, child }: CaseDetailProps) {
 
       <ol className="mt-6 space-y-5">
         <Step n={1} title={CASES_BLOCK.steps.scenario}>
-          <p className="max-h-32 overflow-y-auto rounded-xl bg-white/[0.04] p-3 text-sm leading-relaxed text-gray-text">
-            {prompt}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <CopyButton text={prompt} label="Copiar caso" tone="primary" />
-            <a
-              href={`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-gray-light transition-colors hover:border-green-bright hover:text-white"
-            >
-              <ExternalLink aria-hidden="true" className="size-4" />
-              Abrir en ChatGPT
-            </a>
-          </div>
+          <p className="rounded-xl bg-white/[0.04] p-4 text-base leading-relaxed text-gray-light">{prompt}</p>
         </Step>
 
         <Step n={2} title={CASES_BLOCK.steps.opening}>
           <p className="border-l-2 border-yellow pl-4 text-lg leading-snug text-white md:text-xl">“{c.opening}”</p>
-          <CopyButton text={c.opening} label="Copiar frase" className="mt-3" />
         </Step>
 
         <Step n={3} title={CASES_BLOCK.steps.finish}>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-yellow/50 px-4 py-2 font-semibold text-yellow">“{FINISH}”</span>
-            <CopyButton text={FINISH} />
-          </div>
+          <span className="inline-block rounded-full border border-yellow/50 px-4 py-2 font-semibold text-yellow">“{FINISH}”</span>
         </Step>
       </ol>
     </div>

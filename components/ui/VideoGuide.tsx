@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Info, PlayCircle, X } from "lucide-react";
+import { ExternalLink, Info, PlayCircle, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
@@ -29,17 +29,30 @@ export function VideoGuide({ guide }: { guide: Guide }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => {
-          setStep(0);
-          setOpen(true);
-        }}
-        className="inline-flex items-center gap-2 rounded-full border border-yellow/50 bg-yellow/[0.06] px-4 py-2 text-sm font-semibold text-yellow transition-colors hover:bg-yellow/15"
-      >
-        <PlayCircle aria-hidden="true" className="size-4" strokeWidth={2} />
-        {guide.button}
-      </button>
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            setStep(0);
+            setOpen(true);
+          }}
+          className="inline-flex items-center gap-2 rounded-full border border-yellow/50 bg-yellow/[0.06] px-4 py-2 text-sm font-semibold text-yellow transition-colors hover:bg-yellow/15"
+        >
+          <PlayCircle aria-hidden="true" className="size-4" strokeWidth={2} />
+          {guide.button}
+        </button>
+        {guide.link && (
+          <a
+            href={guide.link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-gray-light transition-colors hover:border-white/50 hover:text-white"
+          >
+            <ExternalLink aria-hidden="true" className="size-4" strokeWidth={2} />
+            {guide.link.label}
+          </a>
+        )}
+      </div>
 
       <dialog
         ref={dialogRef}

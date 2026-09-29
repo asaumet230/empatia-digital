@@ -12,7 +12,7 @@ import type { PromptVariant } from "@/lib/content/prompt-exercise";
 export function PromptActions({ variant }: { variant: PromptVariant }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef(0);
-  const { text, download } = variant;
+  const { text, download, label } = variant;
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -25,12 +25,12 @@ export function PromptActions({ variant }: { variant: PromptVariant }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <button
           type="button"
           onClick={copy}
           className={cn(
-            "inline-flex items-center justify-center gap-3 rounded-full px-7 py-4 text-base font-bold transition-[background-color,filter] duration-300 hover:brightness-110 md:text-lg",
+            "inline-flex items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-bold transition-[background-color,filter] duration-300 hover:brightness-110",
             copied ? "bg-white text-navy-dark" : "bg-green-bright text-navy-dark",
           )}
         >
@@ -39,16 +39,16 @@ export function PromptActions({ variant }: { variant: PromptVariant }) {
           ) : (
             <Copy aria-hidden="true" className="size-5" strokeWidth={2} />
           )}
-          <span aria-live="polite">{copied ? "¡Copiado! Ahora pégalo en ChatGPT" : "Copiar prompt"}</span>
+          <span aria-live="polite">{copied ? "¡Copiado! Ahora pégalo en ChatGPT" : `Copiar prompt ${lowerFirst(label)}`}</span>
         </button>
         <a
           href={`https://chatgpt.com/?q=${encodeURIComponent(text)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-3 rounded-full border border-white/20 px-7 py-4 text-base font-semibold text-gray-light transition-colors hover:border-green-bright hover:text-white md:text-lg"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-sm font-semibold text-gray-light transition-colors hover:border-green-bright hover:text-white"
         >
           <ExternalLink aria-hidden="true" className="size-5" strokeWidth={2} />
-          Abrir en ChatGPT
+          Abrir en ChatGPT {lowerFirst(label)}
         </a>
       </div>
       {download && (
@@ -94,7 +94,7 @@ export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange
                 on ? "text-white" : "text-gray-muted hover:text-gray-text",
               )}
             >
-              Prompt {v.label[0].toLowerCase() + v.label.slice(1)}
+              Prompt {lowerFirst(v.label)}
               {on && (
                 <motion.span
                   layoutId={`${layoutPrefix}-tab`}
@@ -143,3 +143,6 @@ export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange
     </div>
   );
 }
+
+/** "Sin Tally" → "sin Tally", so it reads after "Prompt". */
+const lowerFirst = (label: string) => label[0].toLowerCase() + label.slice(1);

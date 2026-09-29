@@ -10,8 +10,11 @@ import type { SectionProps } from "@/types/presentation";
 
 const RADIUS = 38;
 
+/** Only what ChatGPT itself does: video and voice live in other tools (see the map). */
+const CATEGORIES = AI_CATEGORIES.filter((c) => c.id !== "video" && c.id !== "voz");
+
 const point = (i: number) => {
-  const a = ((-90 + (360 / AI_CATEGORIES.length) * i) * Math.PI) / 180;
+  const a = ((-90 + (360 / CATEGORIES.length) * i) * Math.PI) / 180;
   return { x: 50 + Math.cos(a) * RADIUS, y: 50 + Math.sin(a) * RADIUS };
 };
 
@@ -65,7 +68,7 @@ export function AiOpeningSection({ id, index, label }: SectionProps) {
         {/* ChatGPT at the center, the rest of the ecosystem around it */}
         <div aria-hidden="true" className="relative mx-auto aspect-square w-full max-w-[22rem] sm:max-w-[26rem]">
           <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
-            {AI_CATEGORIES.map((c, i) => {
+            {CATEGORIES.map((c, i) => {
               const p = point(i);
               return (
                 <motion.path
@@ -90,7 +93,7 @@ export function AiOpeningSection({ id, index, label }: SectionProps) {
             <BrandIcon src={AI_TOOLS.chatgpt.icon} className="size-9 text-white sm:size-11" />
           </motion.div>
 
-          {AI_CATEGORIES.map((c, i) => {
+          {CATEGORIES.map((c, i) => {
             const Icon = c.icon;
             return (
               <motion.div

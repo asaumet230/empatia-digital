@@ -17,6 +17,8 @@ export interface PromptVariant {
 export interface VideoGuide {
   /** Texto del botón que abre la guía. */
   button: string;
+  /** Enlace opcional junto al botón (p. ej. para crear la cuenta). */
+  link?: { label: string; href: string };
   title: string;
   note: string;
   steps: readonly { label: string; text: string; src: string; poster: string }[];

@@ -10,102 +10,40 @@ import { CRITERIA, LEVELS, RUBRIC_STUDENTS, countLevels, needSupport } from "@/l
 
 const FILE_NAME = "Rúbrica de Convivencia Escolar";
 
-const PRIVACY =
-  "Usa códigos (E01, E02, E03…) en la columna Estudiante en lugar de nombres, para proteger la privacidad de los estudiantes.";
-
 const DESIGN = `Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.
 
-Tu tarea es diseñar una rúbrica sencilla de observación de convivencia escolar para estudiantes de 13 a 16 años.
+Diseña una rúbrica sencilla para observar la convivencia de estudiantes de 13 a 16 años.
 
-El objetivo es ayudar al docente a observar fortalezas y aspectos que requieren acompañamiento en la convivencia escolar, tanto presencial como digital.
+OBJETIVO
+Ver fortalezas y aspectos que necesitan acompañamiento, en el colegio y en lo digital.
 
-Evalúa estos cuatro criterios:
+LA RÚBRICA
+Criterios: empatía, respeto, manejo de conflictos y convivencia digital.
+Escala:
+   1 = Requiere atención
+   2 = Necesita acompañamiento
+   3 = Adecuado
+   4 = Fortaleza
+En cada nivel, describe un comportamiento que el docente pueda ver en el salón o en chats y redes.
 
-- Empatía.
-- Respeto.
-- Manejo de conflictos.
-- Convivencia digital.
-
-Utiliza una escala de 1 a 4:
-
-1 = Requiere atención.
-2 = Necesita acompañamiento.
-3 = Adecuado.
-4 = Fortaleza.
-
-Para cada criterio, describe claramente qué comportamiento observable corresponde a cada nivel.
-
-Los comportamientos deben ser:
-
-- claros;
-- fáciles de observar por un docente;
-- apropiados para estudiantes de secundaria;
-- neutrales y respetuosos;
-- relacionados con situaciones reales del colegio y los espacios digitales.
-
-Evita:
-
-- diagnosticar problemas psicológicos;
-- utilizar términos clínicos;
-- etiquetar al estudiante;
-- sacar conclusiones sobre su personalidad;
-- utilizar información médica o sensible.
-
-La rúbrica debe servir como herramienta pedagógica de observación, no como instrumento de diagnóstico psicológico.`;
+LÍMITES
+Sin diagnósticos, términos clínicos, etiquetas ni información médica. Es una guía para observar, no para diagnosticar.`;
 
 /** The three sheets, identical for Excel and Google Sheets. */
-const SHEETS = (tool: "Excel" | "Google Sheets") => `Crea tres hojas:
+const SHEETS = `1. “Rúbrica”: la tabla con los 4 criterios y sus 4 niveles.
+2. “Registro de estudiantes”: columnas Estudiante, Empatía, Respeto, Manejo de conflictos, Convivencia digital, Puntaje total y Observaciones.
+   - 40 filas vacías.
+   - Los criterios solo aceptan valores de 1 a 4.
+   - El puntaje total se suma solo.
+   - Códigos (E01, E02…) en lugar de nombres.
+3. “Interpretación”:
+   4 a 7 puntos: varias áreas requieren atención
+   8 a 11: aspectos que necesitan acompañamiento
+   12 a 14: convivencia adecuada
+   15 a 16: fortalezas claras
+   Aclara que conviene mirar cada criterio, no solo el total, y que no es un diagnóstico.
 
-HOJA 1: “Rúbrica”
-
-Incluye una tabla con:
-
-- Criterio.
-- Nivel 1 — Requiere atención.
-- Nivel 2 — Necesita acompañamiento.
-- Nivel 3 — Adecuado.
-- Nivel 4 — Fortaleza.
-
-Incluye los cuatro criterios: empatía, respeto, manejo de conflictos y convivencia digital.
-
-HOJA 2: “Registro de estudiantes”
-
-Crea estas columnas:
-
-- Estudiante.
-- Empatía.
-- Respeto.
-- Manejo de conflictos.
-- Convivencia digital.
-- Puntaje total.
-- Observaciones.
-
-${PRIVACY}
-
-Deja al menos 40 filas listas para registrar estudiantes.
-
-Configura las cuatro columnas de evaluación para aceptar únicamente valores del 1 al 4.
-
-Configura automáticamente la columna Puntaje total para sumar los cuatro criterios.
-
-HOJA 3: “Interpretación”
-
-Incluye esta guía:
-
-- 4 a 7 puntos: varias áreas requieren atención.
-- 8 a 11 puntos: existen aspectos que necesitan acompañamiento.
-- 12 a 14 puntos: convivencia generalmente adecuada.
-- 15 a 16 puntos: fortalezas claras en convivencia.
-
-Agrega también esta aclaración:
-
-“El puntaje total ofrece una visión general. Los puntajes individuales permiten identificar específicamente qué aspecto necesita acompañamiento.”
-
-Incluye otra nota:
-
-“Esta herramienta es una guía de observación pedagógica y no constituye un diagnóstico psicológico.”
-
-${tool === "Excel" ? "Agrega" : "Si Google Sheets lo permite, agrega"} formato visual sencillo para diferenciar los niveles 1, 2, 3 y 4 con colores.`;
+Colorea los niveles 1 a 4 para diferenciarlos.`;
 
 export const RUBRICA_EXERCISE: PromptExercise = {
   id: "rubrica",
@@ -130,16 +68,12 @@ export const RUBRICA_EXERCISE: PromptExercise = {
       note: "Funciona en cualquier cuenta de ChatGPT. El archivo también se puede abrir en Google Sheets.",
       text: `${DESIGN}
 
-Después de diseñar la rúbrica, crea un archivo de Excel (.xlsx) descargable llamado “${FILE_NAME}”.
+EL ARCHIVO
+Crea un archivo de Excel (.xlsx) descargable llamado “${FILE_NAME}” con tres hojas:
+${SHEETS}
 
-${SHEETS("Excel")}
-
-Finalmente, entrégame:
-
-1. el enlace para descargar el archivo de Excel;
-2. una explicación sencilla de cómo debe utilizarlo el profesor;
-3. una explicación sencilla de cómo interpretar los resultados;
-4. cómo abrir el archivo en Google Sheets si el profesor prefiere usarlo ahí.`,
+AL FINAL ENTRÉGAME
+El enlace de descarga y, en pocas frases, cómo usarlo, cómo leer los resultados y cómo abrirlo en Google Sheets.`,
       download: {
         href: "/assets/data/rubrica-convivencia-escolar.xlsx",
         label: "Descargar ejemplo de resultado (Excel)",
@@ -151,20 +85,12 @@ Finalmente, entrégame:
       note: "ChatGPT crea el archivo directamente en tu Google Drive. Necesita ChatGPT Plus con Google Drive conectado.",
       text: `${DESIGN}
 
-Después de diseñar la rúbrica, crea directamente un archivo en Google Sheets utilizando la conexión disponible.
+EL ARCHIVO
+Con la conexión disponible, crea en mi Google Drive un archivo de Google Sheets llamado “${FILE_NAME}” con tres hojas:
+${SHEETS}
 
-El archivo debe llamarse:
-
-“${FILE_NAME}”
-
-${SHEETS("Google Sheets")}
-
-Finalmente, entrégame:
-
-1. el nombre del archivo;
-2. el enlace de Google Sheets;
-3. una explicación sencilla de cómo debe utilizarlo el profesor;
-4. una explicación sencilla de cómo interpretar los resultados.`,
+AL FINAL ENTRÉGAME
+El enlace del archivo y, en pocas frases, cómo usarlo y cómo leer los resultados.`,
     },
   ],
 };
@@ -174,43 +100,32 @@ Finalmente, entrégame:
 /* ------------------------------------------------------------------ */
 
 const ANALYSIS = `OBJETIVO
-
-Ayudar al docente a identificar de forma sencilla las fortalezas del curso y los aspectos que podrían necesitar acompañamiento, tanto a nivel grupal como individual.
-La IA debe organizar y mostrar los patrones encontrados, pero no reemplazar el criterio profesional del docente.
+Ayúdame a ver las fortalezas del curso y a quién conviene acompañar. Tú muestras los patrones; yo interpreto y decido.
 
 CÓMO QUIERO EL INFORME
-Escríbelo como si se lo explicaras a un colega docente que no sabe de estadística:
-* frases cortas y lenguaje cotidiano;
-* di “8 de 15 estudiantes” en lugar de porcentajes; no uses promedios ni decimales;
-* en lugar de números de nivel, describe el comportamiento con palabras;
-* usa 🟢 🟡 🔴 para que se entienda de un vistazo;
-* que se pueda leer en menos de dos minutos.
+Lenguaje sencillo y frases cortas.
+Nada de porcentajes ni promedios: di “8 de 15 estudiantes”.
+Describe con palabras, no con números de nivel.
 
-ESTRUCTURA
-1. En una frase: cuántos estudiantes se analizaron. Si son pocos, aclara que es solo una orientación.
-2. El semáforo del curso: una línea por criterio, con su color y una frase sencilla.
-Ejemplo: 🔴 Convivencia digital: 8 de 15 estudiantes necesitan apoyo en cómo se comportan en chats y redes.
-Usa 🟢 si la mayoría está en los niveles 3 y 4, 🟡 si varios están en el nivel 2 y 🔴 si muchos están en los niveles 1 y 2.
-Incluye un gráfico de barras sencillo con los cuatro criterios.
-3. Lo que va bien: máximo tres frases.
-4. A quién conviene acompañar: los códigos de la columna “Estudiante” y, en palabras sencillas, en qué aspecto.
-Señala si alguno tiene buen puntaje total pero un aspecto bajo.
-5. Lo que dicen tus observaciones: los temas que se repiten, en pocas líneas.
-6. Tres ideas para esta semana: cada una en máximo dos frases, con un ejemplo.
-CIERRE: en máximo tres líneas, ¿qué nos dice esta rúbrica sobre la convivencia del curso?
+El informe debe tener:
+1. Cuántos estudiantes se analizaron.
+2. Un semáforo por criterio:
+   🟢 la mayoría en nivel 3 o 4
+   🟡 varios en nivel 2
+   🔴 muchos en nivel 1 o 2
+3. Un gráfico de barras sencillo.
+4. Lo que va bien.
+5. A quién conviene acompañar: su código y en qué aspecto. Señala si alguien tiene buen total pero un aspecto bajo.
+6. Lo que se repite en mis observaciones.
+7. Tres ideas para esta semana, con un ejemplo.
 
-LÍMITES IMPORTANTES
-No realices diagnósticos psicológicos.
-No utilices términos clínicos.
-No etiquetes a los estudiantes ni saques conclusiones sobre su personalidad.
-No determines quién es víctima, agresor o responsable.
-Utiliza expresiones como “podría requerir acompañamiento” o “conviene observar”.
-Aclara que el semáforo muestra tendencias del grupo y no diagnósticos.`;
+LÍMITES
+No hagas diagnósticos ni uses términos clínicos, no etiquetes a los estudiantes y no digas quién es víctima o agresor. Usa frases como “conviene observar”. Si son pocos estudiantes, aclara que es solo una orientación. El semáforo muestra tendencias, no diagnósticos.`;
 
 const ROLE = "Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.";
 
 const SCALE =
-  "donde el docente registró sus observaciones de convivencia con una escala de 1 a 4 en cuatro criterios: empatía, respeto, manejo de conflictos y convivencia digital.";
+  "Ahí registré cómo veo a cada estudiante, de 1 a 4, en empatía, respeto, manejo de conflictos y convivencia digital.";
 
 export const RUBRICA_ANALISIS_EXERCISE: PromptExercise = {
   id: "rubrica-analisis",
@@ -236,7 +151,7 @@ export const RUBRICA_ANALISIS_EXERCISE: PromptExercise = {
       note: "Funciona en cualquier cuenta de ChatGPT: solo adjunta el archivo antes de enviar el prompt.",
       text: `${ROLE}
 
-Tu tarea es analizar el archivo de Excel adjunto “${FILE_NAME}”, específicamente la hoja “Registro de estudiantes”, ${SCALE}
+Analiza el archivo de Excel adjunto “${FILE_NAME}”, hoja “Registro de estudiantes”. ${SCALE}
 
 ${ANALYSIS}`,
       download: {
@@ -250,7 +165,7 @@ ${ANALYSIS}`,
       note: "ChatGPT lee el archivo directamente de tu Google Drive. Necesita ChatGPT Plus con Google Drive conectado.",
       text: `${ROLE}
 
-Tu tarea es acceder directamente, mediante la conexión disponible con Google Drive, al archivo de Google Sheets “${FILE_NAME}” y analizar la hoja “Registro de estudiantes”, ${SCALE}
+Entra a Google Drive con la conexión disponible, abre el archivo de Google Sheets “${FILE_NAME}” y analiza la hoja “Registro de estudiantes”. ${SCALE}
 
 ${ANALYSIS}`,
     },
@@ -339,25 +254,25 @@ export const RUBRICA_PARTS = partsFor({
     ],
   },
   contexto: {
-    quote: "Docentes de secundaria en Barranquilla. Estudiantes de 13 a 16 años.",
+    quote: "Un docente de secundaria en Barranquilla. Estudiantes de 13 a 16 años.",
     explain: [
       { kind: "text", text: "Le explicamos dónde y con quién vamos a utilizar la herramienta." },
       { kind: "text", text: "Eso ayuda a adaptar el lenguaje y las situaciones." },
     ],
   },
   objetivo: {
-    quote: "Observar fortalezas y aspectos que requieren acompañamiento en la convivencia escolar.",
+    quote: "Ver fortalezas y aspectos que necesitan acompañamiento, en el colegio y en lo digital.",
     explain: [
       { kind: "text", text: "Aquí le decimos para qué queremos la rúbrica. Esto es fundamental." },
       {
         kind: "compare",
         weak: "Hazme una rúbrica.",
-        strong: "Quiero observar fortalezas y aspectos que requieren acompañamiento en la convivencia escolar.",
+        strong: "Quiero ver fortalezas y aspectos que necesitan acompañamiento, en el colegio y en lo digital.",
       },
     ],
   },
   instrucciones: {
-    quote: "4 criterios, escala del 1 al 4, comportamientos observables…",
+    quote: "4 criterios, escala de 1 a 4 y un comportamiento que se pueda ver en cada nivel…",
     explain: [
       { kind: "text", text: "Le decimos exactamente qué queremos:" },
       {
@@ -376,7 +291,7 @@ export const RUBRICA_PARTS = partsFor({
     ],
   },
   limites: {
-    quote: "Evita: diagnosticar problemas psicológicos…",
+    quote: "Sin diagnósticos, términos clínicos, etiquetas ni información médica.",
     explain: [
       { kind: "text", text: "También establecemos lo que no queremos:" },
       {

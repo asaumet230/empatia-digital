@@ -73,7 +73,7 @@ Cada ejercicio tiene la misma plantilla: *¿Para qué? · ¿Qué vas a obtener? 
 | 05 | **Crear un banco de preguntas** | Encuesta anónima de 10 preguntas sobre convivencia (salón, WhatsApp, redes). Pestañas **Sin Tally** (entrega todo listo para Google Forms, funciona en cualquier cuenta) y **Con Tally** (ChatGPT crea el formulario) |
 | 06 | ¿Cómo está construido este prompt? | Las 6 partes, una a la vez, con ← → |
 | 07 | La fórmula | Las 6 partes como tarjetas y la frase: *"Un buen prompt no tiene que sonar sofisticado…"* |
-| 08 | **Alertas tempranas: analizar la encuesta** | Prompt de análisis en lenguaje sencillo (semáforo, lo que va bien, alertas, voces de los estudiantes, tres ideas). **Sin Tally** incluye las 7 respuestas de ejemplo al final del prompt; **Con Tally** lee el formulario "Convivencia en mi curso" |
+| 08 | **Alertas tempranas: analizar la encuesta** | Prompt de análisis en lenguaje sencillo (semáforo, lo que va bien, alertas, voces de los estudiantes, tres ideas). **Sin Tally** trae las 10 preguntas y se adjunta el CSV de respuestas con el clip 📎; **Con Tally** lee el formulario "Convivencia en mi curso" |
 | 09 | ¿Cómo está construido este prompt? | Las 6 partes del prompt de análisis |
 | 10 | Semáforo de la encuesta | Informe interactivo con los datos de ejemplo (ver sección 6) |
 
@@ -124,7 +124,7 @@ Cada prompt pide una respuesta visual (tablas, barras con emojis, flechas) y tra
 |---|---|---|
 | 0–9 | Tú eres el algoritmo | Pulsar "Empezar". La clase es el algoritmo de una red inventada (Scrollia) y debe llegar a 40.000 «me gusta». En 6 rondas, cada vez más rápidas (20 → 8 s), elige qué publicación impulsar; burlarse de Valentina siempre da más. Si se acaba el tiempo, el algoritmo elige solo la que más da. Al final: el puntaje, los mensajes de Valentina según lo impulsado y cómo funciona un algoritmo real. **No adelantar la lección** |
 | 9–12 | Pregunté a la IA | Prompt 1 (ya trae el caso). "Ahora viene lo interesante: ¿la IA acertó?" |
-| 12–16 | La IA propone | Prompt 2. Votación (abierta): "¿Qué podría salir mal?" Leer máximo 3 respuestas |
+| 12–16 | La IA propone | Prompt 2. Votación (abierta): "¿Cuál harían ustedes?" Leer máximo 3 respuestas |
 | 18–20 | Tú decides | "¿Qué aprendimos?" (dos respuestas) y la frase final |
 
 **Sesión 2 · "Creadores de paz" (~25 min):** en equipos crean una pieza de campaña con ChatGPT (textos e imagen).
@@ -134,7 +134,7 @@ Cada prompt pide una respuesta visual (tablas, barras con emojis, flechas) y tra
 | 0–3 | Arma tu prompt | Mostrar el armador: se eligen tema, formato, estilo y colores y el prompt se arma solo con la fórmula |
 | 3–6 | ¿Cómo está construido? | Las 6 partes del prompt de la campaña, una a la vez con ← → |
 | 6–8 | Creadores de paz | Armar equipos. "Sortear reto" le da a cada equipo un tema y un formato; cada equipo vuelve al armador, arma su prompt y lo copia |
-| 8–20 | Crea y mejora | ChatGPT propone 3 frases, eligen una y crea la imagen. Luego piden un cambio con los prompts de mejora |
+| 8–20 | (en vivo) Crear y editar en Canva | Pegan su prompt: ChatGPT propone 3 frases, eligen una y crea la imagen. Después conectan ChatGPT con Canva para editar el diseño |
 | 20–25 | Galería | 30 segundos por equipo y votación: "¿Qué pieza usarían en el colegio?" |
 
 Crear imágenes en ChatGPT gratis tiene un límite diario y puede pedir iniciar sesión. **Plan B:** los equipos arman el prompt y el presentador genera las imágenes desde su cuenta.

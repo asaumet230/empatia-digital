@@ -63,7 +63,7 @@ export interface Poll {
 export const POLL_HINT = "Vota en Mentimeter · o a mano alzada";
 
 /** The story of the game in words, so ChatGPT knows which case it is analyzing. */
-const CASE_TEXT = `En Scrollia, la red social que usa todo el colegio, Mateo publica una foto de su compañera Valentina que le tomó a escondidas en clase. Tomás le pone orejas de conejo, los comentarios "Siempre en la suya 😂" se multiplican y alguien hace un remix que llega a miles de personas, incluso de otros colegios. Valentina escribe: "Por favor, borren esa foto. No di permiso". Algunos le responden "Tampoco exageres" y Cami escribe "Eso no da risa. Ya paren". Mientras tanto, el algoritmo de Scrollia mostraba más estas publicaciones porque eran las que más "me gusta" daban.`;
+const CASE_TEXT = `Mateo le toma una foto a escondidas a su compañera Valentina en clase y la publica en Scrollia, la red social del colegio. Otros le ponen orejas de conejo, se burlan en los comentarios y la foto llega a miles de personas. Valentina pide: "Por favor, borren esa foto. No di permiso". Algunos le responden "Tampoco exageres" y Cami escribe "Eso no da risa. Ya paren". El algoritmo mostraba más la foto porque daba más "me gusta".`;
 
 export interface AiStep {
   title: string;
@@ -79,66 +79,58 @@ export const AI_STEPS = {
   miradas: {
     title: "Le preguntamos a la IA",
     lead: "Tres miradas del mismo caso, con tablas, termómetros y flechas.",
-    prompt: `ROL: Actúa como facilitador de un taller de convivencia digital para estudiantes de 14 a 17 años. Hablas de forma cercana, clara y sin sermones.
+    prompt: `ROL: Eres el guía de un taller de convivencia digital para estudiantes de 14 a 17 años. Habla fácil y sin regaños.
 
-CONTEXTO: Estamos en un colegio público de Barranquilla, Colombia. Acabamos de jugar un juego en el que fuimos el algoritmo de una red social. Este es el caso (ficticio):
+CONTEXTO: Somos un curso de un colegio de Barranquilla. Acabamos de jugar a ser el algoritmo de una red social. Este es el caso (inventado):
 ${CASE_TEXT}
 
-OBJETIVO: Ayudarnos a entender cómo se vive este conflicto desde 3 lugares: Valentina, quienes publicaron o editaron la foto, y quienes reaccionaron, comentaron o compartieron.
+OBJETIVO: Ayúdanos a entender cómo vive este problema cada uno: Valentina, quienes publicaron la foto y quienes la comentaron o compartieron.
 
-INSTRUCCIONES: Responde con este formato visual:
-1. 🎭 Una tabla con 3 columnas (Valentina | Quienes publicaron | Quienes reaccionaron) y 3 filas: ¿Qué podría sentir? · ¿Qué podría pensar? · ¿Qué podría hacer ahora? Una frase corta por casilla.
-2. 🌡️ Un termómetro de emociones para cada uno, hecho con emojis. Ejemplo: Vergüenza 🟥🟥🟥🟥⬜. Máximo 3 emociones por persona. Si puedes crear gráficas, haz además una gráfica de barras con estas emociones.
-3. 🔗 Una cadena de causa y efecto con flechas que muestre cómo creció el conflicto (Foto → … → …). Marca con 🤖 los momentos en que el algoritmo lo hizo más grande.
-4. 🔍 "Lo que casi nadie nota": un detalle de cada mirada que suele pasarse por alto.
-5. 🗳️ Termina con una pregunta para el curso con opciones A, B y C, y espera nuestra respuesta antes de seguir.
+INSTRUCCIONES:
+1. 🎭 Una tabla: qué podría sentir, pensar y hacer cada uno. Una frase corta por casilla.
+2. 🌡️ Las emociones de cada uno con barras de emojis. Ejemplo: Vergüenza 🟥🟥🟥🟥⬜
+3. 🔗 Con flechas, cómo creció el problema (Foto → … → …). Marca con 🤖 dónde ayudó el algoritmo.
+4. 🗳️ Una pregunta para el curso con opciones A, B y C.
 
-Después muestra este menú y úsalo cuando escribamos una de estas palabras:
-• PONTE EN SU LUGAR [nombre] → habla en primera persona como ese personaje, en 4 frases.
-• ALGORITMO → explica con un diagrama de flechas qué hizo el algoritmo en este caso.
-• ZOOM [persona] → profundiza en esa mirada.
-• ¿Y SI…? [un cambio] → cuenta cómo habría cambiado la historia.
+Al final muestra estas palabras para seguir conversando:
+• PONTE EN SU LUGAR [nombre] → hablas como esa persona.
+• ALGORITMO → explicas qué hizo el algoritmo.
 
-LÍMITES: Usa "podría" en lugar de afirmar lo que alguien siente. No culpes a Valentina. No etiquetes a nadie como malo ni hagas diagnósticos. Lenguaje sencillo y frases cortas.
+LÍMITES: Di "podría", no afirmes lo que alguien siente. No culpes a Valentina ni llames malo a nadie.
 
-ACCIÓN: Empieza ya con la tabla.`,
+ACCIÓN: Empieza con la tabla.`,
     sameChat: false,
     then: { label: "Ahora viene lo interesante", text: "¿La IA acertó?" },
   },
   propone: {
     title: "La IA propone",
     lead: "En el juego ustedes decidieron. Ahora la IA propone jugadas.",
-    prompt: `ROL: Ahora actúa como un entrenador de convivencia que propone jugadas reales para estudiantes de 14 a 17 años.
+    prompt: `ROL: Ahora eres un entrenador de convivencia para estudiantes de 14 a 17 años.
 
-CONTEXTO: En el caso anterior, el conflicto sigue creciendo y la foto sigue circulando.
+CONTEXTO: En el caso anterior, la foto sigue circulando y el problema sigue creciendo.
 
-OBJETIVO: Proponer 3 acciones que un estudiante podría hacer AHORA para detener el conflicto.
+OBJETIVO: Propón 3 cosas que un estudiante como nosotros podría hacer AHORA para ayudar a Valentina.
 
-INSTRUCCIONES: Presenta cada acción como una tarjeta, así:
-━━━━━━━━━━
-🎯 ACCIÓN 1: nombre corto
-📝 Qué hacer: una frase
-⚡ Dificultad: de ⭐ a ⭐⭐⭐
-💥 Impacto en el conflicto: 🟩🟩🟩⬜⬜
-🛡️ Protege a Valentina: sí / en parte
-━━━━━━━━━━
-Después, una tabla que compare las 3 acciones: rapidez, riesgo y quién la puede hacer.
-No digas cuál es la mejor ni cuáles son sus debilidades: el curso tiene la misión de encontrar qué podría salir mal.
+INSTRUCCIONES:
+1. 🎯 Cada acción como una tarjeta:
+   Qué hacer: una frase
+   Qué tan difícil es: de ⭐ a ⭐⭐⭐
+   Cuánto ayuda: 🟩🟩🟩⬜⬜
+2. 💬 Para cada una, un ejemplo de lo que el estudiante podría decir o escribir.
+3. 🗳️ Termina preguntando: "¿Cuál harían ustedes?", con opciones 1, 2 y 3.
 
-Muestra este menú y úsalo cuando escribamos una de estas palabras:
-• PISTA → da una pista sobre una debilidad, sin decirla completa.
-• SIMULA [número] → cuenta en 3 escenas cortas, con emojis, qué pasaría si alguien hace esa acción.
-• VISTA DE VALENTINA → cómo podría ver ella cada acción.
-• MÁS OPCIONES → propone 2 acciones distintas.
+Al final muestra estas palabras para seguir conversando:
+• SIMULA [número] → cuentas en 3 escenas qué pasaría con esa acción.
+• ¿Y SI NADIE HACE NADA? → cuentas qué le pasaría a Valentina.
 
-LÍMITES: Acciones realistas y no agresivas. Nada que exponga otra vez a Valentina, ni venganzas, ni publicar datos de nadie.
+LÍMITES: Nada agresivo ni venganzas. Nada que vuelva a exponer a Valentina ni publique datos de nadie.
 
-ACCIÓN: Muestra ya las 3 tarjetas.`,
+ACCIÓN: Muestra las 3 tarjetas.`,
     sameChat: true,
     then: {
-      label: "Su misión",
-      text: "🚨 ¿Qué podría salir mal?",
-      poll: "Si un estudiante hiciera exactamente lo que dice la IA, ¿qué podría salir mal?",
+      label: "Ahora ustedes",
+      text: "🙋 ¿Cuál harían ustedes?",
+      poll: "De las 3 acciones que propuso la IA, ¿cuál harías tú de verdad? ¿Por qué?",
     },
   },
 } as const satisfies Record<string, AiStep>;
@@ -146,32 +138,32 @@ ACCIÓN: Muestra ya las 3 tarjetas.`,
 /** "¿Cómo está construido este prompt?" for each of the three AI steps. */
 export const MIRADAS_PARTS = partsFor({
   rol: {
-    quote: "Actúa como facilitador de un taller de convivencia digital…",
+    quote: "Eres el guía de un taller de convivencia digital…",
     explain: [
       { kind: "text", text: "Le decimos a la IA qué papel debe asumir." },
-      { kind: "text", text: "Y cómo debe hablar: cercana, clara y sin sermones. Así la respuesta suena a conversación, no a regaño." },
+      { kind: "text", text: "Y cómo debe hablar: fácil y sin regaños. Así la respuesta suena a conversación, no a sermón." },
     ],
   },
   contexto: {
-    quote: "Colegio de Barranquilla. Acabamos de jugar a ser el algoritmo. Este es el caso…",
+    quote: "Somos un curso de Barranquilla. Acabamos de jugar a ser el algoritmo. Este es el caso…",
     explain: [
       { kind: "text", text: "Le contamos dónde estamos, qué acabamos de hacer y la historia completa." },
       { kind: "text", text: "Sin el caso, la IA respondería cualquier cosa sobre ciberacoso. Con el caso, habla de Valentina, de Mateo y de nosotros." },
     ],
   },
   objetivo: {
-    quote: "Entender el conflicto desde 3 lugares: Valentina, quienes publicaron y quienes reaccionaron.",
+    quote: "Entender cómo vive este problema cada uno: Valentina, quienes publicaron y quienes comentaron.",
     explain: [
       { kind: "text", text: "Aquí decimos para qué la usamos: ponernos en el lugar de cada uno." },
       {
         kind: "compare",
         weak: "¿Qué opinas del caso?",
-        strong: "Ayúdanos a entender el conflicto desde 3 lugares distintos.",
+        strong: "Ayúdanos a entender cómo vive este problema cada uno.",
       },
     ],
   },
   instrucciones: {
-    quote: "Tabla · termómetro de emociones · cadena de flechas · pregunta A, B, C · menú de palabras",
+    quote: "Tabla · barras de emociones · flechas · pregunta A, B, C · palabras para seguir",
     explain: [
       { kind: "text", text: "Le pedimos la forma exacta de la respuesta, para que sea visual:" },
       {
@@ -180,75 +172,73 @@ export const MIRADAS_PARTS = partsFor({
           "una tabla para comparar las 3 miradas;",
           "barras con emojis para las emociones;",
           "flechas para ver cómo creció el conflicto;",
-          "una pregunta para votar y un menú para seguir jugando.",
+          "una pregunta para votar y palabras para seguir conversando.",
         ],
       },
     ],
   },
   limites: {
-    quote: "Usa «podría». No culpes a Valentina. No etiquetes a nadie.",
+    quote: "Di «podría». No culpes a Valentina ni llames malo a nadie.",
     explain: [
       { kind: "text", text: "Nadie puede saber exactamente lo que siente otra persona, ni siquiera la IA." },
       { kind: "text", text: "Por eso le pedimos hablar de posibilidades, sin culpar ni etiquetar a nadie." },
     ],
   },
   accion: {
-    quote: "Empieza ya con la tabla.",
+    quote: "Empieza con la tabla.",
     explain: [
       { kind: "text", text: "Una orden clara para que arranque de una vez." },
-      { kind: "text", text: "Después, el menú de palabras hace que la conversación siga: la IA responde a lo que el curso le pida." },
+      { kind: "text", text: "Después, las palabras del final hacen que la conversación siga: la IA responde a lo que el curso le pida." },
     ],
   },
 });
 
 export const PROPONE_PARTS = partsFor({
   rol: {
-    quote: "Ahora actúa como un entrenador de convivencia…",
+    quote: "Ahora eres un entrenador de convivencia…",
     explain: [
       { kind: "text", text: "Le cambiamos el papel: ya no analiza, ahora propone jugadas." },
       { kind: "text", text: "En el mismo chat podemos darle a la IA roles distintos según lo que necesitemos." },
     ],
   },
   contexto: {
-    quote: "En el caso anterior, el conflicto sigue creciendo.",
+    quote: "En el caso anterior, la foto sigue circulando.",
     explain: [
       { kind: "text", text: "No repetimos toda la historia: como es el mismo chat, la IA ya la conoce." },
       { kind: "text", text: "Solo le contamos qué cambió." },
     ],
   },
   objetivo: {
-    quote: "3 acciones que un estudiante podría hacer AHORA.",
+    quote: "3 cosas que un estudiante podría hacer AHORA para ayudar a Valentina.",
     explain: [
       { kind: "text", text: "Pedimos acciones para alguien como nosotros, y para ya." },
       {
         kind: "compare",
         weak: "¿Cómo se soluciona el ciberacoso?",
-        strong: "¿Qué puede hacer un estudiante AHORA para detener este conflicto?",
+        strong: "¿Qué puede hacer un estudiante AHORA para ayudar a Valentina?",
       },
     ],
   },
   instrucciones: {
-    quote: "Tarjetas con dificultad ⭐ e impacto 🟩 · tabla comparativa · no digas cuál es la mejor",
+    quote: "Tarjetas con dificultad ⭐ y ayuda 🟩 · un ejemplo de qué decir · ¿cuál harían ustedes?",
     explain: [
       { kind: "text", text: "Cada acción llega como una tarjeta de juego, fácil de comparar." },
-      {
-        kind: "text",
-        text: "Y le pedimos que NO diga cuál es la mejor ni sus debilidades: esa es la misión del curso.",
-      },
+      { kind: "text", text: "Con un ejemplo de qué decir, porque muchas veces eso es lo más difícil." },
+      { kind: "text", text: "Y termina preguntándonos: la IA propone, pero nosotros decidimos." },
     ],
   },
   limites: {
-    quote: "Nada agresivo. Nada que exponga otra vez a Valentina.",
+    quote: "Nada agresivo. Nada que vuelva a exponer a Valentina.",
     explain: [
       { kind: "text", text: "Una mala solución puede empeorar el conflicto." },
       { kind: "list", items: ["sin venganzas;", "sin publicar datos de nadie;", "sin volver a mostrar la foto."] },
     ],
   },
   accion: {
-    quote: "Muestra ya las 3 tarjetas.",
+    quote: "Muestra las 3 tarjetas.",
     explain: [
       { kind: "text", text: "Arranca de una vez." },
-      { kind: "text", text: "Con PISTA o SIMULA, el curso puede poner a prueba cada acción antes de criticarla." },
+      { kind: "text", text: "Con SIMULA o ¿Y SI NADIE HACE NADA?, el curso ve qué pasaría antes de decidir." },
     ],
   },
 });
@@ -310,8 +300,6 @@ export const ALGORITHM_GAME = {
   likesLabel: "Me gusta",
   goalLabel: "Meta",
   boost: "Impulsar",
-  next: "Siguiente ronda",
-  finish: "Ver resultado",
   timeUp: "¡Tiempo!",
   autoPick: "Se acabó el tiempo: el algoritmo eligió solo lo que más «me gusta» daba.",
   rounds: [
@@ -406,6 +394,16 @@ export const ALGORITHM_GAME = {
         "Gracias a los que dijeron que eso no daba risa.",
         "Ya casi nadie habla de eso.",
       ],
+    },
+    /** What happened, told after her messages so the class understands the case. */
+    story: {
+      title: "¿Qué pasó?",
+      intro: "Mateo le tomó una foto a Valentina a escondidas en clase y la publicó sin su permiso.",
+      boosted: "Ustedes, como algoritmo, impulsaron:",
+      none: "Ustedes no impulsaron ninguna burla contra ella.",
+      high: "Cada publicación hizo más grande la burla, hasta llegar a gente que ni la conoce. Para ustedes eran «me gusta»; para Valentina, vergüenza y miedo.",
+      medium: "La burla creció, pero también hubo quien la frenó. Cada «me gusta» decidía qué veía más gente.",
+      low: "Ustedes no le dieron más alcance a la burla. Por eso la foto casi no se movió.",
     },
     next: "¿Cómo funciona un algoritmo de verdad?",
   },
@@ -578,24 +576,6 @@ export function buildCampaignPrompt(
     { label: "Acción", text: "Empieza ya con las 3 frases." },
   ];
 }
-
-export const CREATE = {
-  title: "Crea y mejora",
-  steps: [
-    { title: "Peguen el prompt", text: "ChatGPT les va a proponer 3 frases." },
-    { title: "Escojan una frase", text: "Respóndanle, por ejemplo: «Usamos la frase 2»." },
-    { title: "Revisen la imagen", text: "¿Se entiende en 3 segundos? ¿La frase está bien escrita?" },
-  ],
-  improveTitle: "Pídanle un cambio",
-  improveLead: "La IA propone, ustedes corrigen. Copien uno y cambien lo que está entre corchetes.",
-  improvements: [
-    "Haz la imagen más llamativa y que la frase se lea desde lejos.",
-    "La frase de la imagen tiene errores. Escríbela exactamente así: «[NUESTRA FRASE]».",
-    "Cambia el estilo a [OTRO ESTILO] y mantén la misma frase.",
-    "Muestra estudiantes más diversos: diferentes tonos de piel, estilos y formas de ser.",
-  ],
-  tip: "Si la frase sigue saliendo mal escrita, pidan la imagen sin texto y escriban la frase aparte.",
-} as const;
 
 export const GALLERY = {
   title: "Galería",

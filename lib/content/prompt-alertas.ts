@@ -4,7 +4,7 @@ import {
   SURVEY_QUESTIONS,
   SURVEY_RESPONSES,
   countAnswers,
-  surveyAsText,
+  questionsAsText,
 } from "@/lib/content/encuesta-ejemplo";
 import { partsFor } from "@/lib/content/prompt-encuesta";
 import { TALLY_GUIDE } from "@/lib/content/tally-guia";
@@ -17,55 +17,32 @@ import type { Report, ReportRow, Status } from "@/lib/content/report";
 
 const ROLE = "Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.";
 
-const TASK_TALLY = `Tu tarea es acceder directamente, mediante la conexión disponible con Tally, al formulario llamado “${SURVEY_NAME}” y analizar todas las respuestas anónimas recibidas.`;
+const TASK_TALLY = `Entra a Tally con la conexión disponible, abre el formulario “${SURVEY_NAME}” y analiza todas sus respuestas anónimas.`;
 
-const TASK_PASTED = `Tu tarea es analizar todas las respuestas anónimas de la encuesta “${SURVEY_NAME}”, que encontrarás al final de este mensaje.`;
+const TASK_PASTED = `Analiza el archivo CSV adjunto con las respuestas anónimas de la encuesta “${SURVEY_NAME}”. Las preguntas están al final de este mensaje.`;
 
 /** Everything after the task: identical in both versions. */
 const ANALYSIS = `OBJETIVO
-
-Identificar patrones que ayuden al docente a comprender de forma sencilla cómo perciben los estudiantes la convivencia dentro del curso, tanto en el colegio como en espacios digitales.
-La IA debe organizar y mostrar los patrones encontrados, pero no reemplazar la interpretación profesional del docente.
-
-ASPECTOS QUE DEBES ANALIZAR
-* respeto entre compañeros;
-* inclusión y posibles situaciones de exclusión;
-* burlas o bromas que puedan generar incomodidad;
-* convivencia en grupos de WhatsApp;
-* comportamiento entre compañeros en redes sociales;
-* compartir fotos, videos o mensajes sin permiso;
-* señales relacionadas con posibles situaciones de ciberacoso;
-* confianza para hablar con un adulto;
-* conocimiento de a quién acudir para pedir ayuda.
-Analiza también todas las respuestas abiertas.
-No identifiques estudiantes ni intentes deducir quién escribió cada respuesta.
+Ayúdame a entender cómo viven la convivencia mis estudiantes, en el colegio y en lo digital. Tú muestras los patrones; yo interpreto y decido.
 
 CÓMO QUIERO EL INFORME
-Escríbelo como si se lo explicaras a un colega docente que no sabe de estadística:
-* frases cortas y lenguaje cotidiano;
-* di “3 de 7 estudiantes” en lugar de porcentajes; no uses promedios ni decimales;
-* usa 🟢 🟡 🔴 para que se entienda de un vistazo;
-* que se pueda leer en menos de dos minutos.
+Lenguaje sencillo y frases cortas.
+Nada de porcentajes: di “3 de 7 estudiantes”.
 
-ESTRUCTURA
-1. En una frase: cuántos estudiantes respondieron. Si son pocos, aclara que es solo una orientación y no representa necesariamente a todo el curso.
-2. El semáforo del curso: una línea por aspecto, con su color y una frase sencilla.
-Ejemplo: 🔴 Respeto en redes sociales: 3 de 7 estudiantes dicen que en redes nunca se tratan con respeto.
-Usa 🟢 si la mayoría responde de forma positiva, 🟡 si las respuestas están divididas o predomina “A veces” y 🔴 si varios responden “Nunca” o el tema se repite en las respuestas abiertas.
-Incluye un gráfico de barras sencillo con todos los aspectos.
-3. Lo que va bien: máximo tres frases.
-4. Posibles alertas tempranas: solo las señales que justifiquen una observación más cercana. Usa expresiones como “conviene explorar”, “aparece una señal” o “sería recomendable conversar sobre este tema”.
-5. Lo que dicen los estudiantes: los temas que se repiten en las respuestas abiertas y cuántas respuestas los mencionan.
-6. Tres ideas para esta semana: cada una en máximo dos frases, con un ejemplo. Prioriza conversaciones grupales, acuerdos de convivencia digital y formas seguras de pedir ayuda.
-CIERRE: en máximo tres líneas, ¿qué nos está diciendo esta encuesta sobre la convivencia del curso?
+El informe debe tener:
+1. Cuántos estudiantes respondieron.
+2. Un semáforo por tema:
+   🟢 va bien
+   🟡 a veces
+   🔴 varios dicen “Nunca”
+3. Un gráfico de barras sencillo.
+4. Lo que va bien.
+5. Señales para observar.
+6. Lo que más piden los estudiantes.
+7. Tres ideas para esta semana, con un ejemplo.
 
-LÍMITES IMPORTANTES
-No realices diagnósticos psicológicos.
-No identifiques estudiantes.
-No determines quién es víctima, agresor o responsable.
-No afirmes que existe bullying o ciberacoso únicamente por estas respuestas.
-No exageres resultados obtenidos con pocas respuestas.
-Aclara que el semáforo muestra tendencias del grupo y no diagnósticos.`;
+LÍMITES
+No hagas diagnósticos, no identifiques estudiantes, no digas quién es víctima o agresor y no afirmes que hay ciberacoso solo por estas respuestas. Si hay pocas respuestas, aclara que es solo una orientación. El semáforo muestra tendencias, no diagnósticos.`;
 
 export const ALERTAS_EXERCISE: PromptExercise = {
   id: "alertas",
@@ -86,8 +63,8 @@ export const ALERTAS_EXERCISE: PromptExercise = {
     {
       id: "sin-tally",
       label: "Sin Tally",
-      note: `Incluye las ${SURVEY_RESPONSES.length} respuestas de ejemplo (ficticias), así funciona en cualquier cuenta de ChatGPT.`,
-      text: `${ROLE}\n${TASK_PASTED}\n${ANALYSIS}\n\n${surveyAsText()}`,
+      note: "Descarga el CSV de ejemplo, adjúntalo en ChatGPT con el clip 📎 y pega el prompt. Funciona en cualquier cuenta de ChatGPT.",
+      text: `${ROLE}\n\n${TASK_PASTED}\n\n${ANALYSIS}\n\n${questionsAsText()}`,
       download: { href: "/assets/data/convivencia-en-mi-curso.csv", label: "Descargar respuestas de ejemplo (CSV)" },
     },
     {
@@ -95,7 +72,7 @@ export const ALERTAS_EXERCISE: PromptExercise = {
       label: "Con Tally",
       note: `ChatGPT lee las respuestas directamente de Tally. Para analizar tu propio formulario, cambia “${SURVEY_NAME}” por su nombre.`,
       guide: TALLY_GUIDE,
-      text: `${ROLE}\n${TASK_TALLY}\n${ANALYSIS}`,
+      text: `${ROLE}\n\n${TASK_TALLY}\n\n${ANALYSIS}`,
     },
   ],
 };
@@ -256,19 +233,19 @@ export const ALERTAS_PARTS = partsFor({
     ],
   },
   objetivo: {
-    quote: "Identificar patrones que ayuden al docente a comprender cómo perciben la convivencia.",
+    quote: "Ayúdame a entender cómo viven la convivencia mis estudiantes.",
     explain: [
       { kind: "text", text: "No le pedimos solo un resumen. Le pedimos patrones que ayuden a decidir." },
       {
         kind: "compare",
         weak: "Resume las respuestas de la encuesta.",
-        strong: "Identifica patrones que me ayuden a entender cómo perciben la convivencia.",
+        strong: "Ayúdame a entender cómo viven la convivencia mis estudiantes.",
       },
-      { kind: "text", text: "Y dejamos claro que la IA organiza, pero no reemplaza la mirada del docente." },
+      { kind: "text", text: "Y dejamos claro quién hace qué: “Tú muestras los patrones; yo interpreto y decido”." },
     ],
   },
   instrucciones: {
-    quote: "Escríbelo como si se lo explicaras a un colega docente…",
+    quote: "Lenguaje sencillo y frases cortas.",
     explain: [
       { kind: "text", text: "Le decimos cómo queremos el informe:" },
       {
@@ -285,7 +262,7 @@ export const ALERTAS_PARTS = partsFor({
     ],
   },
   limites: {
-    quote: "No afirmes que existe bullying o ciberacoso únicamente por estas respuestas.",
+    quote: "No afirmes que hay ciberacoso solo por estas respuestas.",
     explain: [
       { kind: "text", text: "Aquí los límites son todavía más importantes, porque hablamos de alertas:" },
       {
@@ -301,7 +278,7 @@ export const ALERTAS_PARTS = partsFor({
     ],
   },
   accion: {
-    quote: "Accede directamente al formulario en Tally y analiza todas las respuestas.",
+    quote: "Entra a Tally, abre el formulario y analiza todas sus respuestas.",
     explain: [
       {
         kind: "text",
@@ -310,9 +287,9 @@ export const ALERTAS_PARTS = partsFor({
       {
         kind: "compare",
         weak: "Te voy a pegar las respuestas.",
-        strong: "Accede al formulario y analiza todas las respuestas.",
+        strong: "Entra a Tally, abre el formulario y analiza todas sus respuestas.",
       },
-      { kind: "text", text: "Es decir: leer los datos → encontrar patrones → entregar un informe." },
+      { kind: "text", text: "Sin Tally, adjuntas el CSV con las respuestas. En los dos casos: leer los datos → encontrar patrones → entregar un informe." },
     ],
   },
 });

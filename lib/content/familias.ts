@@ -202,7 +202,7 @@ export const CASES_BLOCK = {
   childLabel: "Hablo con",
   hint: "Escoge el caso que más se parezca a lo que vives en casa.",
   steps: {
-    scenario: "Copia el caso y pégalo en ChatGPT",
+    scenario: "Lee el caso",
     opening: "Empieza la conversación con esta frase",
     finish: "Cuando quieras terminar, escribe",
   },

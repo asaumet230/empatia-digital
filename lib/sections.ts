@@ -5,7 +5,6 @@ import {
 } from "@/components/sections/estudiantes/AiStepSection";
 import { AlgorithmGameSection } from "@/components/sections/estudiantes/AlgorithmGameSection";
 import { ClosingSection } from "@/components/sections/estudiantes/ClosingSection";
-import { CreateImproveSection } from "@/components/sections/estudiantes/CreateImproveSection";
 import { GallerySection } from "@/components/sections/estudiantes/GallerySection";
 import { PeaceChallengeSection } from "@/components/sections/estudiantes/PeaceChallengeSection";
 import { PromptBuilderSection } from "@/components/sections/estudiantes/PromptBuilderSection";
@@ -90,7 +89,6 @@ export const TRACKS = {
       { id: "paz-prompt", label: "Arma tu prompt", component: PromptBuilderSection },
       { id: "paz-partes", label: "Partes: campaña", component: CampaignPartsSection },
       { id: "paz-reto", label: "Creadores de paz", component: PeaceChallengeSection },
-      { id: "paz-crear", label: "Crea y mejora", component: CreateImproveSection },
       { id: "paz-galeria", label: "Galería", component: GallerySection },
     ],
   },

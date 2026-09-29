@@ -125,11 +125,8 @@ export const SURVEY_RESPONSES: readonly SurveyResponse[] = [
 export const countAnswers = (q: number) =>
   ANSWERS.map((answer) => SURVEY_RESPONSES.filter((r) => r.answers[q] === answer).length);
 
-/** The responses as plain text, to paste after a prompt. */
-export const surveyAsText = () => {
-  const questions = SURVEY_QUESTIONS.map((q, i) => `P${i + 1}. ${q}`).join("\n");
-  const answers = SURVEY_RESPONSES.map(
-    (r, i) => `Respuesta ${i + 1}: ${r.answers.map((a, q) => `P${q + 1} ${a}`).join(" · ")} · P10 “${r.open}”`,
-  ).join("\n");
-  return `RESPUESTAS DE LA ENCUESTA “${SURVEY_NAME}” (${SURVEY_RESPONSES.length} estudiantes, anónimas)\n\nPreguntas:\n${questions}\n\nRespuestas (una línea por estudiante):\n${answers}`;
-};
+/** The questions as plain text, to go with the attached CSV of answers. */
+export const questionsAsText = () =>
+  `PREGUNTAS DE LA ENCUESTA
+Las preguntas 1 a 9 se responden con Nunca / A veces / Frecuentemente / Siempre. La 10 es abierta.
+${SURVEY_QUESTIONS.map((q, i) => `${i + 1}. ${q}`).join("\n")}`;

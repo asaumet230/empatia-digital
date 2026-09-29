@@ -3,6 +3,7 @@ import type { VideoGuide } from "@/lib/content/prompt-exercise";
 /** How to connect Tally to ChatGPT, shown next to every "Con Tally" prompt. */
 export const TALLY_GUIDE: VideoGuide = {
   button: "¿Cómo conectar Tally? · 2 videos",
+  link: { label: "Crear cuenta en Tally", href: "https://tally.so/signup" },
   title: "Cómo conectar Tally a ChatGPT",
   note: "Funciona con la cuenta gratuita de ChatGPT. Si ya tienes cuenta en Tally, empieza en el paso 2.",
   steps: [
