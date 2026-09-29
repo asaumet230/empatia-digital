@@ -156,6 +156,17 @@ body {
   }
 }
 
+/* Dashes travelling along an SVG link (period = dasharray "1 1.6") */
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -2.6;
+  }
+}
+
+@utility animate-dash-flow {
+  animation: dash-flow 0.9s linear infinite;
+}
+
 @utility animate-pulse-ring {
   animation: pulse-ring 1.8s var(--ease-out-expo) infinite;
 }

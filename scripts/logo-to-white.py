@@ -1,7 +1,7 @@
-"""Turn a logo drawn in light tones over a solid dark block into a white logo on transparency.
+"""Turn a logo drawn over a solid block (light-on-dark or dark-on-light) into a white logo on transparency.
 
-Usage: python3 scripts/logo-to-white.py <input.png> <output.png>
-Only needs the standard library (RGBA 8-bit PNGs).
+Usage: python3 scripts/logo-to-white.py <input.png> <output.png> [max-size]
+Only needs the standard library (RGBA 8-bit PNGs). `max-size` downscales so the longest side fits.
 """
 import struct
 import sys
@@ -56,7 +56,35 @@ def write_png(path, w, h, rows):
     open(path, "wb").write(png)
 
 
-def main(src, dst):
+def trim(w, h, rows, margin=0.04):
+    """Crop to the visible ink plus a small margin."""
+    ys = [y for y in range(h) if any(rows[y][x + 3] > 8 for x in range(0, w * 4, 4))]
+    xs = [x for x in range(w) if any(rows[y][x * 4 + 3] > 8 for y in ys)]
+    if not ys or not xs:
+        return w, h, rows
+    pad = round(max(xs[-1] - xs[0], ys[-1] - ys[0]) * margin)
+    x0, x1 = max(0, xs[0] - pad), min(w, xs[-1] + 1 + pad)
+    y0, y1 = max(0, ys[0] - pad), min(h, ys[-1] + 1 + pad)
+    return x1 - x0, y1 - y0, [row[x0 * 4 : x1 * 4] for row in rows[y0:y1]]
+
+
+def downscale(w, h, rows, max_size):
+    """Box filter, integer factor only: good enough for flat logos."""
+    f = -(-max(w, h) // max_size)
+    if f <= 1:
+        return w, h, rows
+    nw, nh, out = w // f, h // f, []
+    for y in range(nh):
+        line = bytearray()
+        for x in range(nw):
+            total = sum(rows[y * f + j][(x * f + i) * 4 + 3] for j in range(f) for i in range(f))
+            # Thin strokes lose weight when averaged; give some of it back
+            line += bytes((255, 255, 255, min(255, round(total / (f * f) * 1.5))))
+        out.append(line)
+    return nw, nh, out
+
+
+def main(src, dst, max_size=None):
     w, h, rows = read_png(src)
     lum = lambda r, g, b: 0.2126 * r + 0.7152 * g + 0.0722 * b
     # The background block is the most common opaque colour
@@ -72,11 +100,16 @@ def main(src, dst):
         line = bytearray()
         for x in range(0, len(row), 4):
             r, g, b, a = row[x : x + 4]
-            alpha = max(0.0, min(1.0, (lum(r, g, b) - bg) / (255 - bg))) * (a / 255)
+            # Ink is whatever departs from the background, towards the opposite end
+            ink = (lum(r, g, b) - bg) / (255 - bg) if bg < 128 else (bg - lum(r, g, b)) / bg
+            alpha = max(0.0, min(1.0, ink)) * (a / 255)
             line += bytes((255, 255, 255, round(alpha * 255)))
         out.append(line)
+    w, h, out = trim(w, h, out)
+    if max_size:
+        w, h, out = downscale(w, h, out, max_size)
     write_png(dst, w, h, out)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else None)
