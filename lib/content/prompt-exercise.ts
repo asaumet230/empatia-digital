@@ -19,5 +19,7 @@ export interface PromptExercise {
   title: string;
   purpose: readonly { label: string; text: string }[];
   steps: readonly string[];
+  /** Aviso importante (p. ej. privacidad), visible junto a los botones. */
+  notice?: string;
   variants: readonly PromptVariant[];
 }

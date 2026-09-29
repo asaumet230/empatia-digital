@@ -35,7 +35,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      data-intro="booting"
       className={`${unbounded.variable} ${manrope.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >

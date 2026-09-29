@@ -228,9 +228,9 @@ export const AI_BLOCK = {
     body: "Por eso el objetivo no puede ser aprendernos todas las aplicaciones; tenemos que aprender cómo",
     emphasis: "acompañarlos en su uso.",
   },
+  /** Bridge to the next block; each audience continues from its own place. */
   transition: {
-    lead: "Ahora veamos esto desde dos lugares:",
-    places: ["Escuela", "Hogar"],
-    order: ["Primero", "Después"],
+    lead: "Ahora veamos esto desde",
+    places: { escuela: "La escuela", hogar: "El hogar" },
   },
 } as const;

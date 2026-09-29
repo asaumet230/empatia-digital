@@ -7,20 +7,10 @@ import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, EASE, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
-import { ANSWERS, SURVEY_QUESTIONS, SURVEY_RESPONSES, countAnswers } from "@/lib/content/encuesta-ejemplo";
-import {
-  ANSWER_COLORS,
-  REPORT_ASPECTS,
-  REPORT_BLOCK,
-  REPORT_THEMES,
-  STATUS,
-  type ReportAspect,
-} from "@/lib/content/prompt-alertas";
+import { SURVEY_REPORT } from "@/lib/content/prompt-alertas";
+import { RUBRIC_REPORT } from "@/lib/content/prompt-rubrica";
+import { SCALE_COLORS, STATUS, type Report, type ReportRow } from "@/lib/content/report";
 import type { SectionProps } from "@/types/presentation";
-
-const TOTAL = SURVEY_RESPONSES.length;
-const percent = (n: number) => `${Math.round((n / TOTAL) * 100)} %`;
-const students = (n: number) => `${n} ${n === 1 ? "estudiante" : "estudiantes"}`;
 
 const swap = {
   initial: { opacity: 0, y: 12, filter: "blur(6px)" },
@@ -28,13 +18,16 @@ const swap = {
   exit: { opacity: 0, y: -8, filter: "blur(6px)", transition: transition(DURATION.fast, 0, EASE.inOutQuint) },
 };
 
+export const SurveyReportSection = (props: SectionProps) => <TrafficLightReport {...props} report={SURVEY_REPORT} />;
+export const RubricReportSection = (props: SectionProps) => <TrafficLightReport {...props} report={RUBRIC_REPORT} />;
+
 /**
- * "Así se ve el resultado" — the report a teacher gets, built from the sample answers:
- * a traffic light per topic; hovering a topic opens its numbers, reading and voices.
+ * "Así se ve el resultado" — the report a teacher gets back, as an interactive traffic light:
+ * one row per topic; hovering a row opens its numbers, a plain reading and the voices behind it.
  */
-export function AlertReportSection({ id, index, label }: SectionProps) {
+function TrafficLightReport({ id, index, label, report }: SectionProps & { report: Report }) {
   const [active, setActive] = useState<number | null>(null);
-  const aspect = active === null ? null : REPORT_ASPECTS[active];
+  const row = active === null ? null : report.rows[active];
 
   return (
     <Section id={id} label={label} className="flex items-center overflow-hidden bg-navy-dark">
@@ -49,32 +42,33 @@ export function AlertReportSection({ id, index, label }: SectionProps) {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <motion.div variants={fadeUp}>
-              <Eyebrow index={index}>{REPORT_BLOCK.eyebrow}</Eyebrow>
+              <Eyebrow index={index}>{report.eyebrow}</Eyebrow>
             </motion.div>
             <motion.h2
               variants={fadeUp}
               className="mt-5 font-display text-[clamp(1.75rem,3.6vw,3rem)] font-bold leading-[1.05] tracking-[-0.03em]"
             >
-              {REPORT_BLOCK.title}
+              {report.title}
             </motion.h2>
           </div>
-          <motion.div variants={fadeUp} className="lg:text-right">
+          <motion.div variants={fadeUp} className="lg:max-w-sm lg:text-right">
             <p className="inline-block rounded-full border border-white/15 px-3 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-gray-light">
-              {REPORT_BLOCK.sample}
+              {report.sample}
             </p>
-            <p className="mt-2 text-sm text-gray-muted">{REPORT_BLOCK.caution}</p>
+            <p className="mt-2 text-sm text-gray-muted">{report.caution}</p>
           </motion.div>
         </div>
 
         <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
           {/* Traffic light */}
           <motion.div variants={fadeUp}>
-            <Legend />
+            <Legend scale={report.scale} />
             <ul className="mt-4 border-t border-line">
-              {REPORT_ASPECTS.map((a, i) => (
-                <AspectRow
-                  key={a.question}
-                  aspect={a}
+              {report.rows.map((r, i) => (
+                <Row
+                  key={r.key}
+                  row={r}
+                  total={report.total}
                   on={i === active}
                   dimmed={active !== null && i !== active}
                   onSelect={() => setActive(i)}
@@ -82,21 +76,21 @@ export function AlertReportSection({ id, index, label }: SectionProps) {
               ))}
             </ul>
             <p className="hud-label mt-4">
-              <span className="hidden [@media(hover:hover)]:inline">{REPORT_BLOCK.hint.pointer}</span>
-              <span className="[@media(hover:hover)]:hidden">{REPORT_BLOCK.hint.touch}</span>
+              <span className="hidden [@media(hover:hover)]:inline">{report.hint.pointer}</span>
+              <span className="[@media(hover:hover)]:hidden">{report.hint.touch}</span>
             </p>
           </motion.div>
 
           {/* Detail */}
           <motion.div variants={fadeUp} aria-live="polite" className="lg:min-h-[30rem]">
             <AnimatePresence mode="wait" initial={false}>
-              {aspect ? (
-                <motion.div key={aspect.question} {...swap}>
-                  <AspectDetail aspect={aspect} onBack={() => setActive(null)} />
+              {row ? (
+                <motion.div key={row.key} {...swap}>
+                  <Detail row={row} report={report} onBack={() => setActive(null)} />
                 </motion.div>
               ) : (
                 <motion.div key="overview" {...swap}>
-                  <Overview />
+                  <Overview report={report} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -107,36 +101,36 @@ export function AlertReportSection({ id, index, label }: SectionProps) {
   );
 }
 
-function Legend() {
+function Legend({ scale }: { scale: readonly string[] }) {
   return (
     <div className="flex flex-wrap gap-x-5 gap-y-2">
-      {ANSWERS.map((answer, i) => (
-        <span key={answer} className="flex items-center gap-2 text-sm text-gray-text">
-          <span aria-hidden="true" className="size-2.5 rounded-sm" style={{ backgroundColor: ANSWER_COLORS[i] }} />
-          {answer}
+      {scale.map((step, i) => (
+        <span key={step} className="flex items-center gap-2 text-sm text-gray-text">
+          <span aria-hidden="true" className="size-2.5 rounded-sm" style={{ backgroundColor: SCALE_COLORS[i] }} />
+          {step}
         </span>
       ))}
     </div>
   );
 }
 
-interface AspectRowProps {
-  aspect: ReportAspect;
+interface RowProps {
+  row: ReportRow;
+  total: number;
   on: boolean;
   dimmed: boolean;
   onSelect: () => void;
 }
 
-function AspectRow({ aspect, on, dimmed, onSelect }: AspectRowProps) {
-  const counts = countAnswers(aspect.question);
-  const status = STATUS[aspect.status];
+function Row({ row, total, on, dimmed, onSelect }: RowProps) {
+  const status = STATUS[row.status];
 
   return (
     <li className="border-b border-line">
       <button
         type="button"
         aria-pressed={on}
-        aria-label={`${aspect.label}: ${status.label}`}
+        aria-label={`${row.label}: ${status.label}`}
         onPointerEnter={(e: PointerEvent) => e.pointerType === "mouse" && onSelect()}
         onClick={onSelect}
         onFocus={onSelect}
@@ -151,7 +145,7 @@ function AspectRow({ aspect, on, dimmed, onSelect }: AspectRowProps) {
           style={{ backgroundColor: status.color, boxShadow: on ? `0 0 12px ${status.color}` : undefined }}
         />
         <span className={cn("text-[0.9375rem] font-semibold md:text-base", on ? "text-white" : "text-gray-light")}>
-          {aspect.label}
+          {row.label}
         </span>
         <motion.span
           aria-hidden="true"
@@ -161,12 +155,12 @@ function AspectRow({ aspect, on, dimmed, onSelect }: AspectRowProps) {
             visible: { scaleX: 1, transition: transition(DURATION.slow, 0.2, EASE.outQuart) },
           }}
         >
-          {counts.map((n, i) =>
+          {row.counts.map((n, i) =>
             n > 0 ? (
               <span
-                key={ANSWERS[i]}
+                key={i}
                 className="h-full border-r border-navy-dark last:border-r-0"
-                style={{ width: `${(n / TOTAL) * 100}%`, backgroundColor: ANSWER_COLORS[i] }}
+                style={{ width: `${(n / total) * 100}%`, backgroundColor: SCALE_COLORS[i] }}
               />
             ) : null,
           )}
@@ -176,9 +170,8 @@ function AspectRow({ aspect, on, dimmed, onSelect }: AspectRowProps) {
   );
 }
 
-function AspectDetail({ aspect, onBack }: { aspect: ReportAspect; onBack: () => void }) {
-  const counts = countAnswers(aspect.question);
-  const status = STATUS[aspect.status];
+function Detail({ row, report, onBack }: { row: ReportRow; report: Report; onBack: () => void }) {
+  const status = STATUS[row.status];
 
   return (
     <div>
@@ -189,45 +182,57 @@ function AspectDetail({ aspect, onBack }: { aspect: ReportAspect; onBack: () => 
         {status.label}
       </span>
       <h3 className="mt-4 font-display text-[clamp(1.375rem,2.4vw,2rem)] font-bold leading-[1.1] tracking-[-0.02em]">
-        {aspect.label}
+        {row.label}
       </h3>
-      <p className="mt-2 text-sm italic text-gray-muted">
-        Pregunta {aspect.question + 1}: “{SURVEY_QUESTIONS[aspect.question]}”
-      </p>
+      {row.source && <p className="mt-2 text-sm italic text-gray-muted">{row.source}</p>}
 
       <ul className="mt-5 space-y-2">
-        {ANSWERS.map((answer, i) => (
+        {report.scale.map((step, i) => (
           <li
-            key={answer}
-            className="grid grid-cols-[7.5rem_minmax(0,1fr)_auto] items-center gap-3 text-sm md:text-[0.9375rem]"
+            key={step}
+            className="grid grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)_auto] items-center gap-3 text-sm md:text-[0.9375rem]"
           >
-            <span className="text-gray-light">{answer}</span>
+            <span className="text-gray-light">{step}</span>
             <span className="h-2 overflow-hidden rounded-full bg-white/5">
               <motion.span
                 className="block h-full origin-left rounded-full"
-                style={{ width: `${(counts[i] / TOTAL) * 100}%`, backgroundColor: ANSWER_COLORS[i] }}
+                style={{ width: `${(row.counts[i] / report.total) * 100}%`, backgroundColor: SCALE_COLORS[i] }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={transition(DURATION.base, 0.05 * i, EASE.outQuart)}
               />
             </span>
             <span className="tabular-nums text-gray-text">
-              {students(counts[i])} — {percent(counts[i])}
+              {row.counts[i]} de {report.total}
             </span>
           </li>
         ))}
       </ul>
 
-      <p className="mt-6 text-base leading-relaxed text-gray-light md:text-lg">{aspect.reading}</p>
+      <p className="mt-6 text-base leading-relaxed text-gray-light md:text-lg">{row.reading}</p>
 
-      {aspect.quotes && (
+      {row.people && row.people.length > 0 && (
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="text-sm text-gray-muted">Conviene acompañar:</span>
+          {row.people.map((code) => (
+            <span
+              key={code}
+              className="rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-xs tracking-[0.08em] text-gray-light"
+            >
+              {code}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {row.quotes && row.quotes.length > 0 && (
         <div className="mt-5 space-y-2">
-          {aspect.quotes.map((q) => (
+          {row.quotes.map((quote) => (
             <p
-              key={q}
+              key={quote}
               className="border-l-2 border-white/20 pl-3 text-sm italic leading-snug text-gray-text md:text-[0.9375rem]"
             >
-              “{SURVEY_RESPONSES[q].open}”
+              {quote}
             </p>
           ))}
         </div>
@@ -245,13 +250,13 @@ function AspectDetail({ aspect, onBack }: { aspect: ReportAspect; onBack: () => 
   );
 }
 
-function Overview() {
+function Overview({ report }: { report: Report }) {
   const tally = (Object.keys(STATUS) as (keyof typeof STATUS)[]).map((key) => ({
     ...STATUS[key],
     key,
-    count: REPORT_ASPECTS.filter((a) => a.status === key).length,
+    count: report.rows.filter((r) => r.status === key).length,
   }));
-  const maxTheme = Math.max(...REPORT_THEMES.map((t) => t.responses.length));
+  const maxWeight = Math.max(1, ...report.list.items.map((item) => item.weight ?? 0));
 
   return (
     <div>
@@ -267,33 +272,34 @@ function Overview() {
       </ul>
 
       <div className="mt-6 rounded-xl border border-yellow/30 bg-yellow/[0.04] p-4 md:p-5">
-        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">
-          {REPORT_BLOCK.keyReading.title}
-        </p>
-        <p className="mt-2 text-base leading-snug text-gray-light md:text-lg">{REPORT_BLOCK.keyReading.text}</p>
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">{report.keyReading.title}</p>
+        <p className="mt-2 text-base leading-snug text-gray-light md:text-lg">{report.keyReading.text}</p>
       </div>
 
-      <p className="mt-7 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-gray-muted">
-        {REPORT_BLOCK.themesTitle}
-      </p>
-      <ul className="mt-3 space-y-2.5">
-        {REPORT_THEMES.map((theme) => (
-          <li
-            key={theme.label}
-            className="grid grid-cols-[minmax(0,1fr)_6rem_auto] items-center gap-3 text-sm md:text-[0.9375rem]"
-          >
-            <span className="text-gray-light">{theme.label}</span>
-            <span className="h-2 overflow-hidden rounded-full bg-white/5">
-              <span
-                className="block h-full rounded-full bg-green-bright/70"
-                style={{ width: `${(theme.responses.length / maxTheme) * 100}%` }}
-              />
-            </span>
-            <span className="tabular-nums text-gray-text">
-              {theme.responses.length} {theme.responses.length === 1 ? "respuesta" : "respuestas"}
-            </span>
-          </li>
-        ))}
+      <p className="mt-7 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-gray-muted">{report.list.title}</p>
+      <ul className="mt-3 space-y-2">
+        {report.list.items.map((item) =>
+          item.weight !== undefined ? (
+            <li
+              key={item.label}
+              className="grid grid-cols-[minmax(0,1fr)_6rem_auto] items-center gap-3 text-sm md:text-[0.9375rem]"
+            >
+              <span className="text-gray-light">{item.label}</span>
+              <span className="h-2 overflow-hidden rounded-full bg-white/5">
+                <span
+                  className="block h-full rounded-full bg-green-bright/70"
+                  style={{ width: `${(item.weight / maxWeight) * 100}%` }}
+                />
+              </span>
+              <span className="tabular-nums text-gray-text">{item.value}</span>
+            </li>
+          ) : (
+            <li key={item.label} className="flex items-baseline gap-3 text-sm md:text-[0.9375rem]">
+              <span className="w-10 shrink-0 font-mono text-xs tracking-[0.08em] text-gray-light">{item.label}</span>
+              <span className="text-gray-text">{item.value}</span>
+            </li>
+          ),
+        )}
       </ul>
     </div>
   );

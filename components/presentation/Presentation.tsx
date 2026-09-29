@@ -3,23 +3,28 @@
 import { MotionConfig, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo } from "react";
 import { Intro } from "@/components/presentation/Intro";
+import { PresentationFooter } from "@/components/presentation/PresentationFooter";
+import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
 import { ProgressNavigation } from "@/components/presentation/ProgressNavigation";
 import { scrollToSection, useActiveSection } from "@/hooks/useActiveSection";
 import { useIntroTimeline } from "@/hooks/useIntroTimeline";
-import { INTRO_SECTION, SECTIONS } from "@/lib/sections";
-
-const NAV_ITEMS = [INTRO_SECTION, ...SECTIONS.map(({ id, label }) => ({ id, label }))];
+import { INTRO_SECTION, TRACKS, type TrackId } from "@/lib/sections";
 
 const NEXT_KEYS = new Set(["ArrowDown", "PageDown", " "]);
 const PREV_KEYS = new Set(["ArrowUp", "PageUp"]);
 
-/** Root of the experience: owns the intro state, keyboard control and progress. */
-export function Presentation() {
+/**
+ * Root of the experience: owns the intro state, keyboard control and progress.
+ * `track` picks the audience; it is a plain string so a Server Component page can pass it.
+ */
+export function Presentation({ track }: { track: TrackId }) {
   const reducedMotion = useReducedMotion() ?? false;
   const { phase, skip } = useIntroTimeline(reducedMotion);
   const ready = phase === "ready";
 
-  const ids = useMemo(() => NAV_ITEMS.map((s) => s.id), []);
+  const sections = TRACKS[track].sections;
+  const navItems = useMemo(() => [INTRO_SECTION, ...sections.map(({ id, label }) => ({ id, label }))], [sections]);
+  const ids = useMemo(() => navItems.map((s) => s.id), [navItems]);
   const active = useActiveSection(ids);
 
   // Always start at the top; hold the scroll while the system boots.
@@ -31,6 +36,9 @@ export function Presentation() {
   useEffect(() => {
     document.documentElement.dataset.intro = ready ? "done" : "booting";
   }, [ready]);
+
+  // Leaving the presentation (e.g. back to the home page) must never leave the page locked
+  useEffect(() => () => void delete document.documentElement.dataset.intro, []);
 
   const goTo = useCallback(
     (index: number) => {
@@ -73,13 +81,15 @@ export function Presentation() {
           onSkip={skip}
           onStart={() => goTo(1)}
         />
-        {SECTIONS.map(({ id, label, component: SectionComponent }, i) => (
+        {sections.map(({ id, label, component: SectionComponent }, i) => (
           <SectionComponent key={id} id={id} index={i + 1} label={label} />
         ))}
       </main>
+      <PresentationFooter track={track} />
+      <SessionSwitcher track={track} visible={ready} />
 
       <ProgressNavigation
-        items={NAV_ITEMS}
+        items={navItems}
         active={active}
         visible={ready}
         onNavigate={(id) => scrollToSection(id, reducedMotion)}

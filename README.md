@@ -25,10 +25,22 @@ scripts/                  utilidades (p. ej. logo-to-white.py)
 
 Los archivos de `public/assets` se referencian desde la raíz: `/assets/logos/archivo.png`.
 
+## Rutas
+
+| Ruta | Sesión |
+|---|---|
+| `/` | Inicio: elige tu sesión |
+| `/docentes` | Mediación tecnológica y diagnóstico del aula con IA |
+| `/familias` | Hogares conectados, familias empáticas |
+
+Cada ruta es una presentación con su propio recorrido (`TRACKS` en `lib/sections.ts`);
+ambas comparten la intro y el bloque "La IA no es solamente ChatGPT".
+Los textos de cada bloque viven en `lib/content/`.
+
 ## Agregar una sección
 
 1. Crea `components/sections/MiSeccion.tsx` que reciba `SectionProps` y envuelva su contenido en `<Section>`.
-2. Añádela a `SECTIONS` en `lib/sections.ts`.
+2. Añádela al recorrido que corresponda en `TRACKS` (`lib/sections.ts`).
 
 La navegación, el progreso y el control por teclado (↑ ↓, PageUp/PageDown, espacio) se actualizan solos.
 

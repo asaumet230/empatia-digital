@@ -95,7 +95,11 @@ export const PROMPT_PARTS: readonly PromptPart[] = [
       { kind: "text", text: "También le decimos qué NO debe hacer. Por ejemplo:" },
       {
         kind: "list",
-        items: ["No pedir nombres.", "No diagnosticar problemas psicológicos.", "No pedir que identifiquen compañeros."],
+        items: [
+          "No pedir nombres.",
+          "No diagnosticar problemas psicológicos.",
+          "No pedir que identifiquen compañeros.",
+        ],
       },
       { kind: "text", text: "Esto es especialmente importante cuando trabajamos con menores de edad." },
     ],
@@ -118,6 +122,14 @@ export const PROMPT_PARTS: readonly PromptPart[] = [
     color: "#FF9F43",
   },
 ];
+
+/**
+ * Same six parts (name, color, formula example) explained for another prompt:
+ * only the quote and the explanation change.
+ */
+export const partsFor = (
+  explanations: Record<PromptPartId, Pick<PromptPart, "quote" | "explain">>,
+): readonly PromptPart[] => PROMPT_PARTS.map((part) => ({ ...part, ...explanations[part.id] }));
 
 /** Todo lo anterior a la acción: idéntico en ambas versiones. */
 const BODY = `Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.

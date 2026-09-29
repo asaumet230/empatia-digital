@@ -26,8 +26,10 @@ export function IntroHud({ phase, onSkip }: IntroHudProps) {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-20">
+      {/* Hands the corner over to the session switcher once the intro is done */}
       <motion.div
         {...fade}
+        animate={{ opacity: visible && !ready ? 1 : 0 }}
         className="absolute left-5 top-5 flex items-center gap-3 sm:left-8 sm:top-8 md:left-10 md:top-10"
       >
         <span aria-hidden="true" className="size-1.5 rounded-full bg-green-bright" />

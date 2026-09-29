@@ -1,8 +1,17 @@
-import { SURVEY_NAME, SURVEY_RESPONSES, surveyAsText } from "@/lib/content/encuesta-ejemplo";
+import {
+  ANSWERS,
+  SURVEY_NAME,
+  SURVEY_QUESTIONS,
+  SURVEY_RESPONSES,
+  countAnswers,
+  surveyAsText,
+} from "@/lib/content/encuesta-ejemplo";
+import { partsFor } from "@/lib/content/prompt-encuesta";
 import type { PromptExercise } from "@/lib/content/prompt-exercise";
+import type { Report, ReportRow, Status } from "@/lib/content/report";
 
 /* ------------------------------------------------------------------ */
-/*  Ejemplo 2 — Alertas tempranas: analizar las respuestas             */
+/*  Ejemplo 1 · Análisis — Alertas tempranas: analizar la encuesta    */
 /* ------------------------------------------------------------------ */
 
 const ROLE = "Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.";
@@ -18,7 +27,6 @@ Identificar patrones que ayuden al docente a comprender de forma sencilla cómo 
 La IA debe organizar y mostrar los patrones encontrados, pero no reemplazar la interpretación profesional del docente.
 
 ASPECTOS QUE DEBES ANALIZAR
-Presta especial atención a:
 * respeto entre compañeros;
 * inclusión y posibles situaciones de exclusión;
 * burlas o bromas que puedan generar incomodidad;
@@ -28,89 +36,40 @@ Presta especial atención a:
 * señales relacionadas con posibles situaciones de ciberacoso;
 * confianza para hablar con un adulto;
 * conocimiento de a quién acudir para pedir ayuda.
-Analiza también todas las respuestas abiertas y señala temas, preocupaciones o propuestas que aparezcan repetidamente.
+Analiza también todas las respuestas abiertas.
 No identifiques estudiantes ni intentes deducir quién escribió cada respuesta.
 
-PRIMERO: EXPLICA LA MUESTRA
-Antes del análisis indica claramente:
-* cuántos estudiantes respondieron;
-* qué porcentaje representa cada respuesta cuando sea útil;
-* si la cantidad de respuestas es pequeña, aclara que los resultados son orientativos y no representan necesariamente a todo el curso.
-PRESENTA LOS RESULTADOS DE FORMA MUY VISUAL INCLUYE GRAFICOS
-Evita entregar únicamente párrafos largos.
-1. Panorama general
-Crea una visualización que permita ver cómo respondió el grupo en cada aspecto.
-Para cada pregunta muestra claramente cuántos estudiantes respondieron:
-* Nunca
-* A veces
-* Frecuentemente
-* Siempre
-Utiliza cantidades y porcentajes.
-Ejemplo de formato:
-Respeto entre compañeros
-🔴 Nunca: 1 estudiante — 12,5 %
-🟡 A veces: 4 estudiantes — 50 %
-🟢 Frecuentemente: 2 estudiantes — 25 %
-🟢 Siempre: 1 estudiante — 12,5 %
-Después explica en 2 o 3 frases qué significa ese resultado en lenguaje sencillo.
-2. Semáforo general de convivencia
-Clasifica los aspectos del grupo utilizando este sistema:
-🟢 Fortaleza: percepción mayoritariamente positiva.
-🟡 Conviene observar: respuestas divididas o predominio de “A veces”.
-🔴 Posible alerta temprana: concentración importante de respuestas “Nunca” o señales repetidas en las respuestas abiertas.
-Aclara que el semáforo representa tendencias del grupo y no diagnósticos.
-3. Fortalezas del grupo
-Explica qué aspectos presentan mejores resultados.
-Indica siempre los datos que justifican la conclusión.
-Ejemplo:
-“6 de los 8 estudiantes indican que frecuentemente o siempre saben a qué adulto acudir.”
-4. Aspectos que conviene observar
-Señala los temas donde las respuestas estén divididas o donde aparezca frecuentemente la opción “A veces”.
-Explica qué podría significar esto en situaciones cotidianas del colegio.
-5. Posibles alertas tempranas
-Identifica únicamente señales que justifiquen una observación más cercana.
-No afirmes que existe bullying, ciberacoso, víctima o agresor.
-Utiliza expresiones como:
-* “conviene explorar”;
-* “aparece una señal”;
-* “podría requerir acompañamiento”;
-* “sería recomendable conversar sobre este tema”.
-6. Respuestas abiertas: ¿qué están diciendo los estudiantes?
-Agrupa las respuestas abiertas por temas.
-Por ejemplo:
-* WhatsApp;
-* memes;
-* fotos compartidas sin permiso;
-* exclusión de grupos;
-* bromas;
-* miedo a pedir ayuda;
-* respeto de las diferencias.
-Indica cuántas respuestas mencionan cada tema cuando sea posible.
-No muestres información que pueda permitir identificar a un estudiante.
-7. Tres recomendaciones prácticas para el docente
-Propón exactamente tres acciones concretas, sencillas y aplicables en el aula.
-Cada recomendación debe explicar:
-* qué hacer;
-* por qué hacerlo según los resultados;
-* un ejemplo sencillo de cómo implementarlo.
-Prioriza actividades preventivas, conversación grupal, normas claras de convivencia digital y mecanismos seguros para pedir ayuda.
-CIERRE
-Finaliza con una conclusión sencilla de máximo cinco líneas que responda:
-“¿Qué nos está diciendo esta encuesta sobre la convivencia del curso?”
+CÓMO QUIERO EL INFORME
+Escríbelo como si se lo explicaras a un colega docente que no sabe de estadística:
+* frases cortas y lenguaje cotidiano;
+* di “3 de 7 estudiantes” en lugar de porcentajes; no uses promedios ni decimales;
+* usa 🟢 🟡 🔴 para que se entienda de un vistazo;
+* que se pueda leer en menos de dos minutos.
+
+ESTRUCTURA
+1. En una frase: cuántos estudiantes respondieron. Si son pocos, aclara que es solo una orientación y no representa necesariamente a todo el curso.
+2. El semáforo del curso: una línea por aspecto, con su color y una frase sencilla.
+Ejemplo: 🔴 Respeto en redes sociales: 3 de 7 estudiantes dicen que en redes nunca se tratan con respeto.
+Usa 🟢 si la mayoría responde de forma positiva, 🟡 si las respuestas están divididas o predomina “A veces” y 🔴 si varios responden “Nunca” o el tema se repite en las respuestas abiertas.
+Incluye un gráfico de barras sencillo con todos los aspectos.
+3. Lo que va bien: máximo tres frases.
+4. Posibles alertas tempranas: solo las señales que justifiquen una observación más cercana. Usa expresiones como “conviene explorar”, “aparece una señal” o “sería recomendable conversar sobre este tema”.
+5. Lo que dicen los estudiantes: los temas que se repiten en las respuestas abiertas y cuántas respuestas los mencionan.
+6. Tres ideas para esta semana: cada una en máximo dos frases, con un ejemplo. Prioriza conversaciones grupales, acuerdos de convivencia digital y formas seguras de pedir ayuda.
+CIERRE: en máximo tres líneas, ¿qué nos está diciendo esta encuesta sobre la convivencia del curso?
+
 LÍMITES IMPORTANTES
 No realices diagnósticos psicológicos.
 No identifiques estudiantes.
 No determines quién es víctima, agresor o responsable.
 No afirmes que existe bullying o ciberacoso únicamente por estas respuestas.
 No exageres resultados obtenidos con pocas respuestas.
-No presentes porcentajes sin explicar también cuántos estudiantes representan.
-No utilices lenguaje técnico innecesario.
-El informe debe poder ser entendido fácilmente por un docente que no sea experto en análisis de datos.`;
+Aclara que el semáforo muestra tendencias del grupo y no diagnósticos.`;
 
 export const ALERTAS_EXERCISE: PromptExercise = {
   id: "alertas",
-  eyebrow: "Ejemplo 2",
-  title: "Alertas tempranas",
+  eyebrow: "Ejemplo 1 · Análisis",
+  title: "Alertas tempranas: analizar la encuesta",
   purpose: [
     {
       label: "¿Para qué?",
@@ -145,119 +104,109 @@ export const ALERTAS_EXERCISE: PromptExercise = {
 /*  lenguaje prudente que pide el prompt.                              */
 /* ------------------------------------------------------------------ */
 
-export type Status = "fortaleza" | "observar" | "alerta";
+const TOTAL = SURVEY_RESPONSES.length;
+const open = (i: number) => `“${SURVEY_RESPONSES[i].open}”`;
 
-export const STATUS = {
-  fortaleza: { label: "Fortaleza", color: "#35C95E" },
-  observar: { label: "Conviene observar", color: "#FFD23F" },
-  alerta: { label: "Posible alerta temprana", color: "#FF6B6B" },
-} as const satisfies Record<Status, { label: string; color: string }>;
+const row = (
+  question: number,
+  label: string,
+  status: Status,
+  reading: string,
+  quotes: readonly number[] = [],
+): ReportRow => ({
+  key: `p${question + 1}`,
+  label,
+  status,
+  counts: countAnswers(question),
+  source: `Pregunta ${question + 1}: “${SURVEY_QUESTIONS[question]}”`,
+  reading,
+  quotes: quotes.map(open),
+});
 
-/** Colors of the four answers (all questions are phrased positively: "Nunca" is the worrying one). */
-export const ANSWER_COLORS = ["#FF6B6B", "#FFD23F", "#7ED99A", "#35C95E"] as const;
-
-export interface ReportAspect {
-  /** Pregunta (0-based) en SURVEY_QUESTIONS. */
-  question: number;
-  label: string;
-  status: Status;
-  reading: string;
-  /** Respuestas abiertas relacionadas (índices en SURVEY_RESPONSES). */
-  quotes?: readonly number[];
-}
-
-export const REPORT_ASPECTS: readonly ReportAspect[] = [
-  {
-    question: 0,
-    label: "Respeto entre compañeros",
-    status: "observar",
-    reading:
-      "3 de 7 estudiantes sienten que el respeto se da solo a veces y 1 dice que nunca. Hay respeto, pero no de forma constante.",
-  },
-  {
-    question: 1,
-    label: "Inclusión",
-    status: "observar",
-    reading:
-      "Solo 3 de 7 sienten que todos participan frecuentemente o siempre. Conviene observar quién se queda por fuera en las actividades.",
-    quotes: [5],
-  },
-  {
-    question: 2,
-    label: "Bromas y burlas",
-    status: "observar",
-    reading:
-      "Nadie respondió “Nunca”, pero 3 de 7 dicen que las bromas solo a veces se hacen sin incomodar. Hay bromas que a algunos les molestan.",
-    quotes: [1],
-  },
-  {
-    question: 3,
-    label: "Grupos de WhatsApp",
-    status: "observar",
-    reading:
-      "4 de 7 perciben un trato respetuoso, pero 3 respuestas abiertas hablan de los grupos: peleas, personas sacadas de los grupos y la necesidad de reglas.",
-    quotes: [3, 4, 6],
-  },
-  {
-    question: 4,
-    label: "Respeto en redes sociales",
-    status: "alerta",
-    reading:
-      "3 de 7 estudiantes (43 %) dicen que en redes sociales nunca se tratan con respeto. Es el aspecto con más respuestas “Nunca”: conviene explorar qué está pasando ahí.",
-  },
-  {
-    question: 5,
-    label: "Fotos y videos sin permiso",
-    status: "alerta",
-    reading:
-      "Aunque 4 de 7 dicen que se pide permiso, 3 respuestas abiertas mencionan memes o fotos compartidas para hacer bromas. Aparece una señal que sería recomendable conversar con el grupo.",
-    quotes: [1, 4, 6],
-  },
-  {
-    question: 6,
-    label: "Buscar ayuda ante el ciberacoso",
-    status: "alerta",
-    reading:
-      "Solo 2 de 7 creen que los estudiantes buscan ayuda frecuentemente o siempre, y 2 dicen que nunca. Podría requerir acompañamiento para que pedir ayuda se sienta seguro.",
-    quotes: [2],
-  },
-  {
-    question: 7,
-    label: "Confianza con un adulto",
-    status: "observar",
-    reading:
-      "4 de 7 sienten confianza para hablar con un adulto, pero 3 no siempre. Una respuesta abierta ayuda a entender por qué.",
-    quotes: [2],
-  },
-  {
-    question: 8,
-    label: "Saber a quién acudir",
-    status: "fortaleza",
-    reading:
-      "6 de 7 estudiantes (86 %) saben frecuentemente o siempre a qué adulto acudir. Es la principal fortaleza del grupo.",
-  },
-];
-
-/** Temas de las respuestas abiertas (índices en SURVEY_RESPONSES). */
-export const REPORT_THEMES = [
-  { label: "Grupos de WhatsApp", responses: [3, 4, 6] },
-  { label: "Fotos, memes o bromas compartidas", responses: [1, 4, 6] },
-  { label: "Pedir ayuda sin exponerse", responses: [1, 2] },
-  { label: "Conocerse y respetar las diferencias", responses: [5] },
-] as const;
-
-export const REPORT_BLOCK = {
+export const SURVEY_REPORT: Report = {
   eyebrow: "Así se ve el resultado",
-  title: "Semáforo de convivencia",
-  sample: `Datos de ejemplo · ${SURVEY_RESPONSES.length} estudiantes`,
+  title: "Semáforo de la encuesta",
+  sample: `Datos de ejemplo · ${TOTAL} estudiantes`,
   caution: "Pocas respuestas: los resultados son orientativos y no son diagnósticos.",
   hint: { pointer: "Pasa el cursor por cada tema", touch: "Toca cada tema" },
+  total: TOTAL,
+  scale: ANSWERS,
+  rows: [
+    row(
+      0,
+      "Respeto entre compañeros",
+      "observar",
+      "3 de 7 sienten que el respeto se da solo a veces y 1 dice que nunca. Hay respeto, pero no de forma constante.",
+    ),
+    row(
+      1,
+      "Inclusión",
+      "observar",
+      "Solo 3 de 7 sienten que todos participan frecuentemente o siempre. Conviene observar quién se queda por fuera.",
+      [5],
+    ),
+    row(
+      2,
+      "Bromas y burlas",
+      "observar",
+      "Nadie respondió “Nunca”, pero 3 de 7 dicen que las bromas solo a veces se hacen sin incomodar.",
+      [1],
+    ),
+    row(
+      3,
+      "Grupos de WhatsApp",
+      "observar",
+      "4 de 7 perciben un trato respetuoso, pero 3 respuestas abiertas hablan de peleas, personas sacadas de los grupos y falta de reglas.",
+      [3, 4, 6],
+    ),
+    row(
+      4,
+      "Respeto en redes sociales",
+      "alerta",
+      "3 de 7 dicen que en redes sociales nunca se tratan con respeto. Es el tema con más “Nunca”: conviene explorar qué está pasando ahí.",
+    ),
+    row(
+      5,
+      "Fotos y videos sin permiso",
+      "alerta",
+      "Aunque 4 de 7 dicen que se pide permiso, 3 respuestas abiertas hablan de memes o fotos compartidas para hacer bromas. Aparece una señal.",
+      [1, 4, 6],
+    ),
+    row(
+      6,
+      "Buscar ayuda ante el ciberacoso",
+      "alerta",
+      "Solo 2 de 7 creen que se busca ayuda frecuentemente o siempre, y 2 dicen que nunca. Podría requerir acompañamiento.",
+      [2],
+    ),
+    row(
+      7,
+      "Confianza con un adulto",
+      "observar",
+      "4 de 7 sienten confianza para hablar con un adulto, pero 3 no siempre. Una respuesta abierta ayuda a entender por qué.",
+      [2],
+    ),
+    row(
+      8,
+      "Saber a quién acudir",
+      "fortaleza",
+      "6 de 7 saben a qué adulto acudir. Es la principal fortaleza del grupo.",
+    ),
+  ],
   keyReading: {
     title: "Lo que más llama la atención",
     text: "Saben a quién acudir (6 de 7), pero no siempre se atreven: solo 2 de 7 creen que se busca ayuda ante el ciberacoso.",
   },
-  themesTitle: "¿Qué están diciendo los estudiantes?",
-} as const;
+  list: {
+    title: "¿Qué están diciendo los estudiantes?",
+    items: [
+      { label: "Grupos de WhatsApp", value: "3 respuestas", weight: 3 },
+      { label: "Fotos, memes o bromas compartidas", value: "3 respuestas", weight: 3 },
+      { label: "Pedir ayuda sin exponerse", value: "2 respuestas", weight: 2 },
+      { label: "Conocerse y respetar las diferencias", value: "1 respuesta", weight: 1 },
+    ],
+  },
+};
 
 export const KEY_IDEA = {
   title: "La IA encuentra patrones; el docente interpreta el contexto y decide qué hacer.",
@@ -273,3 +222,95 @@ export const KEY_IDEA = {
     "Afirmar que hay bullying o ciberacoso solo por estas respuestas.",
   ],
 } as const;
+
+/* ------------------------------------------------------------------ */
+/*  ¿Cómo está construido este prompt? — explicación para docentes     */
+/* ------------------------------------------------------------------ */
+
+export const ALERTAS_PARTS = partsFor({
+  rol: {
+    quote: "Actúa como asistente de un docente…",
+    explain: [
+      { kind: "text", text: "Otra vez le decimos desde qué papel debe trabajar." },
+      {
+        kind: "text",
+        text: "La IA es un apoyo para el docente: no es un psicólogo ni alguien que juzga a los estudiantes.",
+      },
+    ],
+  },
+  contexto: {
+    quote: `Las respuestas anónimas de la encuesta “${SURVEY_NAME}”.`,
+    explain: [
+      { kind: "text", text: "Le decimos qué información va a analizar y de dónde viene:" },
+      {
+        kind: "list",
+        items: [
+          "respuestas anónimas;",
+          "de estudiantes de un mismo curso;",
+          "sobre convivencia en el colegio y en lo digital.",
+        ],
+      },
+      { kind: "text", text: "Así entiende que trabaja con temas sensibles." },
+    ],
+  },
+  objetivo: {
+    quote: "Identificar patrones que ayuden al docente a comprender cómo perciben la convivencia.",
+    explain: [
+      { kind: "text", text: "No le pedimos solo un resumen. Le pedimos patrones que ayuden a decidir." },
+      {
+        kind: "compare",
+        weak: "Resume las respuestas de la encuesta.",
+        strong: "Identifica patrones que me ayuden a entender cómo perciben la convivencia.",
+      },
+      { kind: "text", text: "Y dejamos claro que la IA organiza, pero no reemplaza la mirada del docente." },
+    ],
+  },
+  instrucciones: {
+    quote: "Escríbelo como si se lo explicaras a un colega docente…",
+    explain: [
+      { kind: "text", text: "Le decimos cómo queremos el informe:" },
+      {
+        kind: "list",
+        items: [
+          "lenguaje sencillo, sin porcentajes ni promedios;",
+          "un semáforo 🟢 🟡 🔴 por tema;",
+          "lo que va bien y las posibles alertas;",
+          "lo que dicen los estudiantes;",
+          "tres ideas para esta semana.",
+        ],
+      },
+      { kind: "text", text: "Así el resultado se entiende en menos de dos minutos." },
+    ],
+  },
+  limites: {
+    quote: "No afirmes que existe bullying o ciberacoso únicamente por estas respuestas.",
+    explain: [
+      { kind: "text", text: "Aquí los límites son todavía más importantes, porque hablamos de alertas:" },
+      {
+        kind: "list",
+        items: [
+          "No hacer diagnósticos.",
+          "No identificar estudiantes.",
+          "No decidir quién es víctima o agresor.",
+          "No exagerar resultados con pocas respuestas.",
+        ],
+      },
+      { kind: "text", text: "Por eso la IA habla de “señales” y de temas que “conviene explorar”." },
+    ],
+  },
+  accion: {
+    quote: "Accede directamente al formulario en Tally y analiza todas las respuestas.",
+    explain: [
+      {
+        kind: "text",
+        text: "Con Tally conectado, la IA va sola a buscar las respuestas: no hay que copiar ni pegar nada.",
+      },
+      {
+        kind: "compare",
+        weak: "Te voy a pegar las respuestas.",
+        strong: "Accede al formulario y analiza todas las respuestas.",
+      },
+      { kind: "text", text: "Es decir: leer los datos → encontrar patrones → entregar un informe." },
+    ],
+  },
+});

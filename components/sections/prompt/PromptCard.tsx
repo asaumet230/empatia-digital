@@ -4,27 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, Copy, Download, ExternalLink } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DURATION, transition } from "@/lib/animations";
+import { copyText } from "@/lib/clipboard";
 import { cn } from "@/lib/cn";
 import type { PromptVariant } from "@/lib/content/prompt-exercise";
-
-/** Clipboard API first; a hidden textarea as fallback for locked-down lab browsers. */
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.setAttribute("readonly", "");
-    area.style.position = "fixed";
-    area.style.opacity = "0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
-}
 
 /** Big, obvious actions: copy (primary) and open in ChatGPT, plus an optional download. */
 export function PromptActions({ variant }: { variant: PromptVariant }) {
@@ -112,7 +94,7 @@ export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange
                 on ? "text-white" : "text-gray-muted hover:text-gray-text",
               )}
             >
-              Prompt {v.label.toLowerCase()}
+              Prompt {v.label[0].toLowerCase() + v.label.slice(1)}
               {on && (
                 <motion.span
                   layoutId={`${layoutPrefix}-tab`}

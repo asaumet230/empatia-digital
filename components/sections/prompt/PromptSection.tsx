@@ -6,15 +6,25 @@ import { Section } from "@/components/presentation/Section";
 import { PromptActions, PromptPreview } from "@/components/sections/prompt/PromptCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
+import { ShieldCheck } from "lucide-react";
 import { ALERTAS_EXERCISE } from "@/lib/content/prompt-alertas";
 import { ENCUESTA_EXERCISE } from "@/lib/content/prompt-encuesta";
 import type { PromptExercise } from "@/lib/content/prompt-exercise";
+import { RUBRICA_ANALISIS_EXERCISE, RUBRICA_EXERCISE } from "@/lib/content/prompt-rubrica";
 import type { SectionProps } from "@/types/presentation";
 
 export const PromptSection = (props: SectionProps) => <PromptExerciseSection {...props} exercise={ENCUESTA_EXERCISE} />;
 
 export const AlertPromptSection = (props: SectionProps) => (
   <PromptExerciseSection {...props} exercise={ALERTAS_EXERCISE} />
+);
+
+export const RubricPromptSection = (props: SectionProps) => (
+  <PromptExerciseSection {...props} exercise={RUBRICA_EXERCISE} />
+);
+
+export const RubricAnalysisPromptSection = (props: SectionProps) => (
+  <PromptExerciseSection {...props} exercise={RUBRICA_ANALISIS_EXERCISE} />
 );
 
 /**
@@ -66,6 +76,12 @@ function PromptExerciseSection({ id, index, label, exercise }: SectionProps & { 
           <motion.div variants={fadeUp} className="mt-10">
             <PromptActions variant={variant} />
             <p className="mt-5 max-w-xl text-sm text-gray-muted">{variant.note}</p>
+            {exercise.notice && (
+              <p className="mt-4 flex max-w-xl items-start gap-3 rounded-xl border border-yellow/40 bg-yellow/[0.05] px-4 py-3 text-sm leading-snug text-gray-light md:text-base">
+                <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-yellow" strokeWidth={1.75} />
+                {exercise.notice}
+              </p>
+            )}
           </motion.div>
         </div>
 

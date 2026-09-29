@@ -7,7 +7,9 @@ import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, EASE, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
-import { PROMPT_BLOCK, PROMPT_PARTS, type PromptBlock } from "@/lib/content/prompt-encuesta";
+import { ALERTAS_PARTS } from "@/lib/content/prompt-alertas";
+import { PROMPT_BLOCK, PROMPT_PARTS, type PromptBlock, type PromptPart } from "@/lib/content/prompt-encuesta";
+import { RUBRICA_PARTS } from "@/lib/content/prompt-rubrica";
 import type { SectionProps } from "@/types/presentation";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -16,13 +18,17 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * "¿Cómo está construido?" — one part of the prompt at a time, big, so the presenter
  * can explain it at their own pace. ← → (free: slides use ↑ ↓) move between parts.
  */
-export function PromptPartsSection({ id, index, label }: SectionProps) {
+export const PromptPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={PROMPT_PARTS} />;
+export const AlertPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={ALERTAS_PARTS} />;
+export const RubricPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={RUBRICA_PARTS} />;
+
+function PartsStepper({ id, index, label, parts }: SectionProps & { parts: readonly PromptPart[] }) {
   // Direction travels with the step so the slide-in animation knows where it came from
   const [{ step, direction }, setState] = useState({ step: 0, direction: 1 });
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.6 });
-  const part = PROMPT_PARTS[step];
-  const last = PROMPT_PARTS.length - 1;
+  const part = parts[step];
+  const last = parts.length - 1;
 
   const goTo = (next: number | ((current: number) => number)) =>
     setState((s) => {
@@ -65,7 +71,7 @@ export function PromptPartsSection({ id, index, label }: SectionProps) {
 
         {/* Progress: the six parts, clickable */}
         <motion.ol variants={fadeUp} className="mt-8 grid grid-cols-6 gap-2 md:gap-3">
-          {PROMPT_PARTS.map((p, i) => {
+          {parts.map((p, i) => {
             const on = i === step;
             const seen = i <= step;
             return (
@@ -120,7 +126,7 @@ export function PromptPartsSection({ id, index, label }: SectionProps) {
             >
               {/* Name on its own row: long words (INSTRUCCIONES) never run into the text */}
               <p className="font-mono text-sm tracking-[0.2em]" style={{ color: part.color }}>
-                {pad(step + 1)} / {pad(PROMPT_PARTS.length)}
+                {pad(step + 1)} / {pad(parts.length)}
               </p>
               <p
                 className="mt-2 break-words font-display text-[clamp(2.25rem,6vw,4.5rem)] font-extrabold uppercase leading-none tracking-[-0.03em]"
@@ -162,9 +168,9 @@ export function PromptPartsSection({ id, index, label }: SectionProps) {
             onClick={() => goTo(step + 1)}
             disabled={step === last}
             className="inline-flex h-12 items-center gap-3 rounded-full border px-6 font-semibold transition-colors disabled:opacity-30"
-            style={{ borderColor: PROMPT_PARTS[Math.min(step + 1, last)].color }}
+            style={{ borderColor: parts[Math.min(step + 1, last)].color }}
           >
-            {step === last ? "Última parte" : `Siguiente: ${PROMPT_PARTS[step + 1].name}`}
+            {step === last ? "Última parte" : `Siguiente: ${parts[step + 1].name}`}
             <ArrowRight aria-hidden="true" className="size-5" />
           </button>
           <span className="hud-label ml-2 hidden [@media(hover:hover)]:inline">o usa las flechas ← →</span>
@@ -193,11 +199,15 @@ function Block({ block }: { block: PromptBlock }) {
       return (
         <div className="grid gap-3 text-base md:text-lg">
           <p className="flex items-start gap-3 rounded-xl border border-white/10 px-4 py-3 text-gray-muted">
-            <span aria-label="Menos claro" className="font-bold text-[#FF7A7A]">✕</span>
+            <span aria-label="Menos claro" className="font-bold text-[#FF7A7A]">
+              ✕
+            </span>
             “{block.weak}”
           </p>
           <p className="flex items-start gap-3 rounded-xl border border-green-bright/40 bg-green/10 px-4 py-3 text-gray-light">
-            <span aria-label="Más claro" className="font-bold text-green-bright">✓</span>
+            <span aria-label="Más claro" className="font-bold text-green-bright">
+              ✓
+            </span>
             “{block.strong}”
           </p>
         </div>
