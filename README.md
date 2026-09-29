@@ -33,6 +33,7 @@ Los archivos de `public/assets` se referencian desde la raíz: `/assets/logos/ar
 |---|---|
 | `/` | Inicio: elige tu sesión |
 | `/docentes` | Mediación tecnológica y diagnóstico del aula con IA |
+| `/estudiantes` | Ciudadanía digital y creadores de paz con IA (en construcción) |
 | `/familias` | Hogares conectados, familias empáticas |
 
 Cada ruta es una presentación con su propio recorrido (`TRACKS` en `lib/sections.ts`);

@@ -1,5 +1,10 @@
-/** Public address (QR codes, metadata). `SITE_URL` overrides it, e.g. for a custom domain. */
-export const SITE_URL = (process.env.SITE_URL ?? "https://empatia-digital.vercel.app").replace(/\/$/, "");
+/**
+ * Public address (QR codes, metadata). `SITE_URL` overrides it, e.g. for a custom domain.
+ * While developing (`npm run dev`) it points to the local server.
+ */
+const DEFAULT_SITE_URL =
+  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://empatia-digital.vercel.app";
+export const SITE_URL = (process.env.SITE_URL ?? DEFAULT_SITE_URL).replace(/\/$/, "");
 
 export const BRAND = {
   name: "EmpatIA Digital",

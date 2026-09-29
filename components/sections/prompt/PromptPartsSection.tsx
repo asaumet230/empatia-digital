@@ -7,6 +7,7 @@ import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, EASE, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
+import { CAMPAIGN_PARTS } from "@/lib/content/estudiantes";
 import { ALERTAS_PARTS } from "@/lib/content/prompt-alertas";
 import { PROMPT_BLOCK, PROMPT_PARTS, type PromptBlock, type PromptPart } from "@/lib/content/prompt-encuesta";
 import { RUBRICA_PARTS } from "@/lib/content/prompt-rubrica";
@@ -21,6 +22,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export const PromptPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={PROMPT_PARTS} />;
 export const AlertPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={ALERTAS_PARTS} />;
 export const RubricPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={RUBRICA_PARTS} />;
+export const CampaignPartsSection = (props: SectionProps) => <PartsStepper {...props} parts={CAMPAIGN_PARTS} />;
 
 function PartsStepper({ id, index, label, parts }: SectionProps & { parts: readonly PromptPart[] }) {
   // Direction travels with the step so the slide-in animation knows where it came from

@@ -15,6 +15,7 @@ y se avanza con scroll, con el teclado o con un presentador inalámbrico.
 |---|---|---|
 | `/` | Todos | Inicio: "Elige tu sesión" |
 | `/docentes` | Docentes | *Mediación tecnológica y diagnóstico del aula con IA* (2 h) |
+| `/estudiantes` | Estudiantes | *Ciudadanía digital y creadores de paz con IA* (1 h, en construcción) |
 | `/familias` | Padres, madres y acudientes | *Hogares conectados, familias empáticas* (2 h) |
 
 - **Códigos QR:** en el inicio, cada tarjeta tiene su QR. En la sala de informática los asistentes lo
@@ -106,6 +107,39 @@ Cada ejercicio tiene la misma plantilla: *¿Para qué? · ¿Qué vas a obtener? 
 Los 10 casos: videojuegos · demasiado tiempo con el celular · celular hasta tarde · celular en las comidas ·
 compartió una foto sin permiso · memes y burlas · algo pasó en redes y no quiere hablar · exclusión o posible
 ciberacoso · quiere una red social · "tú también estás todo el día con el celular".
+
+---
+
+## 5b. Sesión para estudiantes (`/estudiantes`) — 1 hora, en construcción
+
+Comparte las tres primeras diapositivas del bloque de IA (sin "Acompañar", que le habla a los adultos).
+
+**"Antes de empezar":** ciudadanía digital, ciberacoso y cómo las redes agrandan un problema.
+
+**Actividad "¿Broma o problema?" (20 min):** 1 votación (Mentimeter o a mano alzada) y 3 prompts de ChatGPT.
+Los prompts 2 y 3 se pegan **en el mismo chat** del prompt 1 (por eso no tienen "Abrir en ChatGPT").
+
+| Min | Diapositiva | Qué dice o hace el presentador |
+|---|---|---|
+| 0–9 | El juego | Explicar la actividad y pulsar "Empezar". 5 escenas proyectadas, 40 segundos para decidir cada una (si se acaba, el juego elige al azar), cada una con otro personaje; la clase vota cada decisión. Ninguna opción es "la correcta": todas tienen un costo. El contador 👁️ muestra cuántas personas ven la foto. Si en la escena 1 guardan la foto, después de la escena 4 "vuelve" |
+| 9–12 | Pregunté a la IA | Prompt 1 (ya trae el caso). "Ahora viene lo interesante: ¿la IA acertó?" |
+| 12–16 | La IA propone | Prompt 2. Votación (abierta): "¿Qué podría salir mal?" Leer máximo 3 respuestas |
+| 16–18 | La IA mejora | Pegar 2 o 3 respuestas en el prompt 3. "La IA propuso. Ustedes cuestionaron. Y ahora la IA mejoró" |
+| 18–20 | Tú decides | "¿Qué aprendimos?" (dos respuestas) y la frase final |
+
+**Sesión 2 · "Creadores de paz" (~25 min):** en equipos crean una pieza de campaña con ChatGPT (textos e imagen).
+
+| Min | Diapositiva | Qué dice o hace el presentador |
+|---|---|---|
+| 0–3 | Arma tu prompt | Mostrar el armador: se eligen tema, formato, estilo y colores y el prompt se arma solo con la fórmula |
+| 3–6 | ¿Cómo está construido? | Las 6 partes del prompt de la campaña, una a la vez con ← → |
+| 6–8 | Creadores de paz | Armar equipos. "Sortear reto" le da a cada equipo un tema y un formato; cada equipo vuelve al armador, arma su prompt y lo copia |
+| 8–20 | Crea y mejora | ChatGPT propone 3 frases, eligen una y crea la imagen. Luego piden un cambio con los prompts de mejora |
+| 20–25 | Galería | 30 segundos por equipo y votación: "¿Qué pieza usarían en el colegio?" |
+
+Crear imágenes en ChatGPT gratis tiene un límite diario y puede pedir iniciar sesión. **Plan B:** los equipos arman el prompt y el presentador genera las imágenes desde su cuenta.
+
+Imágenes del caso: `public/assets/images/algoritmo/escena-1..5.jpg`. Textos: `lib/content/estudiantes.ts`.
 
 ---
 

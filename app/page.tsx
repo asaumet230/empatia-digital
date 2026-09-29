@@ -1,4 +1,4 @@
-import { ArrowRight, GraduationCap, House, ScanLine, type LucideIcon } from "lucide-react";
+import { ArrowRight, Backpack, GraduationCap, House, ScanLine, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
@@ -21,8 +21,14 @@ const AUDIENCES: readonly Audience[] = [
     icon: GraduationCap,
   },
   {
+    href: "/estudiantes",
+    who: "Soy estudiante",
+    session: "Ciudadanía digital y creadores de paz con IA",
+    icon: Backpack,
+  },
+  {
     href: "/familias",
-    who: "Soy padre, madre o acudiente",
+    who: "Soy padre",
     session: "Hogares conectados, familias empáticas",
     icon: House,
   },
@@ -39,7 +45,7 @@ export default function Home() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--navy)_0%,transparent_70%)]"
       />
 
-      <div className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:px-10">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:px-10">
         <h1 className="font-display text-[clamp(2.75rem,10vw,7rem)] font-extrabold leading-[0.9] tracking-[-0.04em]">
           Empat<span className="text-yellow text-glow-yellow">IA</span>
           <span className="mt-3 block text-[0.3em] font-light uppercase tracking-[0.55em] text-gray-light [margin-right:-0.55em]">
@@ -49,7 +55,7 @@ export default function Home() {
         <p className="mt-6 text-lg text-gray-text md:text-xl">{BRAND.tagline}</p>
 
         <p className="hud-label mt-14">Elige tu sesión</p>
-        <ul className="mt-5 grid w-full gap-4 md:grid-cols-2 md:gap-6">
+        <ul className="mt-5 grid w-full gap-4 md:gap-6 lg:grid-cols-3">
           {AUDIENCES.map(({ href, who, session, icon: Icon }) => (
             <li key={href}>
               <Link
