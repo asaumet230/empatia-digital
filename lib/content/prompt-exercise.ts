@@ -10,6 +10,16 @@ export interface PromptVariant {
   text: string;
   /** Archivo opcional para descargar junto al prompt. */
   download?: { href: string; label: string };
+  /** Videos opcionales con los pasos previos (p. ej. conectar Tally). */
+  guide?: VideoGuide;
+}
+
+export interface VideoGuide {
+  /** Texto del botón que abre la guía. */
+  button: string;
+  title: string;
+  note: string;
+  steps: readonly { label: string; text: string; src: string; poster: string }[];
 }
 
 export interface PromptExercise {

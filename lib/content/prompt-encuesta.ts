@@ -1,3 +1,4 @@
+import { TALLY_GUIDE } from "@/lib/content/tally-guia";
 import type { PromptExercise, PromptVariant } from "@/lib/content/prompt-exercise";
 
 /* ------------------------------------------------------------------ */
@@ -188,7 +189,8 @@ const VARIANTS: readonly PromptVariant[] = [
   {
     id: "tally",
     label: "Con Tally",
-    note: "ChatGPT crea el formulario por ti. Necesita el plugin de Tally conectado en ChatGPT.",
+    note: "ChatGPT crea el formulario por ti. Necesita el complemento de Tally conectado en ChatGPT (funciona con la cuenta gratuita).",
+    guide: TALLY_GUIDE,
     text: `${BODY}Después de diseñar las preguntas, crea el formulario directamente en Tally usando la conexión disponible.
 
 Configúralo para que:

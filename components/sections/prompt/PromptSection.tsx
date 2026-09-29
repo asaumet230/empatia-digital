@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Section } from "@/components/presentation/Section";
 import { PromptActions, PromptPreview } from "@/components/sections/prompt/PromptCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { VideoGuide } from "@/components/ui/VideoGuide";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { ShieldCheck } from "lucide-react";
 import { ALERTAS_EXERCISE } from "@/lib/content/prompt-alertas";
@@ -76,6 +77,11 @@ function PromptExerciseSection({ id, index, label, exercise }: SectionProps & { 
           <motion.div variants={fadeUp} className="mt-10">
             <PromptActions variant={variant} />
             <p className="mt-5 max-w-xl text-sm text-gray-muted">{variant.note}</p>
+            {variant.guide && (
+              <div className="mt-4">
+                <VideoGuide guide={variant.guide} />
+              </div>
+            )}
             {exercise.notice && (
               <p className="mt-4 flex max-w-xl items-start gap-3 rounded-xl border border-yellow/40 bg-yellow/[0.05] px-4 py-3 text-sm leading-snug text-gray-light md:text-base">
                 <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-yellow" strokeWidth={1.75} />

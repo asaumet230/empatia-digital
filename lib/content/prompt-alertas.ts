@@ -7,6 +7,7 @@ import {
   surveyAsText,
 } from "@/lib/content/encuesta-ejemplo";
 import { partsFor } from "@/lib/content/prompt-encuesta";
+import { TALLY_GUIDE } from "@/lib/content/tally-guia";
 import type { PromptExercise } from "@/lib/content/prompt-exercise";
 import type { Report, ReportRow, Status } from "@/lib/content/report";
 
@@ -93,6 +94,7 @@ export const ALERTAS_EXERCISE: PromptExercise = {
       id: "tally",
       label: "Con Tally",
       note: `ChatGPT lee las respuestas directamente de Tally. Para analizar tu propio formulario, cambia “${SURVEY_NAME}” por su nombre.`,
+      guide: TALLY_GUIDE,
       text: `${ROLE}\n${TASK_TALLY}\n${ANALYSIS}`,
     },
   ],
