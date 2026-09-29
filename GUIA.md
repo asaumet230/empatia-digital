@@ -116,15 +116,15 @@ Comparte las tres primeras diapositivas del bloque de IA (sin "Acompañar", que 
 
 **"Antes de empezar":** ciudadanía digital, ciberacoso y cómo las redes agrandan un problema.
 
-**Actividad "¿Broma o problema?" (20 min):** 1 votación (Mentimeter o a mano alzada) y 3 prompts de ChatGPT.
-Los prompts 2 y 3 se pegan **en el mismo chat** del prompt 1 (por eso no tienen "Abrir en ChatGPT").
+**Actividad "¿Broma o problema?" (20 min):** 1 votación (Mentimeter o a mano alzada) y 2 prompts de ChatGPT.
+El prompt 2 se pega **en el mismo chat** del prompt 1 (por eso no tienen "Abrir en ChatGPT").
+Cada prompt pide una respuesta visual (tablas, barras con emojis, flechas) y trae un menú de palabras clave para seguir la conversación (p. ej. PONTE EN SU LUGAR, SIMULA, MENSAJE). Después de cada uno hay una diapositiva "¿Cómo está construido este prompt?" con sus 6 partes.
 
 | Min | Diapositiva | Qué dice o hace el presentador |
 |---|---|---|
-| 0–9 | El juego | Explicar la actividad y pulsar "Empezar". 5 escenas proyectadas, 40 segundos para decidir cada una (si se acaba, el juego elige al azar), cada una con otro personaje; la clase vota cada decisión. Ninguna opción es "la correcta": todas tienen un costo. El contador 👁️ muestra cuántas personas ven la foto. Si en la escena 1 guardan la foto, después de la escena 4 "vuelve" |
+| 0–9 | Tú eres el algoritmo | Pulsar "Empezar". La clase es el algoritmo de una red inventada (Scrollia) y debe llegar a 40.000 «me gusta». En 6 rondas, cada vez más rápidas (20 → 8 s), elige qué publicación impulsar; burlarse de Valentina siempre da más. Si se acaba el tiempo, el algoritmo elige solo la que más da. Al final: el puntaje, los mensajes de Valentina según lo impulsado y cómo funciona un algoritmo real. **No adelantar la lección** |
 | 9–12 | Pregunté a la IA | Prompt 1 (ya trae el caso). "Ahora viene lo interesante: ¿la IA acertó?" |
 | 12–16 | La IA propone | Prompt 2. Votación (abierta): "¿Qué podría salir mal?" Leer máximo 3 respuestas |
-| 16–18 | La IA mejora | Pegar 2 o 3 respuestas en el prompt 3. "La IA propuso. Ustedes cuestionaron. Y ahora la IA mejoró" |
 | 18–20 | Tú decides | "¿Qué aprendimos?" (dos respuestas) y la frase final |
 
 **Sesión 2 · "Creadores de paz" (~25 min):** en equipos crean una pieza de campaña con ChatGPT (textos e imagen).
@@ -139,7 +139,7 @@ Los prompts 2 y 3 se pegan **en el mismo chat** del prompt 1 (por eso no tienen 
 
 Crear imágenes en ChatGPT gratis tiene un límite diario y puede pedir iniciar sesión. **Plan B:** los equipos arman el prompt y el presentador genera las imágenes desde su cuenta.
 
-Imágenes del caso: `public/assets/images/algoritmo/escena-1..5.jpg`. Textos: `lib/content/estudiantes.ts`.
+Por ahora las publicaciones del juego usan emojis; cada una acepta una imagen (`image`). Textos: `lib/content/estudiantes.ts`.
 
 ---
 

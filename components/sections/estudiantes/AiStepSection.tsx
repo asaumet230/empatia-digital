@@ -12,7 +12,6 @@ import type { SectionProps } from "@/types/presentation";
 
 export const AiPerspectivesSection = (props: SectionProps) => <AiStepSection {...props} step={AI_STEPS.miradas} />;
 export const AiProposeSection = (props: SectionProps) => <AiStepSection {...props} step={AI_STEPS.propone} />;
-export const AiImproveSection = (props: SectionProps) => <AiStepSection {...props} step={AI_STEPS.mejora} />;
 
 /**
  * One live step with ChatGPT: the prompt to paste, and what the class does with the answer.
@@ -70,7 +69,7 @@ function AiStepSection({ id, index, label, step }: SectionProps & { step: AiStep
           </motion.div>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center text-center">
           <motion.p variants={fadeUp} className="hud-label">
             {step.then.label}
           </motion.p>
@@ -84,7 +83,7 @@ function AiStepSection({ id, index, label, step }: SectionProps & { step: AiStep
             {step.then.text}
           </motion.p>
           {pollQuestion && (
-            <PollCard poll={{ question: pollQuestion, options: [] }} className="mt-8" />
+            <PollCard poll={{ question: pollQuestion, options: [] }} className="mt-8 w-full" />
           )}
         </div>
       </motion.div>
