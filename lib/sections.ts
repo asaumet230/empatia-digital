@@ -1,11 +1,10 @@
 import { AlertKeyIdeaSection } from "@/components/sections/alertas/AlertKeyIdeaSection";
 import {
-  AiImproveSection,
   AiPerspectivesSection,
   AiProposeSection,
 } from "@/components/sections/estudiantes/AiStepSection";
+import { AlgorithmGameSection } from "@/components/sections/estudiantes/AlgorithmGameSection";
 import { ClosingSection } from "@/components/sections/estudiantes/ClosingSection";
-import { ConflictGameSection } from "@/components/sections/estudiantes/ConflictGameSection";
 import { CreateImproveSection } from "@/components/sections/estudiantes/CreateImproveSection";
 import { GallerySection } from "@/components/sections/estudiantes/GallerySection";
 import { PeaceChallengeSection } from "@/components/sections/estudiantes/PeaceChallengeSection";
@@ -23,7 +22,9 @@ import { PromptFormulaSection } from "@/components/sections/prompt/PromptFormula
 import {
   AlertPartsSection,
   CampaignPartsSection,
+  MiradasPartsSection,
   PromptPartsSection,
+  ProponePartsSection,
   RubricPartsSection,
 } from "@/components/sections/prompt/PromptPartsSection";
 import {
@@ -78,11 +79,12 @@ export const TRACKS = {
       // The "Acompañar" bridge speaks to adults, so students only get the first part of the IA block
       ...iaBlock(AiAccompanySchoolSection).slice(0, 3),
       { id: "estudiantes-intro", label: "Antes de empezar", component: StudentIntroSection },
-      // "¿Broma o problema?": jugar → IA → cuestionar a la IA → la IA mejora
-      { id: "algoritmo-juego", label: "El juego", component: ConflictGameSection },
+      // "¿Broma o problema?": jugar → IA → cuestionar a la IA
+      { id: "algoritmo-juego", label: "El juego", component: AlgorithmGameSection },
       { id: "algoritmo-ia-miradas", label: "Pregunté a la IA", component: AiPerspectivesSection },
+      { id: "algoritmo-ia-miradas-partes", label: "Partes: miradas", component: MiradasPartsSection },
       { id: "algoritmo-ia-propone", label: "La IA propone", component: AiProposeSection },
-      { id: "algoritmo-ia-mejora", label: "La IA mejora", component: AiImproveSection },
+      { id: "algoritmo-ia-propone-partes", label: "Partes: propone", component: ProponePartsSection },
       { id: "algoritmo-cierre", label: "Tú decides", component: ClosingSection },
       // Sesión 2 — "Creadores de paz": campañas con ChatGPT
       { id: "paz-prompt", label: "Arma tu prompt", component: PromptBuilderSection },

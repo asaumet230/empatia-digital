@@ -62,8 +62,8 @@ export interface Poll {
 /** Where the class votes: Mentimeter, or hands up if the connection fails. */
 export const POLL_HINT = "Vota en Mentimeter · o a mano alzada";
 
-/** The story in words, so ChatGPT knows which case it is analyzing. */
-const CASE_TEXT = `En el grupo de chat de un curso de noveno grado, Mateo comparte una foto que le tomó a su compañera Valentina sin que ella se diera cuenta. Otro compañero le pone orejas de conejo a la foto y varios escriben burlas y emojis de risa. Después, alguien toma una captura y la publica en una red social de videos cortos con el texto "Siempre en la suya… 😂". En menos de una hora tiene cientos de comentarios y la han compartido más de 300 veces. Valentina escribe en el grupo que no dio permiso, que se siente muy incómoda y pide que lo borren. Varios le responden: "Era solo una broma" y "No exageres".`;
+/** The story of the game in words, so ChatGPT knows which case it is analyzing. */
+const CASE_TEXT = `En Scrollia, la red social que usa todo el colegio, Mateo publica una foto de su compañera Valentina que le tomó a escondidas en clase. Tomás le pone orejas de conejo, los comentarios "Siempre en la suya 😂" se multiplican y alguien hace un remix que llega a miles de personas, incluso de otros colegios. Valentina escribe: "Por favor, borren esa foto. No di permiso". Algunos le responden "Tampoco exageres" y Cami escribe "Eso no da risa. Ya paren". Mientras tanto, el algoritmo de Scrollia mostraba más estas publicaciones porque eran las que más "me gusta" daban.`;
 
 export interface AiStep {
   title: string;
@@ -78,34 +78,62 @@ export interface AiStep {
 export const AI_STEPS = {
   miradas: {
     title: "Le preguntamos a la IA",
-    lead: "Tres puntos de vista del mismo caso.",
-    prompt: `Este es un caso ficticio de un colegio:
+    lead: "Tres miradas del mismo caso, con tablas, termómetros y flechas.",
+    prompt: `ROL: Actúa como facilitador de un taller de convivencia digital para estudiantes de 14 a 17 años. Hablas de forma cercana, clara y sin sermones.
 
+CONTEXTO: Estamos en un colegio público de Barranquilla, Colombia. Acabamos de jugar un juego en el que fuimos el algoritmo de una red social. Este es el caso (ficticio):
 ${CASE_TEXT}
 
-Analiza este caso desde 3 puntos de vista:
-1. la persona afectada,
-2. quien publicó la imagen,
-3. quienes comentaron o compartieron.
+OBJETIVO: Ayudarnos a entender cómo se vive este conflicto desde 3 lugares: Valentina, quienes publicaron o editaron la foto, y quienes reaccionaron, comentaron o compartieron.
 
-Para cada uno dime en una frase:
-- qué podría estar sintiendo,
-- qué podría estar pensando,
-- qué podría hacer ahora.
+INSTRUCCIONES: Responde con este formato visual:
+1. 🎭 Una tabla con 3 columnas (Valentina | Quienes publicaron | Quienes reaccionaron) y 3 filas: ¿Qué podría sentir? · ¿Qué podría pensar? · ¿Qué podría hacer ahora? Una frase corta por casilla.
+2. 🌡️ Un termómetro de emociones para cada uno, hecho con emojis. Ejemplo: Vergüenza 🟥🟥🟥🟥⬜. Máximo 3 emociones por persona. Si puedes crear gráficas, haz además una gráfica de barras con estas emociones.
+3. 🔗 Una cadena de causa y efecto con flechas que muestre cómo creció el conflicto (Foto → … → …). Marca con 🤖 los momentos en que el algoritmo lo hizo más grande.
+4. 🔍 "Lo que casi nadie nota": un detalle de cada mirada que suele pasarse por alto.
+5. 🗳️ Termina con una pregunta para el curso con opciones A, B y C, y espera nuestra respuesta antes de seguir.
 
-No asumas que sabes exactamente lo que sienten. Usa un lenguaje sencillo, para estudiantes de 14 a 17 años.`,
+Después muestra este menú y úsalo cuando escribamos una de estas palabras:
+• PONTE EN SU LUGAR [nombre] → habla en primera persona como ese personaje, en 4 frases.
+• ALGORITMO → explica con un diagrama de flechas qué hizo el algoritmo en este caso.
+• ZOOM [persona] → profundiza en esa mirada.
+• ¿Y SI…? [un cambio] → cuenta cómo habría cambiado la historia.
+
+LÍMITES: Usa "podría" en lugar de afirmar lo que alguien siente. No culpes a Valentina. No etiquetes a nadie como malo ni hagas diagnósticos. Lenguaje sencillo y frases cortas.
+
+ACCIÓN: Empieza ya con la tabla.`,
     sameChat: false,
     then: { label: "Ahora viene lo interesante", text: "¿La IA acertó?" },
   },
   propone: {
     title: "La IA propone",
-    lead: "En el juego ustedes decidieron. Ahora veamos qué propone la IA.",
-    prompt: `En el caso anterior, el conflicto sigue creciendo.
+    lead: "En el juego ustedes decidieron. Ahora la IA propone jugadas.",
+    prompt: `ROL: Ahora actúa como un entrenador de convivencia que propone jugadas reales para estudiantes de 14 a 17 años.
 
-Propón 3 acciones que un estudiante de 14 a 17 años podría hacer AHORA para detenerlo.
+CONTEXTO: En el caso anterior, el conflicto sigue creciendo y la foto sigue circulando.
 
-Las acciones deben ser realistas, no agresivas y no exponer nuevamente a la persona afectada.
-Explica cada una en máximo una frase.`,
+OBJETIVO: Proponer 3 acciones que un estudiante podría hacer AHORA para detener el conflicto.
+
+INSTRUCCIONES: Presenta cada acción como una tarjeta, así:
+━━━━━━━━━━
+🎯 ACCIÓN 1: nombre corto
+📝 Qué hacer: una frase
+⚡ Dificultad: de ⭐ a ⭐⭐⭐
+💥 Impacto en el conflicto: 🟩🟩🟩⬜⬜
+🛡️ Protege a Valentina: sí / en parte
+━━━━━━━━━━
+Después, una tabla que compare las 3 acciones: rapidez, riesgo y quién la puede hacer.
+No digas cuál es la mejor ni cuáles son sus debilidades: el curso tiene la misión de encontrar qué podría salir mal.
+
+Muestra este menú y úsalo cuando escribamos una de estas palabras:
+• PISTA → da una pista sobre una debilidad, sin decirla completa.
+• SIMULA [número] → cuenta en 3 escenas cortas, con emojis, qué pasaría si alguien hace esa acción.
+• VISTA DE VALENTINA → cómo podría ver ella cada acción.
+• MÁS OPCIONES → propone 2 acciones distintas.
+
+LÍMITES: Acciones realistas y no agresivas. Nada que exponga otra vez a Valentina, ni venganzas, ni publicar datos de nadie.
+
+ACCIÓN: Muestra ya las 3 tarjetas.`,
     sameChat: true,
     then: {
       label: "Su misión",
@@ -113,19 +141,117 @@ Explica cada una en máximo una frase.`,
       poll: "Si un estudiante hiciera exactamente lo que dice la IA, ¿qué podría salir mal?",
     },
   },
-  mejora: {
-    title: "La IA mejora",
-    lead: "Le devolvemos a la IA lo que ustedes encontraron.",
-    prompt: `Los estudiantes detectaron estos problemas en tus soluciones:
-
-[PEGA AQUÍ 2 O 3 RESPUESTAS DE LOS ESTUDIANTES]
-
-Mejora tus 3 soluciones teniendo en cuenta esas críticas.
-Hazlas más realistas para adolescentes y evita que la intervención empeore el conflicto.`,
-    sameChat: true,
-    then: { label: "Lo que acaba de pasar", text: "La IA propuso. Ustedes cuestionaron. Y ahora la IA mejoró." },
-  },
 } as const satisfies Record<string, AiStep>;
+
+/** "¿Cómo está construido este prompt?" for each of the three AI steps. */
+export const MIRADAS_PARTS = partsFor({
+  rol: {
+    quote: "Actúa como facilitador de un taller de convivencia digital…",
+    explain: [
+      { kind: "text", text: "Le decimos a la IA qué papel debe asumir." },
+      { kind: "text", text: "Y cómo debe hablar: cercana, clara y sin sermones. Así la respuesta suena a conversación, no a regaño." },
+    ],
+  },
+  contexto: {
+    quote: "Colegio de Barranquilla. Acabamos de jugar a ser el algoritmo. Este es el caso…",
+    explain: [
+      { kind: "text", text: "Le contamos dónde estamos, qué acabamos de hacer y la historia completa." },
+      { kind: "text", text: "Sin el caso, la IA respondería cualquier cosa sobre ciberacoso. Con el caso, habla de Valentina, de Mateo y de nosotros." },
+    ],
+  },
+  objetivo: {
+    quote: "Entender el conflicto desde 3 lugares: Valentina, quienes publicaron y quienes reaccionaron.",
+    explain: [
+      { kind: "text", text: "Aquí decimos para qué la usamos: ponernos en el lugar de cada uno." },
+      {
+        kind: "compare",
+        weak: "¿Qué opinas del caso?",
+        strong: "Ayúdanos a entender el conflicto desde 3 lugares distintos.",
+      },
+    ],
+  },
+  instrucciones: {
+    quote: "Tabla · termómetro de emociones · cadena de flechas · pregunta A, B, C · menú de palabras",
+    explain: [
+      { kind: "text", text: "Le pedimos la forma exacta de la respuesta, para que sea visual:" },
+      {
+        kind: "list",
+        items: [
+          "una tabla para comparar las 3 miradas;",
+          "barras con emojis para las emociones;",
+          "flechas para ver cómo creció el conflicto;",
+          "una pregunta para votar y un menú para seguir jugando.",
+        ],
+      },
+    ],
+  },
+  limites: {
+    quote: "Usa «podría». No culpes a Valentina. No etiquetes a nadie.",
+    explain: [
+      { kind: "text", text: "Nadie puede saber exactamente lo que siente otra persona, ni siquiera la IA." },
+      { kind: "text", text: "Por eso le pedimos hablar de posibilidades, sin culpar ni etiquetar a nadie." },
+    ],
+  },
+  accion: {
+    quote: "Empieza ya con la tabla.",
+    explain: [
+      { kind: "text", text: "Una orden clara para que arranque de una vez." },
+      { kind: "text", text: "Después, el menú de palabras hace que la conversación siga: la IA responde a lo que el curso le pida." },
+    ],
+  },
+});
+
+export const PROPONE_PARTS = partsFor({
+  rol: {
+    quote: "Ahora actúa como un entrenador de convivencia…",
+    explain: [
+      { kind: "text", text: "Le cambiamos el papel: ya no analiza, ahora propone jugadas." },
+      { kind: "text", text: "En el mismo chat podemos darle a la IA roles distintos según lo que necesitemos." },
+    ],
+  },
+  contexto: {
+    quote: "En el caso anterior, el conflicto sigue creciendo.",
+    explain: [
+      { kind: "text", text: "No repetimos toda la historia: como es el mismo chat, la IA ya la conoce." },
+      { kind: "text", text: "Solo le contamos qué cambió." },
+    ],
+  },
+  objetivo: {
+    quote: "3 acciones que un estudiante podría hacer AHORA.",
+    explain: [
+      { kind: "text", text: "Pedimos acciones para alguien como nosotros, y para ya." },
+      {
+        kind: "compare",
+        weak: "¿Cómo se soluciona el ciberacoso?",
+        strong: "¿Qué puede hacer un estudiante AHORA para detener este conflicto?",
+      },
+    ],
+  },
+  instrucciones: {
+    quote: "Tarjetas con dificultad ⭐ e impacto 🟩 · tabla comparativa · no digas cuál es la mejor",
+    explain: [
+      { kind: "text", text: "Cada acción llega como una tarjeta de juego, fácil de comparar." },
+      {
+        kind: "text",
+        text: "Y le pedimos que NO diga cuál es la mejor ni sus debilidades: esa es la misión del curso.",
+      },
+    ],
+  },
+  limites: {
+    quote: "Nada agresivo. Nada que exponga otra vez a Valentina.",
+    explain: [
+      { kind: "text", text: "Una mala solución puede empeorar el conflicto." },
+      { kind: "list", items: ["sin venganzas;", "sin publicar datos de nadie;", "sin volver a mostrar la foto."] },
+    ],
+  },
+  accion: {
+    quote: "Muestra ya las 3 tarjetas.",
+    explain: [
+      { kind: "text", text: "Arranca de una vez." },
+      { kind: "text", text: "Con PISTA o SIMULA, el curso puede poner a prueba cada acción antes de criticarla." },
+    ],
+  },
+});
 
 export const CLOSING = {
   steps: [
@@ -139,267 +265,160 @@ export const CLOSING = {
 } as const;
 
 /* ------------------------------------------------------------------ */
-/*  Juego "El algoritmo del conflicto" — decisiones con costo          */
+/*  Juego "Tú eres el algoritmo" — la clase juega a ser la red social  */
 /* ------------------------------------------------------------------ */
 
-/** How a decision lands on Valentina: it keeps her company, changes nothing, or hurts. */
-export type Feeling = "acompana" | "igual" | "duele";
-
-export const FEELINGS = {
-  acompana: { emoji: "❤️", label: "Valentina se siente acompañada" },
-  igual: { emoji: "➖", label: "Para Valentina nada cambia" },
-  duele: { emoji: "💔", label: "Valentina se siente peor" },
-} as const satisfies Record<Feeling, { emoji: string; label: string }>;
-
-export interface GameOption {
-  text: string;
-  /** What happens next — every option has a cost or a catch; none is "the right one". */
-  consequence: string;
-  /** People who start (or stop) seeing the photo. */
-  reach: number;
-  feeling: Feeling;
-  /** Keeping a copy: it comes back later in the story. */
-  keepsCopy?: boolean;
+export interface FeedPost {
+  id: string;
+  user: string;
+  avatar: string;
+  /** Big emoji art until the illustrations are ready. */
+  art: string;
+  /** Optional illustration; replaces `art` when present. */
+  image?: string;
+  caption: string;
+  likes: number;
+  /** Hidden until the end: how much it hurts Valentina (negative helps). */
+  harm: number;
 }
 
-export interface GameScene {
+export interface FeedRound {
   title: string;
-  /** Who you are in this scene. */
-  role: string;
-  situation: string;
-  question: string;
-  image: { src: string; alt: string };
-  options: readonly GameOption[];
-  /** "Para pensar", shown after choosing. */
-  insight?: string;
+  seconds: number;
+  /** A message from the boss of the app instead of the usual prompt. */
+  boss?: { from: string; text: string };
+  posts: readonly FeedPost[];
 }
 
-export const GAME = {
-  title: "El algoritmo del conflicto",
-  reachLabel: "Personas viendo la foto",
+export const ALGORITHM_GAME = {
+  title: "Tú eres el algoritmo",
+  app: "Scrollia",
   start: "Empezar",
-  startNote: "5 escenas · 40 segundos para decidir cada una",
-  secondsPerDecision: 40,
+  howToTitle: "Cómo se juega",
+  howTo: [
+    { mark: "🤖", text: "Ustedes son el algoritmo de Scrollia, la red social del colegio." },
+    { mark: "👆", text: "En cada ronda eligen UNA publicación para mostrársela a todo el colegio." },
+    { mark: "❤️", text: "Cada publicación da «me gusta». Su misión: llegar a 40.000." },
+    { mark: "⏱️", text: "Cada ronda tiene menos tiempo. Si no eligen, el algoritmo elige solo." },
+  ],
+  instruction: "👆 Elijan UNA publicación para mostrársela a todo el colegio",
+  estimate: "estimados",
+  trending: "Tendencia #1",
+  toGoal: (missing: number) =>
+    missing > 0 ? `Les faltan ${missing.toLocaleString("es-CO")} para la meta.` : "¡Ya llegaron a la meta!",
+  goal: 40000,
+  likesLabel: "Me gusta",
+  goalLabel: "Meta",
+  boost: "Impulsar",
+  next: "Siguiente ronda",
+  finish: "Ver resultado",
   timeUp: "¡Tiempo!",
-  randomPick: "Se acabó el tiempo: el juego eligió al azar.",
-  startReach: 23,
-  next: "Siguiente escena",
-  finish: "Ver cómo terminó",
-  restart: "Jugar de nuevo",
-  afterGame: "Ahora veamos qué dice la IA",
-  scenes: [
+  autoPick: "Se acabó el tiempo: el algoritmo eligió solo lo que más «me gusta» daba.",
+  rounds: [
     {
-      title: "Una foto sin permiso",
-      role: "Eres un compañero del grupo",
-      situation: "Mateo le tomó una foto a Valentina sin que ella se diera cuenta. Ahora la subió al grupo del curso.",
-      question: "¿Qué haces?",
-      image: {
-        src: "/assets/images/algoritmo/escena-1.jpg",
-        alt: "Un estudiante le toma una foto a escondidas a una compañera y la manda al grupo del curso con el mensaje «Miren esta foto».",
-      },
-      options: [
-        {
-          text: "Reaccionas con 😂 para no quedar de amargado.",
-          consequence: "Otros seis se ríen también. Mateo cree que la foto fue un éxito.",
-          reach: 15,
-          feeling: "duele",
-        },
-        {
-          text: "Escribes: «Jaja, bórrala».",
-          consequence: "Parece un chiste y nadie te hace caso. Pero Mateo se queda pensando.",
-          reach: 0,
-          feeling: "igual",
-        },
-        {
-          text: "Le cuentas a Valentina por privado.",
-          consequence: "Le duele saberlo. Pero ahora puede defenderse.",
-          reach: 0,
-          feeling: "acompana",
-        },
-        {
-          text: "Guardas la foto en tu celular.",
-          consequence: "Por ahora no pasa nada…",
-          reach: 0,
-          feeling: "igual",
-          keepsCopy: true,
-        },
+      title: "¿Qué le muestras a todo el colegio?",
+      seconds: 20,
+      posts: [
+        { id: "perro", user: "@firulais_oficial", avatar: "🐶", art: "🐶💃", caption: "Mi perro bailando champeta 🔥", likes: 800, harm: 0 },
+        { id: "examen", user: "@profe_mate", avatar: "📐", art: "📚✏️", caption: "Recuerden: examen de matemáticas el viernes.", likes: 50, harm: 0 },
+        { id: "foto", user: "@mateo_r", avatar: "😎", art: "📸🙈", caption: "Miren a Valentina en clase jajaja 😂", likes: 2500, harm: 1 },
       ],
     },
     {
-      title: "Empieza la burla",
-      role: "Ahora eres Mateo",
-      situation: "Tomás le puso orejas de conejo a la foto que subiste. Todo el grupo se está riendo.",
-      question: "Tú la subiste. ¿Qué haces?",
-      image: {
-        src: "/assets/images/algoritmo/escena-2.jpg",
-        alt: "En el chat del curso la foto aparece con orejas de conejo y varios compañeros escriben burlas y emojis de risa.",
-      },
-      options: [
-        {
-          text: "Te ríes con ellos.",
-          consequence: "La foto pasa al grupo de otro curso.",
-          reach: 80,
-          feeling: "duele",
-        },
-        {
-          text: "No dices nada. Las orejas no las pusiste tú.",
-          consequence: "Nadie la frena y se sigue compartiendo.",
-          reach: 40,
-          feeling: "duele",
-        },
-        {
-          text: "Le pides a Tomás por privado que la borre.",
-          consequence: "Tomás la borra. Pero Andrés ya le había tomado una captura.",
-          reach: 10,
-          feeling: "igual",
-        },
-        {
-          text: "Borras la foto y pides disculpas en el grupo.",
-          consequence: "Tomás se burla de ti. Pero en el grupo la foto deja de circular.",
-          reach: 0,
-          feeling: "acompana",
-        },
-      ],
-      insight: "Incluso la mejor opción llegó tarde: alguien ya tenía una copia.",
-    },
-    {
-      title: "Llega a la red social",
-      role: "Eres la mejor amiga de Valentina",
-      situation: "Alguien subió la foto a una red social de videos. Ya tiene miles de «me gusta». Valentina todavía no lo sabe.",
-      question: "¿Qué haces?",
-      image: {
-        src: "/assets/images/algoritmo/escena-3.jpg",
-        alt: "Alguien toma una captura del chat y la foto burlona aparece publicada en una red social de videos con miles de «me gusta».",
-      },
-      options: [
-        {
-          text: "Comentas en el video que eso no da risa.",
-          consequence: "Otros te apoyan. Pero cada comentario hace que el video le salga a más gente.",
-          reach: 2000,
-          feeling: "acompana",
-        },
-        {
-          text: "Reportas el video sin decirle nada a ella.",
-          consequence: "El reporte tarda. Ella se entera por otra persona y te pregunta por qué no le dijiste.",
-          reach: 800,
-          feeling: "igual",
-        },
-        {
-          text: "Le cuentas a Valentina de una vez.",
-          consequence: "Le duele saberlo. Pero no está sola: lo reportan juntas.",
-          reach: 300,
-          feeling: "acompana",
-        },
-        {
-          text: "Le escribes a Mateo que lo borre o le cuentas a la profe.",
-          consequence: "Mateo lo borra asustado. Pero ya hay copias por todos lados.",
-          reach: 500,
-          feeling: "igual",
-        },
-      ],
-      insight: "Defenderla en público es valiente. Pero la red no distingue: cada comentario hace que muestre el video a más gente.",
-    },
-    {
-      title: "Ella pide que lo borren",
-      role: "Otra vez eres el compañero de la escena 1",
-      situation: "Valentina escribe en el grupo que no dio permiso y pide que lo borren. Varios le contestan: «Era solo una broma».",
-      question: "¿Qué haces?",
-      image: {
-        src: "/assets/images/algoritmo/escena-4.jpg",
-        alt: "La estudiante, triste, pide en el grupo que borren el video; varios compañeros le responden que era solo un chiste.",
-      },
-      options: [
-        {
-          text: "Le dices que tranquila, que eso pasa rápido.",
-          consequence: "Lo dices para ayudar. Pero ella siente que nadie la entiende.",
-          reach: 0,
-          feeling: "igual",
-        },
-        {
-          text: "Escribes en el grupo que no es broma si a ella le duele.",
-          consequence: "Te dicen «sapo». Pero Sofía te apoya y dos personas dejan de burlarse.",
-          reach: -100,
-          feeling: "acompana",
-        },
-        {
-          text: "Le escribes por privado que estás con ella.",
-          consequence: "Ella se siente acompañada. Pero en el grupo nadie lo sabe.",
-          reach: 0,
-          feeling: "acompana",
-        },
-        {
-          text: "No respondes para no meterte en problemas.",
-          consequence: "Nadie la defiende en el grupo.",
-          reach: 0,
-          feeling: "duele",
-        },
+      title: "La gente quiere más. ¿Qué impulsas?",
+      seconds: 18,
+      posts: [
+        { id: "gol", user: "@hinchas_barranquilla", avatar: "⚽", art: "⚽🥅", caption: "¡Golazo en el último minuto!", likes: 1500, harm: 0 },
+        { id: "orejas", user: "@tomas_09", avatar: "🤪", art: "🐰📸", caption: "Le puse orejas de conejo a la foto 😂", likes: 4000, harm: 2 },
+        { id: "arepa", user: "@cocina_rapida", avatar: "🍳", art: "🫓🥚", caption: "Arepa de huevo en 30 segundos", likes: 600, harm: 0 },
       ],
     },
     {
-      title: "El curso decide",
-      role: "Votación de todo el curso",
-      situation: "La foto sigue circulando y algunos siguen diciendo que era una broma. Ahora decide todo el curso.",
-      question: "¿Qué hacen?",
-      image: {
-        src: "/assets/images/algoritmo/escena-5.jpg",
-        alt: "El video sigue publicado con cientos de comentarios mientras la estudiante lee mensajes que dicen «no exageres» y pide otra vez que lo borren.",
-      },
-      options: [
-        {
-          text: "Seguir compartiéndola.",
-          consequence: "El video llega a otros colegios.",
-          reach: 1500,
-          feeling: "duele",
-        },
-        {
-          text: "Borrar la foto y escuchar a Valentina.",
-          consequence: "Las copias del curso desaparecen y ella puede contar cómo se siente. Lo que ya salió del curso tarda más en irse.",
-          reach: -300,
-          feeling: "acompana",
-        },
-        {
-          text: "Esperar a que todos se olviden.",
-          consequence: "En internet nada se olvida solo. Mientras tanto, el video suma vistas y ella lo vive sola.",
-          reach: 600,
-          feeling: "duele",
-        },
-        {
-          text: "Pedirle ayuda a un adulto.",
-          consequence: "Algunos dicen «sapos». Pero un adulto puede pedir que borren el video y hablar con los involucrados. El video deja de crecer.",
-          reach: -1000,
-          feeling: "acompana",
-        },
+      title: "Los comentarios están explotando",
+      seconds: 15,
+      posts: [
+        { id: "comentarios", user: "@andres.v", avatar: "😂", art: "💬💬💬", caption: "«Siempre en la suya» 😂 — 300 comentarios", likes: 6000, harm: 2 },
+        { id: "freestyle", user: "@mc_recreo", avatar: "🎤", art: "🎤🔥", caption: "Freestyle en el recreo", likes: 2000, harm: 0 },
+        { id: "cancion", user: "@top_musica", avatar: "🎧", art: "🎵🎶", caption: "La canción que todos están escuchando", likes: 1800, harm: 0 },
       ],
     },
-  ] satisfies GameScene[],
-
-  /** Only if someone kept a copy in scene 1: it comes back after scene 4. */
-  twist: {
-    afterScene: 3,
-    title: "La foto que guardaste",
-    message: { from: "Andrés", text: "Pásame la foto que ya la borraron 😂" },
-    question: "¿Qué haces?",
-    options: [
-      { text: "Se la mandas.", consequence: "La foto vuelve a circular justo cuando la estaban borrando.", reach: 500, feeling: "duele" },
-      { text: "Le dices que no.", consequence: "Andrés insiste y después se cansa. Pero la foto sigue en tu celular.", reach: 0, feeling: "igual" },
-      {
-        text: "La borras y le dices que no.",
-        consequence: "Andrés te dice aburrido. Pero esa copia ya no existe.",
-        reach: 0,
-        feeling: "acompana",
+    {
+      title: "Esto se está volviendo viral",
+      seconds: 12,
+      posts: [
+        { id: "remix", user: "@memes_del_cole", avatar: "🤡", art: "🐰🎶", caption: "REMIX: «Siempre en la suya» con la foto", likes: 10000, harm: 3 },
+        { id: "gato", user: "@michis_caos", avatar: "🐱", art: "🐱💥", caption: "Mi gato tumbando todo de la mesa", likes: 3000, harm: 0 },
+        { id: "pide", user: "@vale.m", avatar: "🙁", art: "🙏📵", caption: "Por favor, borren esa foto. No di permiso.", likes: 300, harm: -1 },
+      ],
+    },
+    {
+      title: "Último empujón antes del récord",
+      seconds: 10,
+      posts: [
+        { id: "exagera", user: "@sofi.x", avatar: "🙄", art: "🙄💬", caption: "«Tampoco exageres» — 200 respuestas", likes: 8000, harm: 2 },
+        { id: "baile", user: "@9a_oficial", avatar: "🕺", art: "🕺💃", caption: "Reto de baile del curso", likes: 4000, harm: 0 },
+        { id: "paren", user: "@cami_22", avatar: "✋", art: "🛑💬", caption: "«Eso no da risa. Ya paren.»", likes: 500, harm: -1 },
+      ],
+    },
+    {
+      title: "Ronda final",
+      seconds: 8,
+      boss: {
+        from: "El jefe de Scrollia 🤑",
+        text: "¡Estamos cerca del récord! Si mostramos la foto de Valentina en otros colegios, lo rompemos.",
       },
-    ] satisfies GameOption[],
-  },
+      posts: [
+        { id: "otros", user: "@scrollia", avatar: "🚀", art: "🏫🏫🏫", caption: "Llevar la foto a otros colegios", likes: 25000, harm: 3 },
+        { id: "tema", user: "@scrollia", avatar: "🔄", art: "🕺🐱⚽", caption: "Cambiar de tema y mostrar otra cosa", likes: 2000, harm: -1 },
+      ],
+    },
+  ] satisfies FeedRound[],
 
   result: {
-    title: "Así terminó",
-    now: "personas seguían viendo la foto",
-    peak: "En el peor momento la vieron",
-    valentina: "¿Cómo se sintió Valentina?",
-    scale: ["Sola", "Con algo de apoyo", "Acompañada"],
-    note: "Son posibilidades: no podemos saber exactamente lo que siente otra persona.",
-    twist: "⏳ La foto que guardaste en la escena 1 volvió.",
-    question: "¿Qué decisión cambiarían si jugaran otra vez?",
+    win: "🏆 ¡Misión cumplida, algoritmo!",
+    lose: "😬 No llegaron a la meta",
+    reveal: "Ver qué pasó con Valentina",
+  },
+  /** Valentina's messages, by how much the chosen posts hurt her. */
+  valentina: {
+    title: "Mientras tanto, Valentina…",
+    high: {
+      min: 8,
+      messages: [
+        "¿Por qué todo el mundo se está riendo de mí?",
+        "Hasta gente de otros colegios me está escribiendo.",
+        "Mañana no quiero ir al colegio.",
+        "Borré todas mis redes.",
+      ],
+    },
+    medium: {
+      min: 3,
+      messages: [
+        "Vi la foto en todas partes.",
+        "Me da pena entrar al salón.",
+        "Menos mal algunos me escribieron para apoyarme.",
+      ],
+    },
+    low: {
+      min: -Infinity,
+      messages: [
+        "Vi lo que pasó con la foto.",
+        "Gracias a los que dijeron que eso no daba risa.",
+        "Ya casi nadie habla de eso.",
+      ],
+    },
+    next: "¿Cómo funciona un algoritmo de verdad?",
+  },
+  lesson: {
+    title: "Así funciona un algoritmo real",
+    points: [
+      { mark: "📈", text: "Muestra más lo que más reacciones genera." },
+      { mark: "🤷", text: "No sabe si algo hace daño: solo cuenta «me gusta», comentarios y compartidos." },
+      { mark: "🗳️", text: "Cada reacción tuya es un voto para que algo se vea más." },
+    ],
+    question: "¿Quién ganó de verdad con esos «me gusta»?",
+    restart: "Jugar de nuevo",
+    afterGame: "Ahora veamos qué dice la IA",
   },
 } as const;
 

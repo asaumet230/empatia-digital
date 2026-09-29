@@ -13,7 +13,7 @@ export function PollCard({ poll, className }: { poll: Poll; className?: string }
       variants={fadeUp}
       className={cn("rounded-2xl border border-yellow/30 bg-yellow/[0.04] p-5 md:p-7", className)}
     >
-      <p className="flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">
+      <p className="flex items-center justify-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">
         <Vote aria-hidden="true" className="size-4" strokeWidth={1.75} />
         {POLL_HINT}
       </p>
