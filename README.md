@@ -1,6 +1,8 @@
 # EmpatIA Digital
 
-Presentación web interactiva para la capacitación **EmpatIA Digital** (estudiantes de 13 a 16 años).
+Presentación web interactiva para la capacitación **EmpatIA Digital**, con una sesión para docentes y otra para familias.
+
+📘 **[GUIA.md](GUIA.md)**: la dinámica completa del taller, los materiales y cómo mantener la web.
 
 ```bash
 npm run dev     # http://localhost:3000
