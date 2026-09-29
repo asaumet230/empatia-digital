@@ -1,3 +1,6 @@
+/** Public address (QR codes, metadata). `SITE_URL` overrides it, e.g. for a custom domain. */
+export const SITE_URL = (process.env.SITE_URL ?? "https://empatia-digital.vercel.app").replace(/\/$/, "");
+
 export const BRAND = {
   name: "EmpatIA Digital",
   tagline: "Tecnología que conecta personas.",
