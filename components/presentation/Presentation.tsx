@@ -2,6 +2,7 @@
 
 import { MotionConfig, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo } from "react";
+import { EvaluationButton } from "@/components/presentation/EvaluationButton";
 import { Intro } from "@/components/presentation/Intro";
 import { PresentationFooter } from "@/components/presentation/PresentationFooter";
 import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
@@ -87,6 +88,7 @@ export function Presentation({ track }: { track: TrackId }) {
       </main>
       <PresentationFooter track={track} />
       <SessionSwitcher track={track} visible={ready} />
+      <EvaluationButton track={track} visible={ready} />
 
       <ProgressNavigation
         items={navItems}

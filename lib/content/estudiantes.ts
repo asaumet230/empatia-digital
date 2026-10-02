@@ -395,16 +395,54 @@ export const ALGORITHM_GAME = {
         "Ya casi nadie habla de eso.",
       ],
     },
-    /** What happened, told after her messages so the class understands the case. */
-    story: {
-      title: "¿Qué pasó?",
-      intro: "Mateo le tomó una foto a Valentina a escondidas en clase y la publicó sin su permiso.",
-      boosted: "Ustedes, como algoritmo, impulsaron:",
-      none: "Ustedes no impulsaron ninguna burla contra ella.",
-      high: "Cada publicación hizo más grande la burla, hasta llegar a gente que ni la conoce. Para ustedes eran «me gusta»; para Valentina, vergüenza y miedo.",
-      medium: "La burla creció, pero también hubo quien la frenó. Cada «me gusta» decidía qué veía más gente.",
-      low: "Ustedes no le dieron más alcance a la burla. Por eso la foto casi no se movió.",
-    },
+    next: "¿Qué pasó?",
+  },
+  /** What happened, told in pictures after her messages so the class understands the case. */
+  story: {
+    title: "¿Qué pasó?",
+    scenes: [
+      {
+        image: "/assets/images/historia/1.jpg",
+        width: 1280,
+        height: 853,
+        text: "Mateo le tomó una foto a Valentina en clase, sin que ella supiera, y la mandó al grupo del curso. Alguien le hizo captura y la subió a redes.",
+      },
+      {
+        image: "/assets/images/historia/2.jpg",
+        width: 1280,
+        height: 853,
+        text: "En el grupo le pusieron orejas de conejo. Todos se reían: «esa foto está buena para un meme».",
+      },
+      {
+        image: "/assets/images/historia/3.jpg",
+        width: 1280,
+        height: 853,
+        text: "La foto con orejas también llegó a redes: «Siempre en la suya…». Cada «me gusta» la mostraba a más gente.",
+      },
+      {
+        image: "/assets/images/historia/4.jpg",
+        width: 1280,
+        height: 960,
+        text: "Se volvió viral: cientos de comentarios y risas, hasta de gente que ni la conoce.",
+      },
+      {
+        image: "/assets/images/historia/5.jpg",
+        width: 1280,
+        height: 853,
+        text: "Valentina pidió que la borraran. Le respondieron: «era solo una broma», «no exageres».",
+      },
+      {
+        image: "/assets/images/historia/6.jpg",
+        width: 1280,
+        height: 960,
+        text: "Esa noche, Valentina se quedó sola con su celular. Para muchos fue un «me gusta»; para ella, vergüenza y miedo.",
+      },
+    ],
+    /** Shown on the last scene, depending on how much mockery the class boosted. */
+    high: "Ustedes, como algoritmo, impulsaron casi todas las burlas. Así se vuelve grande un problema.",
+    medium: "Ustedes impulsaron algunas burlas. Cada «me gusta» decidía qué veía más gente.",
+    low: "Ustedes no le dieron alcance a la burla. Así se frena un problema.",
+    prev: "Anterior",
     next: "¿Cómo funciona un algoritmo de verdad?",
   },
   lesson: {

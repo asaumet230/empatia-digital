@@ -1,7 +1,7 @@
 "use client";
 
-import { animate, AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, ArrowRight, Heart, Play, Rocket, RotateCcw, Timer } from "lucide-react";
+import { animate, AnimatePresence, motion, useInView } from "framer-motion";
+import { ArrowDown, ArrowLeft, ArrowRight, Heart, Play, Rocket, RotateCcw, Timer } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Section } from "@/components/presentation/Section";
@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 import { ALGORITHM_GAME, type FeedPost } from "@/lib/content/estudiantes";
 import type { SectionProps } from "@/types/presentation";
 
-type Stage = "inicio" | number | "resultado" | "valentina" | "leccion";
+type Stage = "inicio" | number | "resultado" | "valentina" | "historia" | "leccion";
 
 const GAME = ALGORITHM_GAME;
 const ROUNDS = GAME.rounds;
@@ -103,7 +103,9 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
             ) : stage === "resultado" ? (
               <ResultStep likes={likes} onNext={() => setStage("valentina")} />
             ) : stage === "valentina" ? (
-              <ValentinaStep harm={harm} chosen={chosen} onNext={() => setStage("leccion")} />
+              <ValentinaStep harm={harm} onNext={() => setStage("historia")} />
+            ) : stage === "historia" ? (
+              <StoryStep harm={harm} onNext={() => setStage("leccion")} />
             ) : (
               <LessonStep onRestart={restart} />
             )}
@@ -462,14 +464,10 @@ function ResultStep({ likes, onNext }: { likes: number; onNext: () => void }) {
 }
 
 /** The twist: her messages, one by one, depending on how much the boosted posts hurt her. */
-function ValentinaStep({ harm, chosen, onNext }: { harm: number; chosen: readonly FeedPost[]; onNext: () => void }) {
+function ValentinaStep({ harm, onNext }: { harm: number; onNext: () => void }) {
   const { valentina } = GAME;
-  const { story } = valentina;
-  const levelId = harm >= valentina.high.min ? "high" : harm >= valentina.medium.min ? "medium" : "low";
-  const level = valentina[levelId];
+  const level = valentina[harmLevel(harm)];
   const delay = (i: number) => 0.6 + i * 1.4;
-  const storyDelay = delay(level.messages.length) + 0.4;
-  const hurtful = chosen.filter((post) => post.harm > 0);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -495,32 +493,8 @@ function ValentinaStep({ harm, chosen, onNext }: { harm: number; chosen: readonl
         </ul>
       </div>
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0, transition: transition(DURATION.base, storyDelay) }}
-        className="mt-6 rounded-3xl border border-yellow/40 bg-yellow/[0.05] p-5 md:p-7"
-      >
-        <p className="font-display text-xl font-bold text-yellow md:text-2xl">{story.title}</p>
-        <p className="mt-3 text-lg leading-snug text-white md:text-xl">{story.intro}</p>
-        <p className="mt-3 text-base font-semibold text-gray-light md:text-lg">
-          {hurtful.length > 0 ? story.boosted : story.none}
-        </p>
-        {hurtful.length > 0 && (
-          <ul className="mt-3 flex flex-wrap items-center gap-2">
-            {hurtful.map((post, i) => (
-              <li key={post.id} className="flex items-center gap-2">
-                {i > 0 && <span aria-hidden="true" className="text-gray-muted">→</span>}
-                <span className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold text-white md:text-base">
-                  {post.caption}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-        <p className="mt-4 text-lg leading-snug text-gray-light md:text-xl">{story[levelId]}</p>
-      </motion.div>
-      <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: transition(DURATION.base, storyDelay + 1.2) }}
+        animate={{ opacity: 1, transition: transition(DURATION.base, delay(level.messages.length) + 0.4) }}
         className="mt-8 flex justify-center"
       >
         <PrimaryButton onClick={onNext}>
@@ -528,6 +502,99 @@ function ValentinaStep({ harm, chosen, onNext }: { harm: number; chosen: readonl
           <ArrowRight aria-hidden="true" className="size-5" strokeWidth={2} />
         </PrimaryButton>
       </motion.div>
+    </div>
+  );
+}
+
+const harmLevel = (harm: number) =>
+  harm >= GAME.valentina.high.min ? "high" : harm >= GAME.valentina.medium.min ? "medium" : "low";
+
+/** The case told in pictures, one scene at a time, so the presenter can narrate it (← → also work). */
+function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }) {
+  const { story } = GAME;
+  const [scene, setScene] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { amount: 0.5 });
+  const last = story.scenes.length - 1;
+  const current = story.scenes[scene];
+
+  useEffect(() => {
+    if (!inView) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === "ArrowRight") setScene((s) => Math.min(s + 1, last));
+      if (e.key === "ArrowLeft") setScene((s) => Math.max(s - 1, 0));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [inView, last]);
+
+  return (
+    <div ref={ref} className="mx-auto max-w-6xl">
+      <p className="text-center font-display text-[clamp(1.75rem,4vw,3rem)] font-extrabold tracking-[-0.03em] text-yellow">
+        {story.title}
+      </p>
+      <div className="mt-6 grid items-center gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-10">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={scene}
+            {...swap}
+            className="overflow-hidden rounded-3xl border border-white/10 bg-black/40"
+          >
+            <Image
+              src={current.image}
+              alt={current.text}
+              width={current.width}
+              height={current.height}
+              sizes="(min-width: 1024px) 60vw, 100vw"
+              priority={scene === 0}
+              className="mx-auto h-auto max-h-[62svh] w-auto"
+            />
+          </motion.div>
+        </AnimatePresence>
+        <div>
+          <p className="font-mono text-sm font-bold tracking-[0.16em] text-green-bright">
+            {scene + 1} / {story.scenes.length}
+          </p>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={scene} {...swap}>
+              <p className="mt-3 text-xl font-medium leading-snug text-white md:text-2xl">{current.text}</p>
+              {scene === last && (
+                <p className="mt-5 rounded-2xl border border-yellow/40 bg-yellow/[0.05] p-4 text-lg font-semibold leading-snug text-yellow">
+                  {story[harmLevel(harm)]}
+                </p>
+              )}
+            </motion.div>
+          </AnimatePresence>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setScene(scene - 1)}
+              disabled={scene === 0}
+              aria-label={story.prev}
+              className="grid size-12 cursor-pointer place-items-center rounded-full border border-white/15 text-gray-light transition-colors hover:border-white/40 disabled:cursor-default disabled:opacity-30"
+            >
+              <ArrowLeft aria-hidden="true" className="size-5" />
+            </button>
+            {scene < last ? (
+              <button
+                type="button"
+                onClick={() => setScene(scene + 1)}
+                aria-label="Siguiente"
+                className="grid size-12 cursor-pointer place-items-center rounded-full border border-green-bright text-green-bright transition-colors hover:bg-green-bright hover:text-navy-dark"
+              >
+                <ArrowRight aria-hidden="true" className="size-5" />
+              </button>
+            ) : (
+              <PrimaryButton onClick={onNext}>
+                {story.next}
+                <ArrowRight aria-hidden="true" className="size-5" strokeWidth={2} />
+              </PrimaryButton>
+            )}
+            <span className="hud-label ml-2 hidden [@media(hover:hover)]:inline">o usa las flechas ← →</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -22,6 +22,9 @@ y se avanza con scroll, con el teclado o con un presentador inalámbrico.
   escanean con el celular o escriben la dirección que aparece debajo. En celular el QR se oculta.
 - **Selector de sesión (☰, arriba a la izquierda):** botón redondo que se expande al pasar el cursor
   (o con un toque en celular) y muestra **Inicio · Docentes · Familias**. Está en las tres páginas.
+- **Pretest y postest (botón abajo a la derecha):** en las tres sesiones, después de la intro. Abre los dos
+  formularios de Google de esa sesión, cada uno con su QR. Pretest al empezar, postest al terminar.
+  Los enlaces están en `lib/content/evaluacion.ts`.
 - **Pie de página:** al final de cada sesión, "Volver al inicio" e "Ir a la sesión de…".
 
 ---
@@ -122,7 +125,7 @@ Cada prompt pide una respuesta visual (tablas, barras con emojis, flechas) y tra
 
 | Min | Diapositiva | Qué dice o hace el presentador |
 |---|---|---|
-| 0–9 | Tú eres el algoritmo | Pulsar "Empezar". La clase es el algoritmo de una red inventada (Scrollia) y debe llegar a 40.000 «me gusta». En 6 rondas, cada vez más rápidas (20 → 8 s), elige qué publicación impulsar; burlarse de Valentina siempre da más. Si se acaba el tiempo, el algoritmo elige solo la que más da. Al final: el puntaje, los mensajes de Valentina según lo impulsado y cómo funciona un algoritmo real. **No adelantar la lección** |
+| 0–9 | Tú eres el algoritmo | Pulsar "Empezar". La clase es el algoritmo de una red inventada (Scrollia) y debe llegar a 40.000 «me gusta». En 6 rondas, cada vez más rápidas (20 → 8 s), elige qué publicación impulsar; burlarse de Valentina siempre da más. Si se acaba el tiempo, el algoritmo elige solo la que más da. Al final: el puntaje, los mensajes de Valentina según lo impulsado, «¿Qué pasó?» (la historia en 6 imágenes, se avanza con ← →; imágenes en `public/assets/images/historia/`) y cómo funciona un algoritmo real. **No adelantar la lección** |
 | 9–12 | Pregunté a la IA | Prompt 1 (ya trae el caso). "Ahora viene lo interesante: ¿la IA acertó?" |
 | 12–16 | La IA propone | Prompt 2. Votación (abierta): "¿Cuál harían ustedes?" Leer máximo 3 respuestas |
 | 18–20 | Tú decides | "¿Qué aprendimos?" (dos respuestas) y la frase final |

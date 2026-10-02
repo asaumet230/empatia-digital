@@ -2,8 +2,9 @@ import { ArrowRight, Backpack, GraduationCap, House, ScanLine, type LucideIcon }
 import Image from "next/image";
 import Link from "next/link";
 import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { QrCode } from "@/components/ui/QrCode";
-import { BRAND, LOGOS, SITE_URL } from "@/lib/constants";
+import { BRAND, LOGOS, PUBLIC_SITE_URL, SITE_URL } from "@/lib/constants";
 
 interface Audience {
   href: string;
@@ -54,7 +55,16 @@ export default function Home() {
         </h1>
         <p className="mt-6 text-lg text-gray-text md:text-xl">{BRAND.tagline}</p>
 
-        <p className="hud-label mt-14">Elige tu sesión</p>
+        {/* Big enough to read from the back of the room and copy by hand */}
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-2xl border border-green-bright/40 bg-navy/70 px-6 py-4 sm:flex-row sm:gap-5">
+          <span className="hud-label">Entra aquí</span>
+          <span className="select-all break-all font-mono text-xl font-semibold text-green-bright md:text-3xl">
+            {PUBLIC_SITE_URL.replace(/^https?:\/\//, "")}
+          </span>
+          <CopyButton text={PUBLIC_SITE_URL} />
+        </div>
+
+        <p className="hud-label mt-12">Elige tu sesión</p>
         <ul className="mt-5 grid w-full gap-4 md:gap-6 lg:grid-cols-3">
           {AUDIENCES.map(({ href, who, session, icon: Icon }) => (
             <li key={href}>
