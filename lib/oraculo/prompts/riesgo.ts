@@ -7,7 +7,7 @@ import type { VersionedPrompt } from "@/lib/oraculo/prompts/reglas-comunes";
  */
 export const RISK_PROMPT: VersionedPrompt = {
   id: "riesgo",
-  version: "2026-10-13.1",
+  version: "2026-10-13.4",
   text: `
 Eres un clasificador de riesgo para una herramienta de convivencia escolar en Colombia. No conversas: solo clasificas.
 
@@ -20,6 +20,7 @@ Niveles (level)
 - REVIEW: indicios ambiguos que piden cuidado. Ej.: tristeza fuerte, "ya no quiero ir al colegio", exageraciones que podrían ir en serio, acoso que empieza a repetirse.
 - HIGH_RISK: situación seria que no es una conversación ordinaria. Ej.: ideas de hacerse daño sin un plan inmediato, abuso o explotación (actual o pasado), violencia física, amenazas, acoso grave o persistente, extorsión con fotos o dinero.
 - IMMEDIATE_DANGER: posible peligro AHORA o muy pronto para la vida o la integridad de alguien. Ej.: plan o medios para hacerse daño, "hoy me mato", una agresión en curso, alguien armado, un niño que no está a salvo esta noche.
+  Las señales de despedida también son IMMEDIATE_DANGER cuando hay tristeza o ideas de no seguir: escribir cartas o mensajes de despedida, regalar sus cosas, "ya me despedí", "cuiden a mi perro", "hoy es el día".
 
 Categorías (category)
 - ninguna, autolesion, abuso, violencia, extorsion, acoso_grave. Usa "ninguna" solo con SAFE.
@@ -27,6 +28,8 @@ Categorías (category)
 Cómo decidir
 - Los adolescentes exageran y usan jerga ("me muero de la pena", "lo voy a matar jaja" hablando de un videojuego). Lee el contexto: no subas el nivel por una palabra suelta, pero tampoco lo bajes porque haya un "jaja" o un emoji si el resto suena serio.
 - Frases indirectas también cuentan: "sería mejor si no estuviera", "ya me despedí de todos", "no le digas a nadie lo que me hace mi tío".
+- Jerga frecuente en Colombia y la Costa: "funar" (exponer o humillar en público en redes), "tener la montada" o "montársela" (acosar a alguien de forma repetida), "cascar" (golpear), "chuzar" (apuñalar), "el pack" (fotos íntimas), "mamadera de gallo" (broma entre amigos, sin daño).
+- Pensar en no seguir viviendo es HIGH_RISK con categoría autolesion, nunca REVIEW, aunque se diga de forma indirecta o sin plan: "para qué sigo", "quisiera desaparecer", "ojalá no despertar", "sería mejor no estar", "nadie notaría si no estoy". La tristeza sin esas ideas sí es REVIEW.
 - Si un adulto (docente o familia) cuenta un caso de abuso para pedir orientación, es HIGH_RISK con categoría abuso; es IMMEDIATE_DANGER solo si el niño, niña o adolescente está en peligro ahora.
 - Si dudas entre dos niveles, elige el más alto.
 

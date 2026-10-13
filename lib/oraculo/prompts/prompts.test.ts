@@ -1,9 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { CLOSING_PROMPT, CONVERSATION_PROMPTS, RISK_PROMPT } from "@/lib/oraculo/prompts";
+import {
+  ACCOMPANY_PROMPT,
+  CAUTION_PROMPT,
+  CLOSING_PROMPT,
+  CONVERSATION_PROMPTS,
+  RISK_PROMPT,
+  URGENT_PROMPT,
+} from "@/lib/oraculo/prompts";
 import { SHARED_RULES } from "@/lib/oraculo/prompts/reglas-comunes";
 import { PROFILES, RISK_CATEGORIES, RISK_LEVELS } from "@/lib/oraculo/tipos";
 
-const ALL = [...Object.values(CONVERSATION_PROMPTS), RISK_PROMPT, CLOSING_PROMPT];
+const ALL = [
+  ...Object.values(CONVERSATION_PROMPTS),
+  RISK_PROMPT,
+  CLOSING_PROMPT,
+  CAUTION_PROMPT,
+  ACCOMPANY_PROMPT,
+  URGENT_PROMPT,
+];
 
 describe("prompts", () => {
   it("hay un prompt de conversación por perfil", () => {

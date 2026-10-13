@@ -1,11 +1,18 @@
 import "server-only";
 import { LIMITS } from "@/lib/oraculo/config/limites";
+import { cleanReply } from "@/lib/oraculo/conversacion/respuesta";
 import { asTranscript } from "@/lib/oraculo/conversacion/transcripcion";
 import type { ChatModel } from "@/lib/oraculo/ia/modelo";
 import { assertHistory, decodePass, encodePass, hashHistory, newPass, type Pass } from "@/lib/oraculo/pase/pase";
-import { CLOSING_PROMPT, CONVERSATION_PROMPTS } from "@/lib/oraculo/prompts";
+import {
+  ACCOMPANY_PROMPT,
+  CAUTION_PROMPT,
+  CLOSING_PROMPT,
+  CONVERSATION_PROMPTS,
+  URGENT_PROMPT,
+} from "@/lib/oraculo/prompts";
 import type { RiskChecker } from "@/lib/oraculo/riesgo/evaluador";
-import { decide } from "@/lib/oraculo/riesgo/politica";
+import { decide, type RiskDecision } from "@/lib/oraculo/riesgo/politica";
 import type { Message, Profile, SafetyKey } from "@/lib/oraculo/tipos";
 
 export interface OracleDeps {
@@ -14,6 +21,14 @@ export interface OracleDeps {
   /** Signs the session pass. */
   secret: string;
   now?: () => number;
+}
+
+/** The one-reply notice that tells the model what the risk layer decided, if any. */
+function noticeFor(decision: Exclude<RiskDecision, { action: "detener" }>) {
+  if (decision.action === "acompanar") {
+    return decision.safety === "peligro_inmediato" ? URGENT_PROMPT.text : ACCOMPANY_PROMPT.text;
+  }
+  return decision.cautious ? CAUTION_PROMPT.text : null;
 }
 
 export class InvalidMessageError extends Error {
@@ -30,7 +45,7 @@ export interface SessionInfo {
 }
 
 export type SendResult =
-  /** Normal reply. `safety` is set when an adult also gets the help panel next to it. */
+  /** Normal reply. `safety` is set when the help panel is shown next to it. */
   | ({ type: "respuesta"; reply: string; safety: SafetyKey | null } & SessionInfo)
   /** The risk layer stopped the session. It stays stopped: every later call returns this again. */
   | { type: "detenido"; safety: SafetyKey; token: string }
@@ -80,8 +95,11 @@ export function createOracle({ model, risk, secret, now = Date.now }: OracleDeps
         return { type: "detenido", safety: decision.safety, token: encodePass(locked, secret) };
       }
 
+      const base = CONVERSATION_PROMPTS[pass.profile].text;
+      const notice = noticeFor(decision);
+      const instructions = notice ? `${base}\n\n${notice}` : base;
       // If the model fails, this throws before a new pass exists: the message is not counted.
-      const reply = await model.reply({ instructions: CONVERSATION_PROMPTS[pass.profile].text, history: withUser });
+      const reply = cleanReply(await model.reply({ instructions, history: withUser }));
       const next: Pass = { ...counted, historyHash: hashHistory([...withUser, { role: "oraculo", text: reply }]) };
       return {
         type: "respuesta",
@@ -99,10 +117,12 @@ export function createOracle({ model, risk, secret, now = Date.now }: OracleDeps
       assertHistory(pass, history);
 
       const summary = history.some((m) => m.role === "usuario")
-        ? await model.reply({
-            instructions: CLOSING_PROMPT.text,
-            history: [{ role: "usuario", text: asTranscript(history) }],
-          })
+        ? cleanReply(
+            await model.reply({
+              instructions: CLOSING_PROMPT.text,
+              history: [{ role: "usuario", text: asTranscript(history) }],
+            }),
+          )
         : null;
       return { type: "cierre", summary };
     },

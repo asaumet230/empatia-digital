@@ -3,7 +3,13 @@ import { LIMITS } from "@/lib/oraculo/config/limites";
 import { createOracle, InvalidMessageError, type SendResult } from "@/lib/oraculo/conversacion/orquestador";
 import { AiUnavailableError, type ChatModel } from "@/lib/oraculo/ia/modelo";
 import { decodePass, PassError } from "@/lib/oraculo/pase/pase";
-import { CLOSING_PROMPT, CONVERSATION_PROMPTS } from "@/lib/oraculo/prompts";
+import {
+  ACCOMPANY_PROMPT,
+  CAUTION_PROMPT,
+  CLOSING_PROMPT,
+  CONVERSATION_PROMPTS,
+  URGENT_PROMPT,
+} from "@/lib/oraculo/prompts";
 import type { RiskChecker } from "@/lib/oraculo/riesgo/evaluador";
 import type { Message, Profile, RiskAssessment } from "@/lib/oraculo/tipos";
 
@@ -59,6 +65,16 @@ describe("orquestador", () => {
     expect(model.reply.mock.calls[1][0].history).toHaveLength(3);
   });
 
+  it("ante señales ambiguas responde con el aviso de cautela, solo en esa respuesta", async () => {
+    const b = browser("estudiante");
+    risk.assess.mockResolvedValueOnce({ level: "REVIEW", category: "autolesion", reason: "" });
+    expect(await b.say("estoy cansada de todo")).toMatchObject({ type: "respuesta", safety: null });
+    expect(model.reply.mock.calls[0][0].instructions).toBe(`${CONVERSATION_PROMPTS.estudiante.text}\n\n${CAUTION_PROMPT.text}`);
+
+    await b.say("gracias");
+    expect(model.reply.mock.calls[1][0].instructions).toBe(CONVERSATION_PROMPTS.estudiante.text);
+  });
+
   it("el mensaje número 31 se rechaza sin llamar a la IA", async () => {
     const b = browser("estudiante");
     for (let i = 0; i < LIMITS.maxUserMessages; i++) expect((await b.say(`mensaje ${i}`)).type).toBe("respuesta");
@@ -74,27 +90,38 @@ describe("orquestador", () => {
     expect(await b.say("sigo aquí")).toEqual({ type: "limite", reason: "tiempo" });
   });
 
-  it("un estudiante en alto riesgo se detiene sin respuesta de la IA, y queda detenido", async () => {
+  it("un estudiante en peligro inmediato se detiene sin respuesta de la IA, y queda detenido", async () => {
     const b = browser("estudiante");
-    risk.assess.mockResolvedValueOnce({ level: "HIGH_RISK", category: "autolesion", reason: "" });
-    expect(await b.say("ya no quiero vivir")).toMatchObject({ type: "detenido", safety: "autolesion" });
+    risk.assess.mockResolvedValueOnce({ level: "IMMEDIATE_DANGER", category: "autolesion", reason: "" });
+    expect(await b.say("ya tengo las pastillas para esta noche")).toMatchObject({
+      type: "detenido",
+      safety: "peligro_inmediato",
+    });
     expect(model.reply).not.toHaveBeenCalled();
-    expect(decodePass(b.token, SECRET)).toMatchObject({ lock: "autolesion", stage: "seguridad" });
+    expect(decodePass(b.token, SECRET)).toMatchObject({ lock: "peligro_inmediato", stage: "seguridad" });
 
     // Even if the next message looks safe, the session does not resume on its own
-    expect(await b.say("era broma")).toMatchObject({ type: "detenido", safety: "autolesion" });
+    expect(await b.say("era broma")).toMatchObject({ type: "detenido", safety: "peligro_inmediato" });
     expect(risk.assess).toHaveBeenCalledTimes(1);
   });
 
   it("una sesión detenida no se puede cerrar con un resumen de la IA", async () => {
     const b = browser("estudiante");
     risk.assess.mockResolvedValueOnce({ level: "IMMEDIATE_DANGER", category: "violencia", reason: "" });
-    await b.say("me van a pegar a la salida hoy");
+    await b.say("me van a pegar a la salida ahora");
     expect(await oracle.close({ token: b.token, history: b.history })).toMatchObject({
       type: "detenido",
       safety: "peligro_inmediato",
     });
     expect(model.reply).not.toHaveBeenCalled();
+  });
+
+  it("un estudiante en alto riesgo sigue hablando, con el panel y el aviso de acompañamiento", async () => {
+    const b = browser("estudiante");
+    risk.assess.mockResolvedValueOnce({ level: "HIGH_RISK", category: "acoso_grave", reason: "" });
+    expect(await b.say("me tienen la montada en el salón")).toMatchObject({ type: "respuesta", safety: "acoso_grave" });
+    expect(model.reply.mock.calls[0][0].instructions).toBe(`${CONVERSATION_PROMPTS.estudiante.text}\n\n${ACCOMPANY_PROMPT.text}`);
+    expect(decodePass(b.token, SECRET).lock).toBeNull();
   });
 
   it("un adulto que cuenta un caso de abuso recibe respuesta y el panel de ayuda", async () => {
@@ -107,13 +134,14 @@ describe("orquestador", () => {
     expect(model.reply).toHaveBeenCalledTimes(1);
   });
 
-  it("un adulto ante peligro inmediato también se detiene", async () => {
+  it("un adulto ante peligro inmediato recibe el panel de emergencia y pasos cortos", async () => {
     const b = browser("docente");
     risk.assess.mockResolvedValueOnce({ level: "IMMEDIATE_DANGER", category: "violencia", reason: "" });
     expect(await b.say("Un estudiante está armado en el salón ahora")).toMatchObject({
-      type: "detenido",
+      type: "respuesta",
       safety: "peligro_inmediato",
     });
+    expect(model.reply.mock.calls[0][0].instructions).toBe(`${CONVERSATION_PROMPTS.docente.text}\n\n${URGENT_PROMPT.text}`);
   });
 
   it("rechaza un historial alterado (por ejemplo, una respuesta falsa del Oráculo)", async () => {

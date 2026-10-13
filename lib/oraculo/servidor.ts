@@ -2,6 +2,8 @@ import "server-only";
 import { z } from "zod";
 import { createOracle, type Oracle } from "@/lib/oraculo/conversacion/orquestador";
 import { createOpenAIClient, OpenAIChatModel } from "@/lib/oraculo/ia/openai";
+import { ModelRiskChecker } from "@/lib/oraculo/riesgo/clasificador";
+import { CombinedRiskChecker } from "@/lib/oraculo/riesgo/combinado";
 import { ModerationRiskChecker } from "@/lib/oraculo/riesgo/moderacion";
 
 /**
@@ -11,11 +13,19 @@ import { ModerationRiskChecker } from "@/lib/oraculo/riesgo/moderacion";
  */
 const DEFAULT_MODEL = "gpt-5.6-luna";
 
+/**
+ * The risk classifier is chosen for what it catches, not for price: on the same test bank
+ * gpt-5.4-mini missed no danger while gpt-5.6-luna missed one, and each call is tiny.
+ * Run `npm run eval:riesgo` before changing it (OPENAI_RISK_MODEL).
+ */
+const DEFAULT_RISK_MODEL = "gpt-5.4-mini";
+
 const EnvSchema = z.object({
   OPENAI_API_KEY: z.string().startsWith("sk-"),
   /** Signs session passes. At least 32 random characters; changing it ends all open sessions. */
   ORACULO_SECRET: z.string().min(32),
   OPENAI_MODEL: z.string().min(1).default(DEFAULT_MODEL),
+  OPENAI_RISK_MODEL: z.string().min(1).default(DEFAULT_RISK_MODEL),
 });
 
 let oracle: Oracle | undefined;
@@ -27,7 +37,11 @@ export function getOracle(): Oracle {
   const client = createOpenAIClient(env.OPENAI_API_KEY);
   oracle = createOracle({
     model: new OpenAIChatModel(client, env.OPENAI_MODEL),
-    risk: new ModerationRiskChecker(client),
+    // Two independent checks; the most serious answer wins
+    risk: new CombinedRiskChecker([
+      new ModerationRiskChecker(client),
+      new ModelRiskChecker(client, env.OPENAI_RISK_MODEL),
+    ]),
     secret: env.ORACULO_SECRET,
   });
   return oracle;

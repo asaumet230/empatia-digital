@@ -10,21 +10,32 @@ const r = (level: RiskAssessment["level"], category: RiskAssessment["category"])
 });
 
 describe("política de riesgo", () => {
-  it.each(PROFILES)("peligro inmediato detiene a %s", (profile) => {
-    expect(decide(profile, r("IMMEDIATE_DANGER", "abuso"))).toEqual({ action: "detener", safety: "peligro_inmediato" });
+  it("peligro inmediato detiene al estudiante", () => {
+    expect(decide("estudiante", r("IMMEDIATE_DANGER", "abuso"))).toEqual({ action: "detener", safety: "peligro_inmediato" });
   });
 
-  it("alto riesgo detiene al estudiante con el mensaje de su categoría", () => {
-    expect(decide("estudiante", r("HIGH_RISK", "autolesion"))).toEqual({ action: "detener", safety: "autolesion" });
+  it.each(["docente", "familia"] as const)("peligro inmediato no detiene a %s: panel de emergencia + respuesta", (profile) => {
+    expect(decide(profile, r("IMMEDIATE_DANGER", "violencia"))).toEqual({
+      action: "acompanar",
+      safety: "peligro_inmediato",
+    });
   });
 
-  it.each(["docente", "familia"] as const)("alto riesgo no detiene a %s: le acompaña con el panel", (profile) => {
+  it.each(PROFILES)("alto riesgo acompaña a %s con el panel de su categoría, sin cortar", (profile) => {
     expect(decide(profile, r("HIGH_RISK", "abuso"))).toEqual({ action: "acompanar", safety: "abuso" });
+    expect(decide(profile, r("HIGH_RISK", "acoso_grave"))).toEqual({ action: "acompanar", safety: "acoso_grave" });
   });
 
-  it.each(PROFILES)("seguro y revisar siguen la conversación para %s", (profile) => {
-    expect(decide(profile, r("SAFE", "ninguna"))).toEqual({ action: "continuar" });
-    expect(decide(profile, r("REVIEW", "acoso_grave"))).toEqual({ action: "continuar" });
+  it.each(PROFILES)("solo un estudiante en peligro inmediato corta la conversación (%s)", (profile) => {
+    const levels = ["SAFE", "REVIEW", "HIGH_RISK", "IMMEDIATE_DANGER"] as const;
+    const stops = levels.filter((level) => decide(profile, r(level, level === "SAFE" ? "ninguna" : "autolesion")).action === "detener");
+    expect(stops).toEqual(profile === "estudiante" ? ["IMMEDIATE_DANGER"] : []);
+  });
+
+  it.each(PROFILES)("seguro sigue normal y revisar sigue con cautela para %s", (profile) => {
+    expect(decide(profile, r("SAFE", "ninguna"))).toEqual({ action: "continuar", cautious: false });
+    expect(decide(profile, r("REVIEW", "acoso_grave"))).toEqual({ action: "continuar", cautious: true });
+    expect(decide(profile, r("REVIEW", "ninguna"))).toEqual({ action: "continuar", cautious: true });
   });
 });
 
