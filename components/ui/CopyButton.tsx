@@ -8,7 +8,8 @@ import { cn } from "@/lib/cn";
 interface CopyButtonProps {
   text: string;
   label?: string;
-  tone?: "primary" | "ghost";
+  /** "oraculo" follows the Oráculo light/dark theme. */
+  tone?: "primary" | "ghost" | "oraculo";
   className?: string;
 }
 
@@ -34,7 +35,9 @@ export function CopyButton({ text, label = "Copiar", tone = "ghost", className }
         "inline-flex shrink-0 items-center justify-center gap-2 rounded-full font-semibold transition-[background-color,border-color,color,filter] duration-300",
         tone === "primary"
           ? cn("px-5 py-2.5 text-navy-dark hover:brightness-110", copied ? "bg-white" : "bg-green-bright")
-          : cn(
+          : tone === "oraculo"
+            ? cn("border px-5 py-3", copied ? "border-o-accent text-o-accent" : "border-o-line text-o-text hover:bg-o-raised")
+            : cn(
               "border px-4 py-2 text-sm",
               copied
                 ? "border-green-bright text-green-bright"

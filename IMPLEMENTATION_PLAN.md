@@ -65,9 +65,13 @@ components/oraculo/       interfaz
     la conversación. Alto riesgo (cualquier perfil) y peligro inmediato contado por un adulto siguen la
     conversación con el panel de ayuda en pantalla y un aviso al modelo (acompañar o pasos urgentes).
   - Hecho cuando: las frases de peligro activan el panel y las bromas no.
-- [ ] **Paso 4 — Interfaz.** Botón flotante, perfil, consentimiento, chat, panel de emergencia, cierre;
+- [x] **Paso 4 — Interfaz.** Botón flotante, perfil, consentimiento, chat, panel de emergencia, cierre;
   claro/oscuro, teclado, lector de pantalla, celular.
-  - Hecho cuando: se prueba completo en iPhone, Android y computador.
+  - Hecho cuando: se prueba completo en iPhone, Android y computador. ✅ Probado con Playwright en
+    tamaño celular (390 px, táctil) y computador (1280 px), claro y oscuro, con la IA real.
+    Falta la prueba en teléfonos físicos (iPhone y Android) antes del lanzamiento.
+  - El enlace "Política de privacidad y términos" apunta a `/oraculo/privacidad`, que se crea en el Paso 5.
+  - En desarrollo, el ícono "N" de Next.js tapa el botón flotante; en producción no aparece.
 - [ ] **Paso 5 — Páginas legales.** Privacidad, términos y formato de autorización (borrador para abogado).
 - [ ] **Paso 6 — Pruebas finales y publicación.** Playwright, variables en Vercel, límite por visitante,
   tope de gasto en OpenAI, ningún mensaje en los logs.

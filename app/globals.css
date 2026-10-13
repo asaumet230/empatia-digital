@@ -42,6 +42,66 @@
 }
 
 /* ------------------------------------------------------------------ */
+/*  Oráculo — light by default like any chat, dark when the device     */
+/*  is. Same brand: navy, green and the same fonts.                    */
+/* ------------------------------------------------------------------ */
+
+.oraculo-theme,
+html:has(.oraculo-theme) {
+  color-scheme: light;
+  --o-bg: #eef1f4;
+  --o-surface: #ffffff;
+  --o-raised: #f6f8fa;
+  --o-text: #142738;
+  --o-muted: #566676;
+  --o-line: rgb(20 39 56 / 0.12);
+  /* Accent for text and icons; buttons use green-bright with navy text in both themes */
+  --o-accent: #1d7f3c;
+  --o-user: #142738;
+  --o-user-text: #ffffff;
+  --o-alert: #c4323a;
+  --o-alert-soft: #fdeeee;
+  --o-help: #9a5b00;
+  --o-help-soft: #fff6e6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .oraculo-theme,
+  html:has(.oraculo-theme) {
+    color-scheme: dark;
+    --o-bg: #0f1f2c;
+    --o-surface: #142738;
+    --o-raised: #1a3247;
+    --o-text: #f4f6f8;
+    --o-muted: #a3b0bd;
+    --o-line: rgb(201 209 217 / 0.14);
+    --o-accent: #35c95e;
+    --o-user: #2a4a63;
+    --o-user-text: #ffffff;
+    --o-alert: #ff7a7a;
+    --o-alert-soft: rgb(255 107 107 / 0.12);
+    --o-help: #ffd23f;
+    --o-help-soft: rgb(255 210 63 / 0.1);
+  }
+}
+
+@theme inline {
+  --color-o-bg: var(--o-bg);
+  --color-o-surface: var(--o-surface);
+  --color-o-raised: var(--o-raised);
+  --color-o-text: var(--o-text);
+  --color-o-muted: var(--o-muted);
+  --color-o-line: var(--o-line);
+  --color-o-accent: var(--o-accent);
+  --color-o-user: var(--o-user);
+  --color-o-user-text: var(--o-user-text);
+  --color-o-alert: var(--o-alert);
+  --color-o-alert-soft: var(--o-alert-soft);
+  --color-o-help: var(--o-help);
+  --color-o-help-soft: var(--o-help-soft);
+}
+
+/* ------------------------------------------------------------------ */
 /*  Base                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -64,6 +124,13 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* The Oráculo pages paint the whole canvas (overscroll included) with their own theme */
+html:has(.oraculo-theme),
+html:has(.oraculo-theme) body {
+  background: var(--o-bg);
+  scroll-snap-type: none;
 }
 
 ::selection {

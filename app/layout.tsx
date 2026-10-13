@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope, Unbounded } from "next/font/google";
+import { OracleLauncher } from "@/components/oraculo/OracleLauncher";
 import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
@@ -40,7 +41,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${unbounded.variable} ${manrope.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-svh">{children}</body>
+      <body className="min-h-svh">
+        {children}
+        <OracleLauncher />
+      </body>
     </html>
   );
 }
