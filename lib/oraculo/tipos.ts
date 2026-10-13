@@ -30,17 +30,33 @@ export const RISK_CATEGORIES = ["ninguna", "autolesion", "abuso", "violencia", "
 export const RiskCategorySchema = z.enum(RISK_CATEGORIES);
 export type RiskCategory = z.infer<typeof RiskCategorySchema>;
 
-/** Structured answer of the risk classifier. Anything that does not parse is treated as REVIEW. */
-export const RiskAssessmentSchema = z.object({
-  level: RiskLevelSchema,
-  category: RiskCategorySchema,
-  /** Short internal reason. Never shown to the user and never logged with the message. */
-  reason: z.string().max(300),
-});
+/** Which fixed safety message applies: one per risk category, plus "possible immediate danger". */
+export const SAFETY_KEYS = [
+  "peligro_inmediato",
+  "autolesion",
+  "abuso",
+  "violencia",
+  "extorsion",
+  "acoso_grave",
+] as const satisfies readonly (Exclude<RiskCategory, "ninguna"> | "peligro_inmediato")[];
+export const SafetyKeySchema = z.enum(SAFETY_KEYS);
+export type SafetyKey = z.infer<typeof SafetyKeySchema>;
+
+/** Structured answer of the risk layer. A serious level always names what kind of risk it is. */
+export const RiskAssessmentSchema = z
+  .object({
+    level: RiskLevelSchema,
+    category: RiskCategorySchema,
+    /** Short internal reason. Never shown to the user and never logged with the message. */
+    reason: z.string().max(300),
+  })
+  .refine((r) => (r.level === "SAFE") === (r.category === "ninguna") || r.level === "REVIEW", {
+    message: "SAFE va con 'ninguna'; HIGH_RISK e IMMEDIATE_DANGER necesitan una categoría",
+  });
 export type RiskAssessment = z.infer<typeof RiskAssessmentSchema>;
 
 export const MessageSchema = z.object({
   role: z.enum(["usuario", "oraculo"]),
-  text: z.string().min(1),
+  text: z.string().min(1).max(4000),
 });
 export type Message = z.infer<typeof MessageSchema>;

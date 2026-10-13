@@ -43,8 +43,17 @@ components/oraculo/       interfaz
   - [ ] Confirmar por teléfono las líneas de `lib/oraculo/config/lineas.ts`.
 - [x] **Paso 1 — Base.** Tipos, límites, líneas, mensajes de seguridad (borrador) y prompts versionados.
   - Hecho cuando: `npm test` valida que la configuración está completa y es coherente. ✅
-- [ ] **Paso 2 — Servidor.** Pase firmado, endpoint, adaptador de OpenAI, límites, errores y timeouts.
-  - Hecho cuando: una conversación completa funciona sin interfaz y el mensaje 31 se rechaza.
+- [x] **Paso 2 — Servidor.** Pase firmado, endpoint, adaptador de OpenAI, límites, errores y timeouts.
+  - Hecho cuando: una conversación completa funciona sin interfaz y el mensaje 31 se rechaza. ✅
+  - Endpoints (POST, solo desde el mismo sitio): `/api/oraculo/sesion`, `/api/oraculo/mensaje`, `/api/oraculo/cierre`.
+  - Variables de entorno: `OPENAI_API_KEY`, `ORACULO_SECRET` (32+ caracteres al azar),
+    `OPENAI_MODEL` (opcional, por defecto `gpt-5.6-luna`).
+  - Riesgo provisional: solo el filtro de moderación de OpenAI. En la prueba real no detectó
+    "su padrastro le pega y le da miedo volver a la casa": por eso el Paso 3 es obligatorio.
+  - Límite conocido del diseño sin almacenamiento: el servidor no recuerda pases viejos, así que
+    alguien con conocimientos técnicos podría reusar un pase anterior (o abrir una sesión nueva)
+    para saltarse un bloqueo o el límite de mensajes. La interfaz nunca lo hará sola. Las
+    protecciones reales contra abuso son el límite por visitante de Vercel y el tope de gasto.
 - [ ] **Paso 3 — Seguridad.** Moderación + clasificador + reglas por perfil; banco de frases de prueba
   (jerga adolescente, casos ambiguos, intentos de inyección).
   - Hecho cuando: las frases de peligro activan el panel y las bromas no.

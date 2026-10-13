@@ -17,6 +17,9 @@ describe("tipos", () => {
     { level: "PELIGRO", category: "abuso", reason: "" },
     { level: "SAFE", category: "otra", reason: "" },
     { level: "SAFE", category: "ninguna" },
+    { level: "SAFE", category: "abuso", reason: "" },
+    { level: "HIGH_RISK", category: "ninguna", reason: "" },
+    { level: "IMMEDIATE_DANGER", category: "ninguna", reason: "" },
     "SAFE",
   ])("rechaza una evaluación inválida: %j", (value) => {
     expect(RiskAssessmentSchema.safeParse(value).success).toBe(false);

@@ -3,7 +3,7 @@ import { SHARED_RULES, type VersionedPrompt } from "@/lib/oraculo/prompts/reglas
 
 export const FAMILY_PROMPT: VersionedPrompt = {
   id: "familia",
-  version: "2026-10-13.1",
+  version: "2026-10-13.2",
   text: `${SHARED_RULES}
 
 Con quién hablas

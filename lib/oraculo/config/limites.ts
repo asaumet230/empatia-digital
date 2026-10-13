@@ -6,8 +6,13 @@ export const LIMITS = {
   maxSessionMinutes: 60,
   /** Characters per message: enough to tell what happened, too little to paste long injections. */
   maxMessageChars: 1000,
-  /** Upper bound for each Oráculo reply; replies are meant to be short. */
-  maxReplyTokens: 400,
+  /**
+   * Token budget per model call. It also covers the model's internal reasoning, so it is well
+   * above the length of a reply; the prompts keep the visible answer short.
+   */
+  maxOutputTokens: 1500,
+  /** Longest history (both sides) the server accepts back from the browser. */
+  maxHistoryMessages: 61,
   /** Time we wait for OpenAI before giving up on a request. */
   requestTimeoutMs: 20_000,
   /** Extra attempts after a failed OpenAI call. */

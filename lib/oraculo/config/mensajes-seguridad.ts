@@ -1,5 +1,5 @@
 import type { HelpLineId } from "@/lib/oraculo/config/lineas";
-import type { Audience, RiskCategory } from "@/lib/oraculo/tipos";
+import type { Audience, SafetyKey } from "@/lib/oraculo/tipos";
 
 /* ------------------------------------------------------------------ */
 /*  Fixed safety messages. The AI never writes these: they are shown   */
@@ -8,8 +8,6 @@ import type { Audience, RiskCategory } from "@/lib/oraculo/tipos";
 /*  PazLab and Fundación Por Una Sonrisa before launch. Any change     */
 /*  bumps `version`.                                                   */
 /* ------------------------------------------------------------------ */
-
-export type SafetyKey = Exclude<RiskCategory, "ninguna"> | "peligro_inmediato";
 
 export interface SafetyMessage {
   title: string;

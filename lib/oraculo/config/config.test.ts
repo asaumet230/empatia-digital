@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { HELP_LINES, type HelpLineId } from "@/lib/oraculo/config/lineas";
 import { LIMITS } from "@/lib/oraculo/config/limites";
-import { SAFETY_MESSAGES, safetyMessage, type SafetyKey } from "@/lib/oraculo/config/mensajes-seguridad";
-import { RISK_CATEGORIES, type Audience } from "@/lib/oraculo/tipos";
+import { SAFETY_MESSAGES, safetyMessage } from "@/lib/oraculo/config/mensajes-seguridad";
+import { RISK_CATEGORIES, SAFETY_KEYS, type Audience } from "@/lib/oraculo/tipos";
 
-const KEYS: SafetyKey[] = [...RISK_CATEGORIES.filter((c) => c !== "ninguna"), "peligro_inmediato"];
+const KEYS = SAFETY_KEYS;
 const AUDIENCES: Audience[] = ["estudiante", "adulto"];
 const every = KEYS.flatMap((key) => AUDIENCES.map((audience) => ({ key, audience })));
 
@@ -23,6 +23,11 @@ describe("líneas de ayuda", () => {
 });
 
 describe("mensajes de seguridad", () => {
+  it("hay una clave por cada categoría de riesgo, más peligro inmediato", () => {
+    const categories = RISK_CATEGORIES.filter((c) => c !== "ninguna");
+    expect([...SAFETY_KEYS].sort()).toEqual([...categories, "peligro_inmediato"].sort());
+  });
+
   it("existe un mensaje para cada situación y cada público", () => {
     for (const { key, audience } of every) expect(safetyMessage(key, audience)).toBeDefined();
   });
