@@ -1,0 +1,46 @@
+import { z } from "zod";
+
+/* ------------------------------------------------------------------ */
+/*  Oráculo — shared contracts. The zod schemas are the source of      */
+/*  truth: the server validates everything that crosses a boundary     */
+/*  (browser → API, OpenAI → API) against them.                        */
+/* ------------------------------------------------------------------ */
+
+/** Who is talking. Chosen on the first screen; it picks the prompt and the safety policy. */
+export const PROFILES = ["estudiante", "docente", "familia"] as const;
+export const ProfileSchema = z.enum(PROFILES);
+export type Profile = z.infer<typeof ProfileSchema>;
+
+/** Students get the protective flow; teachers and families get guidance on how to act. */
+export type Audience = "estudiante" | "adulto";
+export const audienceOf = (profile: Profile): Audience => (profile === "estudiante" ? "estudiante" : "adulto");
+
+/** Conversation stages. The server owns the transitions; "seguridad" can only be entered, never left. */
+export const STAGES = ["bienvenida", "escucha", "orientacion", "cierre", "seguridad"] as const;
+export const StageSchema = z.enum(STAGES);
+export type Stage = z.infer<typeof StageSchema>;
+
+/** Risk levels, from "within scope" to "possible immediate danger". */
+export const RISK_LEVELS = ["SAFE", "REVIEW", "HIGH_RISK", "IMMEDIATE_DANGER"] as const;
+export const RiskLevelSchema = z.enum(RISK_LEVELS);
+export type RiskLevel = z.infer<typeof RiskLevelSchema>;
+
+/** What kind of risk was detected; each one has its own safety message and help lines. */
+export const RISK_CATEGORIES = ["ninguna", "autolesion", "abuso", "violencia", "extorsion", "acoso_grave"] as const;
+export const RiskCategorySchema = z.enum(RISK_CATEGORIES);
+export type RiskCategory = z.infer<typeof RiskCategorySchema>;
+
+/** Structured answer of the risk classifier. Anything that does not parse is treated as REVIEW. */
+export const RiskAssessmentSchema = z.object({
+  level: RiskLevelSchema,
+  category: RiskCategorySchema,
+  /** Short internal reason. Never shown to the user and never logged with the message. */
+  reason: z.string().max(300),
+});
+export type RiskAssessment = z.infer<typeof RiskAssessmentSchema>;
+
+export const MessageSchema = z.object({
+  role: z.enum(["usuario", "oraculo"]),
+  text: z.string().min(1),
+});
+export type Message = z.infer<typeof MessageSchema>;
