@@ -35,6 +35,7 @@ Los archivos de `public/assets` se referencian desde la raíz: `/assets/logos/ar
 | `/docentes` | Mediación tecnológica y diagnóstico del aula con IA |
 | `/estudiantes` | Ciudadanía digital y creadores de paz con IA (en construcción) |
 | `/familias` | Hogares conectados, familias empáticas |
+| `/oraculo` | Oráculo: chat de escucha y orientación con IA (ver GUIA.md, sección 8b) |
 
 Cada ruta es una presentación con su propio recorrido (`TRACKS` en `lib/sections.ts`);
 ambas comparten la intro y el bloque "La IA no es solamente ChatGPT".

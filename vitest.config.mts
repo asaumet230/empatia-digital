@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
@@ -10,5 +10,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // End-to-end tests run with Playwright (`npm run test:e2e`)
+    exclude: [...configDefaults.exclude, "e2e/**"],
   },
 });

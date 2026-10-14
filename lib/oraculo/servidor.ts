@@ -2,6 +2,7 @@ import "server-only";
 import { z } from "zod";
 import { createOracle, type Oracle } from "@/lib/oraculo/conversacion/orquestador";
 import { createOpenAIClient, OpenAIChatModel } from "@/lib/oraculo/ia/openai";
+import { SimulatedChatModel, TaggedRiskChecker } from "@/lib/oraculo/ia/simulada";
 import { ModelRiskChecker } from "@/lib/oraculo/riesgo/clasificador";
 import { CombinedRiskChecker } from "@/lib/oraculo/riesgo/combinado";
 import { ModerationRiskChecker } from "@/lib/oraculo/riesgo/moderacion";
@@ -20,6 +21,11 @@ const DEFAULT_MODEL = "gpt-5.6-luna";
  */
 const DEFAULT_RISK_MODEL = "gpt-5.4-mini";
 
+/** End-to-end tests only. Ignored on Vercel, so a stray variable can never reach real users. */
+const simulated = () => process.env.ORACULO_IA_SIMULADA === "1" && !process.env.VERCEL;
+
+const SimulatedEnvSchema = z.object({ ORACULO_SECRET: z.string().min(32) });
+
 const EnvSchema = z.object({
   OPENAI_API_KEY: z.string().startsWith("sk-"),
   /** Signs session passes. At least 32 random characters; changing it ends all open sessions. */
@@ -33,6 +39,15 @@ let oracle: Oracle | undefined;
 /** Composition root: the only place that wires real implementations together. */
 export function getOracle(): Oracle {
   if (oracle) return oracle;
+  if (simulated()) {
+    console.warn("[oraculo] IA simulada: solo para pruebas");
+    oracle = createOracle({
+      model: new SimulatedChatModel(),
+      risk: new TaggedRiskChecker(),
+      secret: SimulatedEnvSchema.parse(process.env).ORACULO_SECRET,
+    });
+    return oracle;
+  }
   const env = EnvSchema.parse(process.env);
   const client = createOpenAIClient(env.OPENAI_API_KEY);
   oracle = createOracle({

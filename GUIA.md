@@ -206,6 +206,69 @@ agregarlo al recorrido correspondiente en `TRACKS`. La navegación y el progreso
 **Logos de herramientas de IA:** `public/assets/logos/ia/` (monocromos, se colorean con máscara CSS;
 los originales están en `ia/originales/`). `scripts/logo-to-white.py` convierte logos a blanco sobre transparente.
 
+## 8b. Oráculo: chat de escucha y orientación (`/oraculo`)
+
+Chat con inteligencia artificial (OpenAI) para estudiantes, docentes y familias sobre convivencia, acoso
+y ciberacoso. Responsables de los datos: **PazLab** y **Fundación Por Una Sonrisa**. Se abre desde el
+botón flotante "¿Necesitas hablar?" (abajo a la izquierda) en todas las páginas.
+El plan completo y su avance están en `IMPLEMENTATION_PLAN.md`.
+
+> **Estado:** en la rama `feature/oraculo`, sin publicar. Los mensajes de emergencia, el banco de riesgo y
+> los textos legales son **borradores**: no usar con estudiantes hasta que los aprueben los profesionales
+> designados y un abogado.
+
+**Cómo funciona, en corto**
+- La persona elige perfil, acepta el "Antes de empezar" y conversa. No se piden nombres ni cuentas.
+- No se guarda nada: la conversación vive en la pestaña y se borra al cerrarla. El servidor no tiene base
+  de datos; firma un "pase" con el contador de mensajes (máximo 30) y la hora de inicio (máximo 60 minutos).
+- Cada mensaje pasa por dos revisiones de riesgo (filtro de moderación de OpenAI + clasificador propio).
+  Caso serio → la IA sigue y aparece el panel de ayuda con botones para llamar. Estudiante en peligro
+  inmediato → la conversación se pausa y queda solo el panel de emergencia.
+
+**Dónde se cambia cada cosa**
+
+| Qué | Dónde |
+|---|---|
+| Líneas de ayuda (números) | `lib/oraculo/config/lineas.ts` |
+| Mensajes de emergencia (fijos) | `lib/oraculo/config/mensajes-seguridad.ts` |
+| Textos de las pantallas | `lib/oraculo/config/textos.ts` |
+| Límites (mensajes, minutos, largo) | `lib/oraculo/config/limites.ts` |
+| Prompts de la IA (con versión) | `lib/oraculo/prompts/` |
+| Qué hacer con cada nivel de riesgo | `lib/oraculo/riesgo/politica.ts` |
+| Frases de prueba de riesgo | `lib/oraculo/riesgo/banco.ts` |
+| Política de privacidad, términos y autorización | `lib/oraculo/config/legal.ts` |
+| Modelos de OpenAI | variables `OPENAI_MODEL` (conversación, `gpt-5.6-luna`) y `OPENAI_RISK_MODEL` (riesgo, `gpt-5.4-mini`) |
+
+Al cambiar un prompt o un mensaje de emergencia, súbele la versión (`version`).
+
+**Pruebas**
+
+| Comando | Qué revisa | ¿Gasta saldo de OpenAI? |
+|---|---|---|
+| `npm test` | Reglas, límites, riesgo, pase firmado, textos, privacidad del código | No |
+| `npm run test:e2e` | El recorrido completo en computador, iPhone (WebKit) y Android, accesibilidad en claro y oscuro, y que ningún mensaje llegue al registro del servidor. Usa una IA simulada | No |
+| `npm run eval:riesgo` | El banco de frases contra la IA real: falla si se escapa algún peligro | Sí, muy poco |
+
+Correr `npm run eval:riesgo` después de cambiar el prompt de riesgo o el modelo `OPENAI_RISK_MODEL`.
+
+**Para publicarlo (cuando se decida)**
+1. Completar en `lib/oraculo/config/legal.ts` el NIT y el domicilio, y obtener la aprobación del abogado
+   (cambiar `approved` a `true` en `LEGAL`).
+2. Obtener la aprobación profesional de `mensajes-seguridad.ts`, `politica.ts` y `banco.ts`
+   (cambiar `approved` a `true` en `SAFETY_MESSAGES`).
+3. Confirmar por teléfono cada número de `lineas.ts`.
+4. En OpenAI: poner un tope de gasto mensual (Settings → Limits) y, si es posible, solicitar la retención
+   cero (Zero Data Retention); si se aprueba, actualizar la política de privacidad.
+5. En Vercel → Settings → Environment Variables (solo *Production*):
+   - `OPENAI_API_KEY`: la clave de OpenAI.
+   - `ORACULO_SECRET`: una clave nueva, distinta a la del computador. Se genera con
+     `openssl rand -base64 48`.
+   - `ORACULO_IA_SIMULADA` **no** se configura nunca en Vercel (de todos modos, allá se ignora).
+6. En Vercel → Firewall: una regla de límite por visitante para `/api/oraculo/` (por ejemplo, 20 solicitudes
+   por minuto por IP).
+7. Unir `feature/oraculo` a `main`, esperar el despliegue y probar en un iPhone y un Android reales:
+   un caso normal, uno serio (debe salir el panel) y uno de peligro (debe pausarse).
+
 ---
 
 ## 9. Historial de trabajo

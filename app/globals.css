@@ -56,7 +56,7 @@ html:has(.oraculo-theme) {
   --o-muted: #566676;
   --o-line: rgb(20 39 56 / 0.12);
   /* Accent for text and icons; buttons use green-bright with navy text in both themes */
-  --o-accent: #1d7f3c;
+  --o-accent: #176b35;
   --o-user: #142738;
   --o-user-text: #ffffff;
   --o-alert: #c4323a;
@@ -96,7 +96,7 @@ html:has(.oraculo-theme) {
     --o-text: #000000;
     --o-muted: #333333;
     --o-line: rgb(0 0 0 / 0.3);
-    --o-accent: #1d7f3c;
+    --o-accent: #176b35;
     --o-help: #000000;
     --o-help-soft: #ffffff;
   }

@@ -77,6 +77,16 @@ components/oraculo/       interfaz
   - Textos en `lib/oraculo/config/legal.ts`, marcados como borrador (`LEGAL.approved = false`).
   - Faltan: NIT y domicilio de PazLab y la Fundación (aparecen resaltados en amarillo) y la revisión de un abogado.
   - Recomendado: solicitar a OpenAI la retención cero (Zero Data Retention); hoy conserva hasta 30 días.
-- [ ] **Paso 6 — Pruebas finales y publicación.** Playwright, variables en Vercel, límite por visitante,
-  tope de gasto en OpenAI, ningún mensaje en los logs.
+- [x] **Paso 6 — Pruebas finales y publicación.** Playwright, variables en Vercel, límite por visitante,
+  tope de gasto en OpenAI, ningún mensaje en los logs. ✅ *(la parte local; la publicación se pospuso)*
+  - `npm run test:e2e`: 49 pruebas en computador, iPhone (WebKit) y Android con IA simulada, sin costo:
+    recorrido completo, panel de ayuda, pausa por peligro, errores, límite de 30 mensajes, origen y pase
+    falsos, y accesibilidad (axe) en claro y oscuro. Al terminar verifica que ningún mensaje llegó al
+    registro del servidor.
+  - `lib/oraculo/privacidad.test.ts` vigila el código: solo dos registros (sin datos de la conversación),
+    sin localStorage ni cookies, y `store: false` en las llamadas a OpenAI.
+  - Ajuste por accesibilidad: verde del modo claro más oscuro (contraste 4,5:1).
+  - Guía de publicación: `GUIA.md`, sección 8b.
+  - **Pospuesto por decisión de PazLab (2026-10-13):** configurar Vercel (variables, límite por visitante),
+    tope de gasto en OpenAI, unir a `main` y probar en teléfonos reales.
 - [ ] **Paso 7 — Aprobación y lanzamiento.** Revisión profesional de mensajes y pruebas de riesgo.
