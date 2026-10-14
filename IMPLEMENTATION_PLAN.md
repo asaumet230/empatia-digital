@@ -72,7 +72,11 @@ components/oraculo/       interfaz
     Falta la prueba en teléfonos físicos (iPhone y Android) antes del lanzamiento.
   - El enlace "Política de privacidad y términos" apunta a `/oraculo/privacidad`, que se crea en el Paso 5.
   - En desarrollo, el ícono "N" de Next.js tapa el botón flotante; en producción no aparece.
-- [ ] **Paso 5 — Páginas legales.** Privacidad, términos y formato de autorización (borrador para abogado).
+- [x] **Paso 5 — Páginas legales.** Privacidad, términos y formato de autorización (borrador para abogado). ✅
+  - `/oraculo/privacidad` (política + términos) y `/oraculo/autorizacion` (formato imprimible, se firma a mano).
+  - Textos en `lib/oraculo/config/legal.ts`, marcados como borrador (`LEGAL.approved = false`).
+  - Faltan: NIT y domicilio de PazLab y la Fundación (aparecen resaltados en amarillo) y la revisión de un abogado.
+  - Recomendado: solicitar a OpenAI la retención cero (Zero Data Retention); hoy conserva hasta 30 días.
 - [ ] **Paso 6 — Pruebas finales y publicación.** Playwright, variables en Vercel, límite por visitante,
   tope de gasto en OpenAI, ningún mensaje en los logs.
 - [ ] **Paso 7 — Aprobación y lanzamiento.** Revisión profesional de mensajes y pruebas de riesgo.

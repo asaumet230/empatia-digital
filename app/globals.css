@@ -85,6 +85,23 @@ html:has(.oraculo-theme) {
   }
 }
 
+/* Paper is always white: printing from a phone in dark mode must not give light-gray text */
+@media print {
+  .oraculo-theme,
+  html:has(.oraculo-theme) {
+    color-scheme: light;
+    --o-bg: #ffffff;
+    --o-surface: #ffffff;
+    --o-raised: #ffffff;
+    --o-text: #000000;
+    --o-muted: #333333;
+    --o-line: rgb(0 0 0 / 0.3);
+    --o-accent: #1d7f3c;
+    --o-help: #000000;
+    --o-help-soft: #ffffff;
+  }
+}
+
 @theme inline {
   --color-o-bg: var(--o-bg);
   --color-o-surface: var(--o-surface);
