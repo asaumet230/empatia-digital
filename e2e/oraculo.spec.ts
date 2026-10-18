@@ -93,11 +93,12 @@ test("al finalizar muestra el resumen para copiar o imprimir", async ({ page }) 
   await expect(page.getByRole("heading", { name: "¿Quién eres?" })).toBeVisible();
 });
 
-test("la política y el formato de autorización cargan y avisan que son borrador", async ({ page }) => {
-  for (const path of ["/oraculo/privacidad", "/oraculo/terminos", "/oraculo/autorizacion"]) {
+test("los textos legales son la versión final, sin aviso de borrador", async ({ page }) => {
+  for (const path of ["/oraculo/terminos", "/oraculo/autorizacion"]) {
     await page.goto(path);
-    await expect(page.getByText("Borrador pendiente de revisión jurídica")).toBeVisible();
+    await expect(page.getByText("Borrador pendiente de revisión jurídica")).toHaveCount(0);
   }
   await page.goto("/oraculo/privacidad");
   await expect(page.getByRole("heading", { name: "Política de privacidad", exact: true })).toBeVisible();
+  await expect(page.getByText("Borrador pendiente de revisión jurídica")).toHaveCount(0);
 });

@@ -1,6 +1,5 @@
-import { TriangleAlert } from "lucide-react";
 import { Fragment } from "react";
-import { LEGAL, type LegalBlock, type LegalSection } from "@/lib/oraculo/config/legal";
+import type { LegalBlock, LegalSection } from "@/lib/oraculo/config/legal";
 
 /** Highlights "[Completar: …]" so missing data cannot go unnoticed. */
 export function WithPending({ text }: { text: string }) {
@@ -48,18 +47,4 @@ export function LegalSections({ sections }: { sections: readonly LegalSection[] 
       </div>
     </section>
   ));
-}
-
-/** Shown until a lawyer approves the texts (`LEGAL.approved`). */
-export function DraftNotice() {
-  if (LEGAL.approved) return null;
-  return (
-    <p
-      role="note"
-      className="flex items-start gap-3 rounded-2xl border border-o-help/50 bg-o-help-soft px-4 py-3 text-sm font-semibold print:border-black"
-    >
-      <TriangleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-o-help" />
-      {LEGAL.draftNotice}
-    </p>
-  );
 }

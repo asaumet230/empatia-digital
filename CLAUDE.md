@@ -72,7 +72,7 @@ Por Una Sonrisa, todavía sin publicar.
 | `/estudiantes` | Estudiantes | *Ciudadanía digital y creadores de paz con IA* (1 h, terminada) |
 | `/familias` | Padres, madres y acudientes | *Hogares conectados, familias empáticas* (2 h) |
 | `/oraculo` | Estudiantes, docentes, familias | Oráculo (rama `feature/oraculo`) |
-| `/oraculo/privacidad`, `/oraculo/terminos`, `/oraculo/autorizacion` | Familias y colegios | Textos legales del Oráculo (borrador) |
+| `/oraculo/privacidad`, `/oraculo/terminos`, `/oraculo/autorizacion` | Familias y colegios | Textos legales del Oráculo: privacidad, términos y autorización (2 hojas) finales, 2026-10-18 |
 | `/privacidad`, `/terminos` | Todos | Política de privacidad y términos del sitio (versión final, `components/ui/PolicyPage.tsx`) |
 
 ---

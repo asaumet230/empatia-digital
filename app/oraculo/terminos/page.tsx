@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DraftNotice, LegalSections } from "@/components/oraculo/LegalText";
+import { LegalSections } from "@/components/oraculo/LegalText";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
 import { PrintButton } from "@/components/oraculo/PrintButton";
 import { SiteFooter } from "@/components/ui/SiteFooter";
-import { LEGAL, TERMS } from "@/lib/oraculo/config/legal";
+import { TERMS, TERMS_META } from "@/lib/oraculo/config/legal";
 
 export const metadata: Metadata = {
   title: "Términos de uso · Oráculo",
@@ -17,12 +17,11 @@ export default function TerminosPage() {
     <div className="min-h-dvh">
       <OracleHeader />
       <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 md:py-14">
-        <DraftNotice />
-        <h1 className="mt-6 font-display text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">
+        <h1 className="font-display text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">
           Términos de uso
         </h1>
         <p className="mt-3 text-sm text-o-muted">
-          Versión {LEGAL.version} · Actualizada el {LEGAL.updated}
+          Versión {TERMS_META.version} · Actualizada el {TERMS_META.updated}
         </p>
 
         <nav aria-label="Documentos del Oráculo" className="mt-6 flex flex-wrap gap-2 print:hidden">

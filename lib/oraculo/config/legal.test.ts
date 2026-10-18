@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { AUTHORIZATION_FORM, CONTROLLERS, LEGAL, PRIVACY_POLICY, TERMS } from "@/lib/oraculo/config/legal";
+import { HELP_LINES } from "@/lib/oraculo/config/lineas";
 
 const text = (sections: typeof PRIVACY_POLICY) => JSON.stringify(sections);
 
@@ -14,12 +15,14 @@ describe("textos legales", () => {
     }
   });
 
-  it("la política cubre lo que exige la Ley 1581: responsables, finalidades, derechos y plazos", () => {
+  it("la política cubre lo que exige la Ley 1581: responsable, finalidades, derechos y plazos", () => {
     const policy = text(PRIVACY_POLICY);
     expect(policy).toContain(CONTROLLERS.email);
     expect(policy).toContain(CONTROLLERS.phone);
-    expect(policy).toMatch(/artículo 8 de la Ley 1581/);
-    expect(policy).toMatch(/artículo 7 de la Ley 1581/);
+    expect(policy).toContain(CONTROLLERS.ids);
+    expect(policy).toMatch(/Ley 1581 de 2012/);
+    expect(policy).toMatch(/Conocer, actualizar y rectificar/);
+    expect(policy).toMatch(/representante legal/);
     expect(policy).toMatch(/Superintendencia de Industria y Comercio/);
     expect(policy).toMatch(/10 días hábiles/);
     expect(policy).toMatch(/15 días hábiles/);
@@ -45,7 +48,14 @@ describe("textos legales", () => {
     expect(AUTHORIZATION_FORM.intro).toContain(LEGAL.policyUrl);
   });
 
-  it("sigue marcada como borrador hasta la revisión jurídica", () => {
-    expect(LEGAL.approved).toBe(false);
+  it("la política muestra las cinco líneas de ayuda de la app", () => {
+    const policy = text(PRIVACY_POLICY);
+    for (const line of Object.values(HELP_LINES)) expect(policy).toContain(line.number);
+  });
+
+  it("los textos legales son la versión final y el formato muestra las cinco líneas de ayuda", () => {
+    expect(LEGAL.approved).toBe(true);
+    const form = JSON.stringify(AUTHORIZATION_FORM);
+    for (const line of Object.values(HELP_LINES)) expect(form).toContain(line.number);
   });
 });

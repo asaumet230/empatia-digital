@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DraftNotice, LegalSections } from "@/components/oraculo/LegalText";
+import { LegalSections } from "@/components/oraculo/LegalText";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
 import { PrintButton } from "@/components/oraculo/PrintButton";
 import { SiteFooter } from "@/components/ui/SiteFooter";
-import { LEGAL, PRIVACY_POLICY } from "@/lib/oraculo/config/legal";
+import { PRIVACY_META, PRIVACY_POLICY } from "@/lib/oraculo/config/legal";
 
 export const metadata: Metadata = {
   title: "Política de privacidad · Oráculo",
@@ -17,12 +17,11 @@ export default function PrivacidadPage() {
     <div className="min-h-dvh">
       <OracleHeader />
       <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 md:py-14">
-        <DraftNotice />
-        <h1 className="mt-6 font-display text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">
+        <h1 className="font-display text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">
           Política de privacidad
         </h1>
         <p className="mt-3 text-sm text-o-muted">
-          Versión {LEGAL.version} · Actualizada el {LEGAL.updated}
+          Versión {PRIVACY_META.version} · Actualizada el {PRIVACY_META.updated}
         </p>
 
         <nav aria-label="Documentos del Oráculo" className="mt-6 flex flex-wrap gap-2 print:hidden">
