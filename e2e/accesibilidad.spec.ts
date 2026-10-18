@@ -48,7 +48,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     });
 
     test("política y formato de autorización", async ({ page }) => {
-      for (const path of ["/oraculo/privacidad", "/oraculo/autorizacion"]) {
+      for (const path of ["/oraculo/privacidad", "/oraculo/terminos", "/oraculo/autorizacion"]) {
         await page.goto(path);
         expect(await audit(page), path).toEqual([]);
       }

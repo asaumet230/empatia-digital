@@ -72,7 +72,8 @@ Por Una Sonrisa, todavía sin publicar.
 | `/estudiantes` | Estudiantes | *Ciudadanía digital y creadores de paz con IA* (1 h, terminada) |
 | `/familias` | Padres, madres y acudientes | *Hogares conectados, familias empáticas* (2 h) |
 | `/oraculo` | Estudiantes, docentes, familias | Oráculo (rama `feature/oraculo`) |
-| `/oraculo/privacidad`, `/oraculo/autorizacion` | Familias y colegios | Textos legales del Oráculo (borrador) |
+| `/oraculo/privacidad`, `/oraculo/terminos`, `/oraculo/autorizacion` | Familias y colegios | Textos legales del Oráculo (borrador) |
+| `/privacidad`, `/terminos` | Todos | Política de privacidad y términos del sitio (versión final, `components/ui/PolicyPage.tsx`) |
 
 ---
 
@@ -214,6 +215,7 @@ falla por lo largo del prompt, usar "Copiar prompt".
 | Familias / estudiantes | `lib/content/familias.ts` / `lib/content/estudiantes.ts` |
 | Pretest y postest | `lib/content/evaluacion.ts` |
 | Pie general (políticas, aliados, contacto, líneas 123 y 141) | `lib/content/sitio.ts` (`ready: false` muestra "Próximamente") |
+| Política de privacidad y términos del sitio (`/privacidad`, `/terminos`) | `lib/content/privacidad.ts` y `lib/content/terminos.ts` (responsable: Fundación Por Una Sonrisa; proveedores Vercel, Google Forms, Mentimeter, OpenAI) |
 | Videos de Tally | `lib/content/tally-guia.ts` |
 | Dirección pública (QR) | `SITE_URL` en `lib/constants.ts` o variable de entorno `SITE_URL` |
 | Tiempos de la intro | `lib/intro-timeline.ts` |
@@ -239,8 +241,8 @@ falla por lo largo del prompt, usar "Copiar prompt".
 > política de riesgo, el banco de pruebas y los textos legales son **borradores**: no usar con estudiantes
 > hasta que los aprueben los profesionales designados y un abogado.
 
-Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsables de los datos: **PazLab** y
-**Fundación Por Una Sonrisa** (+57 314 596 7994 · contacto@fporunasonrisa.com). Nace de un prompt de PazLab
+Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los datos: **Fundación Por Una Sonrisa** (NIT 900.804.571-1;
++57 314 596 7994 · contacto@fporunasonrisa.com); PazLab es el nombre del proyecto, no una entidad. Nace de un prompt de PazLab
 ("Oráculo de la Mediación") que se adaptó con el usuario.
 
 ### 8.1 Decisiones tomadas (no volver a discutirlas)
@@ -318,7 +320,7 @@ components/oraculo/             ProfileStep, ConsentStep, ChatView, Composer, Me
 | Prompts | `lib/oraculo/prompts/` (subir `version`) |
 | Qué hacer con cada nivel de riesgo | `lib/oraculo/riesgo/politica.ts` |
 | Frases de prueba de riesgo | `lib/oraculo/riesgo/banco.ts` |
-| Política, términos y autorización | `lib/oraculo/config/legal.ts` (`approved: false`; faltan NIT y domicilio, marcados `[Completar: …]`) |
+| Política, términos y autorización | `lib/oraculo/config/legal.ts` (`approved: false`; responsable: Fundación Por Una Sonrisa, NIT 900.804.571-1) |
 | Colores del tema | `.oraculo-theme` en `app/globals.css` (tokens `o-*`; al imprimir se fuerza papel blanco) |
 
 ### 8.5 Pruebas
@@ -333,7 +335,7 @@ Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alar
 ("jajaja me quiero morir, mañana hay examen" muestra el panel; "mamadera de gallo" pide cautela).
 
 ### 8.6 Para publicarlo (cuando el usuario lo decida)
-1. Completar NIT y domicilio en `legal.ts` y obtener la aprobación del abogado (`LEGAL.approved = true`).
+1. Obtener la aprobación del abogado de los textos de `legal.ts` (`LEGAL.approved = true`).
 2. Aprobación profesional de mensajes, política y banco (`SAFETY_MESSAGES.approved = true`).
 3. Confirmar por teléfono los números de `lineas.ts`.
 4. OpenAI: tope de gasto mensual (Settings → Limits) y, si se puede, pedir la retención cero; si la

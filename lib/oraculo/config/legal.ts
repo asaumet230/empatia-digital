@@ -7,23 +7,22 @@ import { LIMITS } from "@/lib/oraculo/config/limites";
 /*  parents' authorization form. DRAFT — written to follow Ley 1581   */
 /*  de 2012 and Decreto 1377 de 2013 (compiled in Decreto 1074 de      */
 /*  2015), but they must be reviewed and approved by a lawyer before   */
-/*  launch. `[Completar: …]` marks data still missing; the pages       */
+/*  launch. A `[Completar: …]` in a text marks missing data; the pages */
 /*  highlight it. Any change bumps `version`.                          */
 /* ------------------------------------------------------------------ */
 
-const missing = (what: string) => `[Completar: ${what}]`;
-
 export const CONTROLLERS = {
-  names: "PazLab y Fundación Por Una Sonrisa",
+  names: "Fundación Por Una Sonrisa",
   phone: "+57 314 596 7994",
   email: "contacto@fporunasonrisa.com",
-  ids: missing("NIT de PazLab y de la Fundación Por Una Sonrisa"),
-  address: missing("domicilio y dirección de notificaciones"),
+  ids: "NIT 900.804.571-1",
+  address: "Calle 75 #57-38, Barranquilla, Atlántico, Colombia",
+  representative: "Noris Osorio de Martínez",
 } as const;
 
 export const LEGAL = {
-  version: "2026-10-13.borrador",
-  updated: "13 de octubre de 2026",
+  version: "2026-10-18.borrador",
+  updated: "18 de octubre de 2026",
   approved: false,
   draftNotice: "Borrador pendiente de revisión jurídica. No usar con estudiantes hasta su aprobación.",
   policyUrl: `${PUBLIC_SITE_URL}/oraculo/privacidad`,
@@ -41,13 +40,14 @@ export interface LegalSection {
 export const PRIVACY_POLICY: readonly LegalSection[] = [
   {
     id: "responsables",
-    title: "1. Quiénes son los responsables",
+    title: "1. Quién es el responsable",
     blocks: [
-      `El Oráculo es una herramienta de EmpatIA Digital. Los responsables del tratamiento de los datos son ${CONTROLLERS.names}.`,
+      `El Oráculo es una herramienta de EmpatIA Digital. El responsable del tratamiento de los datos es la ${CONTROLLERS.names}, que ejecuta y administra EmpatIA Digital en articulación con la Alcaldía Distrital de Barranquilla.`,
       {
         list: [
           `Identificación: ${CONTROLLERS.ids}.`,
           `Domicilio: ${CONTROLLERS.address}.`,
+          `Representante legal: ${CONTROLLERS.representative}.`,
           `Teléfono y WhatsApp: ${CONTROLLERS.phone}.`,
           `Correo: ${CONTROLLERS.email}.`,
         ],
@@ -97,7 +97,7 @@ export const PRIVACY_POLICY: readonly LegalSection[] = [
     blocks: [
       {
         list: [
-          "Las conversaciones no se guardan en ninguna base de datos de los responsables.",
+          "Las conversaciones no se guardan en ninguna base de datos del responsable.",
           "Los mensajes no se registran en los registros técnicos (logs) del servidor.",
           "No se venden ni se comparten con terceros, salvo el proveedor de inteligencia artificial descrito abajo.",
           "No se crean perfiles de las personas ni se usan con fines comerciales.",
@@ -148,10 +148,10 @@ export const PRIVACY_POLICY: readonly LegalSection[] = [
           "Ser informado sobre el uso que se ha dado a sus datos.",
           "Revocar la autorización y pedir la supresión de los datos.",
           "Acceder gratis a sus datos.",
-          "Presentar quejas ante la Superintendencia de Industria y Comercio, después de haber agotado el trámite ante los responsables.",
+          "Presentar quejas ante la Superintendencia de Industria y Comercio, después de haber agotado el trámite ante el responsable.",
         ],
       },
-      "Como las conversaciones no se guardan, los responsables no tienen copias que consultar o corregir. Si hace falta, gestionarán ante OpenAI la supresión de lo que aún conserve.",
+      "Como las conversaciones no se guardan, el responsable no tiene copias que consultar o corregir. Si hace falta, gestionará ante OpenAI la supresión de lo que aún conserve.",
     ],
   },
   {
@@ -229,12 +229,12 @@ export const AUTHORIZATION_FORM = {
   intro: `Yo, el abajo firmante, declaro que me informaron sobre el Oráculo y que leí la política de privacidad y los términos de uso publicados en ${LEGAL.policyUrl}. Entiendo que:`,
   points: [
     "El Oráculo es un chat con inteligencia artificial que escucha y orienta sobre convivencia escolar, acoso y ciberacoso. No es una persona ni un servicio de salud o de emergencias.",
-    "No pide nombres ni crea cuentas, y las conversaciones no se guardan en ninguna base de datos de los responsables.",
+    "No pide nombres ni crea cuentas, y las conversaciones no se guardan en ninguna base de datos del responsable.",
     "Los mensajes se envían a OpenAI (Estados Unidos) para generar las respuestas. OpenAI puede conservarlos hasta 30 días para vigilar abusos y no los usa para entrenar sus modelos.",
     "Si mi hijo o hija cuenta una situación de riesgo, el Oráculo le mostrará líneas de ayuda, pero no avisará al colegio, a la familia ni a las autoridades.",
     "El uso es voluntario, y puedo revocar esta autorización en cualquier momento.",
   ],
-  grant: `Autorizo de manera previa, expresa e informada a ${CONTROLLERS.names} para el tratamiento de los datos que mi hijo o hija escriba en el Oráculo, incluidos los datos sensibles que decida compartir, y su transmisión a OpenAI, con las finalidades descritas en la política de privacidad.`,
+  grant: `Autorizo de manera previa, expresa e informada a la ${CONTROLLERS.names} para el tratamiento de los datos que mi hijo o hija escriba en el Oráculo, incluidos los datos sensibles que decida compartir, y su transmisión a OpenAI, con las finalidades descritas en la política de privacidad.`,
   choice: ["Sí autorizo", "No autorizo"],
   guardianFields: [
     "Nombre del padre, madre o representante legal",

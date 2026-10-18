@@ -33,15 +33,15 @@ export const SITE_FOOTER = {
     {
       title: "EmpatIA Digital",
       links: [
-        { label: "Política de privacidad", href: "/privacidad", ready: false },
-        { label: "Términos y condiciones", href: "/terminos", ready: false },
+        { label: "Política de privacidad", href: "/privacidad", ready: true },
+        { label: "Términos y condiciones", href: "/terminos", ready: true },
       ],
     },
     {
       title: "Oráculo",
       links: [
-        { label: "Política de privacidad", href: "/oraculo/privacidad#privacidad", ready: true },
-        { label: "Términos y condiciones", href: "/oraculo/privacidad#terminos", ready: true },
+        { label: "Política de privacidad", href: "/oraculo/privacidad", ready: true },
+        { label: "Términos y condiciones", href: "/oraculo/terminos", ready: true },
         { label: "Autorización para padres", href: "/oraculo/autorizacion", ready: true },
       ],
     },

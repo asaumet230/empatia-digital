@@ -94,7 +94,7 @@ test("al finalizar muestra el resumen para copiar o imprimir", async ({ page }) 
 });
 
 test("la política y el formato de autorización cargan y avisan que son borrador", async ({ page }) => {
-  for (const path of ["/oraculo/privacidad", "/oraculo/autorizacion"]) {
+  for (const path of ["/oraculo/privacidad", "/oraculo/terminos", "/oraculo/autorizacion"]) {
     await page.goto(path);
     await expect(page.getByText("Borrador pendiente de revisión jurídica")).toBeVisible();
   }
