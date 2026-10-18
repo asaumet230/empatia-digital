@@ -62,7 +62,7 @@ teclado o un presentador inalámbrico. Incluye el **Oráculo** (§8), un chat co
 Por Una Sonrisa, todavía sin publicar.
 
 - **Publicado:** https://empatia-digital.vercel.app · **Repositorio:** https://github.com/asaumet230/empatia-digital
-- **Stack:** Next.js 16.3 (App Router, Turbopack) · React 19.2 · TypeScript estricto · Tailwind CSS 4 ·
+- **Stack:** Next.js 16.4 (App Router, Turbopack) · React 19.2 · TypeScript estricto · Tailwind CSS 4 ·
   framer-motion · lucide-react · qrcode. Oráculo: openai 7 · zod 4. Pruebas: Vitest 4 y Playwright.
 
 | Ruta | Para quién | Sesión |
@@ -221,7 +221,10 @@ falla por lo largo del prompt, usar "Copiar prompt".
 
 - Código y logos sin usar: eliminados el 2026-10-18 (los originales de los logos de IA siguen en el historial de git).
 - `npm ls` marca 6 paquetes de `sharp` (wasm) como sobrantes; `npm prune` no los quita y no afectan.
-- eslint 9.39 ya no tiene soporte (aviso de npm).
+- eslint 9.39 ya no tiene soporte (aviso de npm). `eslint-config-next` 16.4 ya acepta ESLint 10, pero no aporta nada
+  a la app; quedan avisos de `npm audit` en `braces` (solo herramientas de desarrollo, no llega a la página).
+- La prueba de accesibilidad "perfil, consentimiento, chat con panel…" en iPhone falla ~1 de cada 4 veces
+  (contraste de un botón desactivado, `disabled:opacity-50`): es inestable desde antes de Next 16.4.
 - En desarrollo, el ícono "N" de Next.js tapa el botón del Oráculo; en producción no aparece.
 
 ---
@@ -379,3 +382,6 @@ noche?" aunque el mensaje siguiente sea tranquilo (se puede suavizar en el aviso
 | `8aeafcc` | Prompts más cortos, juego automático y ajustes por sesión |
 | `504497e` | Dirección pública, historia de Valentina en imágenes, pretest y postest |
 | `c1c1ca4` → `838dfe6` | Oráculo, pasos 1 a 6 (rama `feature/oraculo`, §8.7) |
+| `3ce6e2f` | Limpieza de código, etapas del Oráculo y logos sin usar |
+| `5fe1478` | Juego del algoritmo dividido, `useDismiss` común y pie con todas las sesiones |
+| (este) | Next 16.4.2 (corrige 6 fallas de seguridad graves) y error de la animación de la intro |
