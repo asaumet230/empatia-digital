@@ -219,9 +219,8 @@ falla por lo largo del prompt, usar "Copiar prompt".
 ## 7. Deuda técnica conocida (auditoría del 2026-10-13)
 
 - `components/sections/estudiantes/AlgorithmGameSection.tsx` tiene ~650 líneas y 8 subcomponentes: conviene dividirlo.
-- Código sin usar: `COLORS` y `BootStep` en `lib/constants.ts`, `total()` en `lib/content/rubrica-ejemplo.ts`,
-  y los logos `alcaldia-barranquilla.png`, `barranquilla-gov-vertical.png`, `digital.png`,
-  `empatia-digital.png`, `empatia-ia-icono.png` y la carpeta `logos/ia/originales/`.
+- Código y logos sin usar: eliminados el 2026-10-18 (los originales de los logos de IA siguen en el historial de git).
+- `npm ls` marca 6 paquetes de `sharp` (wasm) como sobrantes; `npm prune` no los quita y no afectan.
 - `PresentationFooter` solo enlaza a la *primera* otra sesión (desde estudiantes y familias lleva a docentes).
 - La lógica de "cerrar al tocar afuera" se repite en `EvaluationButton` y `SessionSwitcher`.
 - eslint 9.39 ya no tiene soporte (aviso de npm).

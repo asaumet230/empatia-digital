@@ -55,5 +55,3 @@ export const countLevels = (c: number) =>
 
 /** Codes with level 1 or 2 in criterion `c`. */
 export const needSupport = (c: number) => RUBRIC_STUDENTS.filter((s) => s.levels[c] <= 2).map((s) => s.code);
-
-export const total = (s: RubricStudent) => s.levels.reduce((a, b) => a + b, 0);
