@@ -389,4 +389,4 @@ noche?" aunque el mensaje siguiente sea tranquilo (se puede suavizar en el aviso
 | `3ce6e2f` | Limpieza de código, etapas del Oráculo y logos sin usar |
 | `5fe1478` | Juego del algoritmo dividido, `useDismiss` común y pie con todas las sesiones |
 | `2846e40` · `5ff24f5` | Next 16.4.2 (corrige 6 fallas de seguridad graves) y error de la animación de la intro |
-| (siguiente) | Pie general con políticas, ventanas (QR, prompt completo, pretest solo en estudiantes), índice móvil, responsive y diseño de varias diapositivas |
+| `9b0bb50` | Pie general con políticas, ventanas (QR, prompt completo, pretest solo en estudiantes), índice móvil, responsive y diseño de varias diapositivas |
