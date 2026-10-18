@@ -384,4 +384,4 @@ noche?" aunque el mensaje siguiente sea tranquilo (se puede suavizar en el aviso
 | `c1c1ca4` → `838dfe6` | Oráculo, pasos 1 a 6 (rama `feature/oraculo`, §8.7) |
 | `3ce6e2f` | Limpieza de código, etapas del Oráculo y logos sin usar |
 | `5fe1478` | Juego del algoritmo dividido, `useDismiss` común y pie con todas las sesiones |
-| (este) | Next 16.4.2 (corrige 6 fallas de seguridad graves) y error de la animación de la intro |
+| `2846e40` · `5ff24f5` | Next 16.4.2 (corrige 6 fallas de seguridad graves) y error de la animación de la intro |
