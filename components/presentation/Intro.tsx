@@ -29,7 +29,7 @@ export function Intro({ id, phase, reducedMotion, onSkip, onStart }: IntroProps)
   const sparkRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Section id={id} label="Inicio" className="grain overflow-hidden bg-navy-dark">
+    <Section id={id} label="Inicio" gutter={false} className="grain min-h-svh overflow-hidden bg-navy-dark">
       {/* Technical grid, only surfaces once the network connects */}
       <motion.div
         aria-hidden="true"

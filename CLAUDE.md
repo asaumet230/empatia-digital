@@ -82,11 +82,12 @@ Por Una Sonrisa, todavía sin publicar.
 app/                      rutas, layout, fuentes y tokens de diseño (globals.css)
   api/oraculo/            único backend: sesion, mensaje, cierre (POST)
 components/presentation/  Presentation (raíz), Intro, Section, ProgressNavigation, SessionSwitcher,
-                          EvaluationButton (pretest/postest), PresentationFooter
+                          EvaluationButton (pretest/postest)
 components/intro/         BootSequence, BrandReveal, NetworkBackground (canvas), IntroHud
 components/sections/      una diapositiva por archivo (ia/, prompt/, report/, familias/, estudiantes/, alertas/);
                           las pantallas del juego del algoritmo están en estudiantes/algoritmo/
-components/ui/            piezas reutilizables (Eyebrow, PulseDot, CopyButton, QrCode, BrandIcon, VideoGuide)
+components/ui/            piezas reutilizables (Eyebrow, PulseDot, CopyButton, QrCode, QrDialogButton, BrandIcon, VideoGuide,
+                          SiteFooter: pie general en inicio, sesiones —con los enlaces a las otras sesiones— y páginas legales del Oráculo)
 components/oraculo/       interfaz del Oráculo
 hooks/                    useIntroTimeline, useActiveSection, useOracle, useDismiss (cerrar menús al tocar afuera o con Esc)
 lib/                      constants, animations, intro-timeline, sections (TRACKS), cn, clipboard
@@ -100,6 +101,7 @@ public/assets/            logos, imágenes, videos y datos de ejemplo (se refere
   audiencia está en `TRACKS` (`lib/sections.ts`); cada diapositiva recibe `SectionProps` y se envuelve en
   `<Section>`. Para **agregar una diapositiva**: crear el componente y sumarlo a `TRACKS`. La navegación,
   el progreso y el teclado se actualizan solos.
+  `<Section>` deja un margen a la derecha para el índice lateral (`gutter`; la intro lo desactiva).
 - **Datos:** la presentación es 100 % estática. No tiene base de datos, autenticación (no usa Auth.js),
   cookies ni localStorage. Los "modelos" son constantes tipadas en `lib/content/` (prompts, casos,
   encuesta y rúbrica ficticias, semáforos, juego). Solo enlaza a servicios externos (ChatGPT con
@@ -120,7 +122,8 @@ public/assets/            logos, imágenes, videos y datos de ejemplo (se refere
 | Cerrar un panel o volver al resumen | `Esc` |
 
 Elementos fijos: menú de sesiones ☰ (arriba a la izquierda, con Inicio, Docentes, Estudiantes y
-Familias), botón **Pretest y postest** (abajo a la derecha; enlaces en `lib/content/evaluacion.ts`),
+Familias), botón **Pretest y postest** (abajo a la derecha, solo en estudiantes; abre una ventana con los dos
+formularios y sus QR; enlaces en `lib/content/evaluacion.ts`),
 índice lateral y, en la rama del Oráculo, el botón **"¿Necesitas hablar?"** (abajo a la izquierda).
 Todos aparecen después de la intro.
 
@@ -210,6 +213,7 @@ falla por lo largo del prompt, usar "Copiar prompt".
 | Datos de ejemplo | `lib/content/encuesta-ejemplo.ts`, `lib/content/rubrica-ejemplo.ts` |
 | Familias / estudiantes | `lib/content/familias.ts` / `lib/content/estudiantes.ts` |
 | Pretest y postest | `lib/content/evaluacion.ts` |
+| Pie general (políticas, aliados, contacto, líneas 123 y 141) | `lib/content/sitio.ts` (`ready: false` muestra "Próximamente") |
 | Videos de Tally | `lib/content/tally-guia.ts` |
 | Dirección pública (QR) | `SITE_URL` en `lib/constants.ts` o variable de entorno `SITE_URL` |
 | Tiempos de la intro | `lib/intro-timeline.ts` |
@@ -385,3 +389,4 @@ noche?" aunque el mensaje siguiente sea tranquilo (se puede suavizar en el aviso
 | `3ce6e2f` | Limpieza de código, etapas del Oráculo y logos sin usar |
 | `5fe1478` | Juego del algoritmo dividido, `useDismiss` común y pie con todas las sesiones |
 | `2846e40` · `5ff24f5` | Next 16.4.2 (corrige 6 fallas de seguridad graves) y error de la animación de la intro |
+| (siguiente) | Pie general con políticas, ventanas (QR, prompt completo, pretest solo en estudiantes), índice móvil, responsive y diseño de varias diapositivas |

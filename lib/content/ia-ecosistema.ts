@@ -210,9 +210,26 @@ export const AI_CATEGORIES: readonly AiCategory[] = [
     title: "Investigación y análisis de información",
     can: "Investigar",
     icon: Search,
-    // Solo aparece en el resumen del material: sin descripciones propias todavía.
-    tools: [{ id: "chatgpt" }, { id: "gemini" }, { id: "perplexity" }],
+    tools: [
+      {
+        id: "perplexity",
+        description:
+          "Es un buscador con IA: responde preguntas consultando Internet en tiempo real y muestra las fuentes de donde sacó cada dato, para poder verificarlas.",
+      },
+      {
+        id: "chatgpt",
+        description:
+          "Puede buscar en Internet y, con su modo de investigación a fondo, revisar muchas páginas para entregar un informe organizado con sus fuentes.",
+      },
+      {
+        id: "gemini",
+        description:
+          "Busca con Google y tiene un modo de investigación a fondo que arma informes completos. También puede analizar documentos largos, PDF y hojas de cálculo.",
+      },
+    ],
     summary: ["chatgpt", "gemini", "perplexity"],
+    quote:
+      "La IA puede investigar en minutos lo que antes nos tomaba horas, pero siempre hay que revisar las fuentes: también puede equivocarse o inventar datos.",
   },
 ];
 

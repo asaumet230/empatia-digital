@@ -4,88 +4,95 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ClipboardCheck, ExternalLink, X } from "lucide-react";
 import QRCode from "qrcode";
 import { useEffect, useRef, useState } from "react";
-import { useDismiss } from "@/hooks/useDismiss";
-import { DURATION, EASE, transition } from "@/lib/animations";
-import { EVALUATION, EVALUATION_FORMS } from "@/lib/content/evaluacion";
-import type { TrackId } from "@/lib/sections";
+import { DURATION, transition } from "@/lib/animations";
+import { EVALUATION, type EvaluationForms } from "@/lib/content/evaluacion";
 
 /**
- * Floating button, bottom-right: opens the pretest and postest of this audience, each with a QR
+ * Floating button, bottom-right: opens the pretest and postest in a centered modal, each with a QR
  * big enough to scan from the projected screen. Appears after the intro, like the rest of the chrome.
+ * Native <dialog>: Esc, the close button or a click on the backdrop close it.
  */
-export function EvaluationButton({ track, visible }: { track: TrackId; visible: boolean }) {
+export function EvaluationButton({ forms, visible }: { forms: EvaluationForms; visible: boolean }) {
+  const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const forms = EVALUATION_FORMS[track];
 
-  useDismiss(ref, open, () => setOpen(false));
+  const show = () => {
+    dialog.current?.showModal();
+    setOpen(true);
+  };
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          ref={ref}
-          className="fixed bottom-3 right-3 z-50 flex flex-col items-end gap-3 sm:bottom-5 sm:right-5"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8 }}
-          transition={transition(DURATION.slow, 0.2)}
-        >
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                id="evaluacion-panel"
-                role="dialog"
-                aria-label={EVALUATION.title}
-                className="w-[min(calc(100vw-1.5rem),34rem)] rounded-3xl border border-white/10 bg-navy-deep/95 p-4 shadow-[0_20px_50px_-15px_rgb(0_0_0/0.7)] backdrop-blur-md sm:p-5"
-                initial={{ opacity: 0, y: 10, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.97 }}
-                transition={transition(DURATION.base, 0, EASE.outQuart)}
-              >
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {EVALUATION.forms.map(({ key, name, when }) => (
-                    <li key={key} className="flex flex-col rounded-2xl border border-white/10 bg-navy/70 p-4">
-                      <p className="hud-label">{when}</p>
-                      <p className="mt-1 font-display text-2xl font-bold tracking-[-0.02em]">{name}</p>
-                      {/* On a phone the link is enough */}
-                      <FormQr value={forms[key]} label={`Código QR del ${name.toLowerCase()}`} />
-                      <span className="mt-3 break-all font-mono text-xs text-gray-muted">
-                        {forms[key].replace(/^https?:\/\//, "")}
-                      </span>
-                      <a
-                        href={forms[key]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-green-bright px-4 py-2.5 text-sm font-bold text-navy-dark transition-[filter] hover:brightness-110"
-                      >
-                        {EVALUATION.open}
-                        <ExternalLink aria-hidden="true" className="size-4" strokeWidth={2} />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls="evaluacion-panel"
-            onClick={() => setOpen((v) => !v)}
-            className="inline-flex items-center gap-2 rounded-full border border-green-bright/50 bg-navy-deep/85 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgb(0_0_0/0.6)] backdrop-blur-md transition-colors hover:border-green-bright"
+    <>
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            className="fixed bottom-3 right-3 z-50 sm:bottom-5 sm:right-5"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={transition(DURATION.slow, 0.2)}
           >
-            {open ? (
-              <X aria-hidden="true" className="size-4 text-green-bright" strokeWidth={2} />
-            ) : (
-              <ClipboardCheck aria-hidden="true" className="size-4 text-green-bright" strokeWidth={2} />
-            )}
-            {EVALUATION.button}
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              aria-label={EVALUATION.button}
+              onClick={show}
+              className="group inline-flex items-center gap-2.5 rounded-full border border-green-bright bg-navy-deep p-1.5 md:pr-5 text-sm font-bold text-white shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 hover:bg-green-bright hover:text-navy-dark"
+            >
+              <span className="grid size-8 place-items-center rounded-full bg-green-bright text-navy-dark transition-colors duration-300 group-hover:bg-navy-dark group-hover:text-green-bright">
+                <ClipboardCheck aria-hidden="true" className="size-4" strokeWidth={2.25} />
+              </span>
+              {/* On a phone, only the icon: the text would cover the content */}
+              <span className="hidden md:inline">{EVALUATION.button}</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <dialog
+        ref={dialog}
+        aria-label={EVALUATION.title}
+        onClose={() => setOpen(false)}
+        onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
+        className="m-auto w-[min(calc(100vw-2rem),40rem)] rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      >
+        <div className="relative p-5 sm:p-7">
+          <div className="flex items-center justify-between gap-4">
+            <p className="font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">{EVALUATION.button}</p>
+            <button
+              type="button"
+              aria-label="Cerrar"
+              onClick={() => dialog.current?.close()}
+              className="grid size-9 shrink-0 place-items-center rounded-full text-gray-light transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <X aria-hidden="true" className="size-5" strokeWidth={2} />
+            </button>
+          </div>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4">
+            {EVALUATION.forms.map(({ key, name, when }) => (
+              <li key={key} className="flex flex-col rounded-2xl border border-white/10 bg-navy/70 p-4">
+                <p className="hud-label">{when}</p>
+                <p className="mt-1 font-display text-2xl font-bold tracking-[-0.02em]">{name}</p>
+                {/* On a phone the link is enough; the QR only renders while the modal is open */}
+                {open && <FormQr value={forms[key]} label={`Código QR del ${name.toLowerCase()}`} />}
+                <span className="mt-3 break-all font-mono text-xs text-gray-muted">
+                  {forms[key].replace(/^https?:\/\//, "")}
+                </span>
+                <a
+                  href={forms[key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-green-bright px-4 py-2.5 text-sm font-bold text-navy-dark transition-[filter] hover:brightness-110"
+                >
+                  {EVALUATION.open}
+                  <ExternalLink aria-hidden="true" className="size-4" strokeWidth={2} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </dialog>
+    </>
   );
 }
 
@@ -110,7 +117,7 @@ function FormQr({ value, label }: { value: string; label: string }) {
     <span
       role="img"
       aria-label={label}
-      className="mt-4 hidden aspect-square w-full max-w-48 self-center overflow-hidden rounded-xl bg-white p-2 md:block [&>svg]:h-full [&>svg]:w-full"
+      className="mt-4 hidden aspect-square w-full max-w-52 self-center overflow-hidden rounded-xl bg-white p-2 md:block [&>svg]:h-full [&>svg]:w-full"
       // Generated by the qrcode library from our own form links, never from user input
       dangerouslySetInnerHTML={{ __html: svg }}
     />

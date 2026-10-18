@@ -108,16 +108,14 @@ export function BrandReveal({ ready, onStart }: BrandRevealProps) {
           type="button"
           onClick={onStart}
           disabled={!ready}
-          className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-green-bright/40 px-7 py-3.5 font-mono text-xs uppercase tracking-[0.24em] text-gray-light transition-colors duration-500 hover:border-green-bright hover:text-navy-dark focus-visible:border-green-bright disabled:pointer-events-none sm:text-[0.8125rem]"
+          className="group inline-flex items-center gap-2.5 rounded-full border border-green-bright/70 bg-green-bright/15 px-6 py-3 font-display text-sm font-semibold text-white backdrop-blur-sm transition-colors duration-300 hover:border-green-bright hover:bg-green-bright/30 disabled:pointer-events-none sm:px-7 sm:text-base"
         >
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 origin-bottom scale-y-0 bg-green-bright transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-y-100"
-          />
-          <span className="relative">{BRAND.cta}</span>
-          <ArrowDown aria-hidden="true" className="relative size-4 animate-nudge" strokeWidth={1.75} />
+          {BRAND.cta}
+          <ArrowDown aria-hidden="true" className="size-4 animate-nudge text-green-bright transition-colors group-hover:text-white" strokeWidth={2.25} />
         </button>
-        <span className="hud-label">o {BRAND.scrollHint.toLowerCase()}</span>
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-gray-light sm:text-sm">
+          o {BRAND.scrollHint.toLowerCase()}
+        </span>
       </motion.div>
     </motion.div>
   );

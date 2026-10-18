@@ -9,13 +9,13 @@ import { cn } from "@/lib/cn";
 import { AI_TOOLS, type AiCategory, type AiToolId } from "@/lib/content/ia-ecosistema";
 
 /* ------------------------------------------------------------------ */
-/*  Radial map in three rings, so nothing collides:                    */
-/*  labels on the spokes → category nodes → tools of the active one on */
-/*  an outer arc. Geometry is in % of a square stage, shared by the    */
-/*  SVG links (viewBox 0..100) and the DOM nodes.                      */
+/*  Radial map in two rings: category nodes (name under each) and the  */
+/*  tools of the active one on an outer arc. Only the selected tool    */
+/*  shows its name, facing outwards, so nothing collides at any size.  */
+/*  Geometry is in % of a square stage, shared by the SVG links        */
+/*  (viewBox 0..100) and the DOM nodes.                                */
 /* ------------------------------------------------------------------ */
 
-const LABEL_RING = 15;
 const ORBIT = 26;
 const TOOL_RING = 45;
 const TOOL_SPREAD = 24; // degrees between sibling tools on the outer ring
@@ -191,7 +191,7 @@ export function AiMap({ categories, activeId, toolId, onSelectCategory, onSelect
           >
             <span
               className={cn(
-                "grid size-12 place-items-center rounded-full border backdrop-blur-sm transition-all duration-500 sm:size-16 lg:size-[4.5rem]",
+                "relative grid size-12 place-items-center rounded-full border backdrop-blur-sm transition-all duration-500 sm:size-16 lg:size-[4.5rem]",
                 on
                   ? "scale-110 border-green-bright bg-green/20 text-green-bright shadow-[0_0_32px_rgb(53_201_94/0.45)]"
                   : "border-white/15 bg-navy/80 text-gray-light group-hover:border-green-bright/60",
@@ -200,27 +200,18 @@ export function AiMap({ categories, activeId, toolId, onSelectCategory, onSelect
             >
               <Icon aria-hidden="true" strokeWidth={1.5} className="size-5 sm:size-6 lg:size-7" />
             </span>
+            {/* The name sits under the node; the active one hides it, its tools take that room */}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "pointer-events-none absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-full bg-navy-dark px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] transition-opacity duration-500 sm:text-[0.6875rem]",
+                on ? "opacity-0" : "text-gray-text",
+                dimmed && "opacity-55",
+              )}
+            >
+              {c.label}
+            </span>
           </motion.button>
-        );
-      })}
-
-      {/* Category names sit on the spokes, masking the line behind them */}
-      {categories.map((c, i) => {
-        const on = c.id === activeId;
-        return (
-          <motion.span
-            key={c.id}
-            aria-hidden="true"
-            style={pct(polar(categoryAngle(i, total), LABEL_RING))}
-            className={cn(
-              "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-navy-dark px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.16em] transition-all duration-500 sm:text-[0.6875rem]",
-              on ? "text-green-bright" : "text-gray-text",
-              activeId !== null && !on && "opacity-55",
-            )}
-            variants={reveal(0.6 + i * 0.08)}
-          >
-            {c.label}
-          </motion.span>
         );
       })}
 
@@ -260,15 +251,20 @@ export function AiMap({ categories, activeId, toolId, onSelectCategory, onSelect
                     className="size-5 sm:size-6"
                   />
                 </span>
-                <span
-                  className={cn(
-                    "absolute left-1/2 top-full mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full border bg-navy-dark/90 px-2.5 py-1 font-mono text-[0.6875rem] uppercase leading-none tracking-[0.14em] transition-colors duration-300 md:block",
-                    on ? "border-white/30 text-white" : "border-white/10 text-gray-text",
-                  )}
-                >
-                  {tool.name}
-                  {on && <ArrowUpRight aria-hidden="true" className="-mr-1 ml-1 inline size-3 align-[-0.15em]" />}
-                </span>
+                {/* Only the selected tool is named here (the panel lists them all), away from the hub */}
+                {on && (
+                  <span
+                    className={cn(
+                      "absolute whitespace-nowrap rounded-full border border-white/30 bg-navy-dark/95 px-2.5 py-1 font-mono text-[0.625rem] uppercase leading-none tracking-[0.14em] text-white sm:text-[0.6875rem]",
+                      p.y < 50 ? "bottom-full mb-2" : "top-full mt-2",
+                      // Near a side edge the name grows inwards, so a small screen never cuts it
+                      p.x < 30 ? "left-0" : p.x > 70 ? "right-0" : "left-1/2 -translate-x-1/2",
+                    )}
+                  >
+                    {tool.name}
+                    <ArrowUpRight aria-hidden="true" className="-mr-1 ml-1 inline size-3 align-[-0.15em]" />
+                  </span>
+                )}
               </motion.a>
             );
           })}

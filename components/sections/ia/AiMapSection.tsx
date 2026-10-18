@@ -64,7 +64,7 @@ export function AiMapSection({ id, index, label }: SectionProps) {
           </motion.h2>
         </motion.header>
 
-        <div className="mt-10 grid items-center gap-12 lg:mt-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+        <div className="mt-14 grid items-center gap-12 md:mt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
           <AiMap
             categories={AI_CATEGORIES}
             activeId={activeId}

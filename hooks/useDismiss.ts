@@ -4,7 +4,7 @@ import { useEffect, useRef, type RefObject } from "react";
 
 /**
  * Closes a floating menu or panel while it is open: on a tap or click outside `ref`, or on `Esc`.
- * Shared by the session menu and the pretest/postest button.
+ * Used by the session menu.
  */
 export function useDismiss(ref: RefObject<HTMLElement | null>, open: boolean, onDismiss: () => void) {
   const dismiss = useRef(onDismiss);

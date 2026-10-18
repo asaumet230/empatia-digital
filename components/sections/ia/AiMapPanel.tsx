@@ -30,7 +30,7 @@ export function AiMapPanel({ categories, activeId, toolId, onSelectCategory, onS
   const category = index >= 0 ? categories[index] : null;
 
   return (
-    <div id="ia-map-panel" aria-live="polite" className="relative lg:min-h-[34rem]">
+    <div id="ia-map-panel" aria-live="polite" className="relative lg:flex lg:min-h-[34rem] lg:flex-col lg:justify-center">
       <AnimatePresence mode="wait" initial={false}>
         {category ? (
           <motion.div key={category.id} {...swap}>
@@ -45,7 +45,7 @@ export function AiMapPanel({ categories, activeId, toolId, onSelectCategory, onS
               {category.title}
             </h3>
 
-            <ul className="mt-6 border-t border-line">
+            <ul className="mt-6 space-y-1.5">
               {category.tools.map((t) => (
                 <ToolRow
                   key={t.id}
@@ -120,24 +120,32 @@ function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
   const select = () => onSelect(id);
 
   return (
-    <li className="border-b border-line">
+    <li
+      className={cn(
+        "rounded-2xl border transition-colors duration-300",
+        open ? "border-green-bright/35 bg-white/[0.04]" : "border-transparent",
+      )}
+    >
       <button
         type="button"
         aria-expanded={open}
         onPointerEnter={(e: PointerEvent) => e.pointerType === "mouse" && select()}
         onClick={select}
         onFocus={select}
-        className="group flex w-full items-center gap-4 py-3 text-left"
+        className="group flex w-full items-center gap-3.5 rounded-2xl px-3 py-2.5 text-left focus-visible:outline-offset-0"
       >
-        <BrandIcon
-          src={tool.icon}
-          color={open ? tool.color : "var(--gray-muted)"}
-          className="size-5"
-        />
         <span
           className={cn(
-            "font-mono text-xs uppercase tracking-[0.16em] transition-colors sm:text-[0.8125rem]",
-            open ? "text-white" : "text-gray-text group-hover:text-gray-light",
+            "grid size-10 shrink-0 place-items-center rounded-xl transition-colors",
+            open ? "bg-white/10" : "bg-white/[0.04] group-hover:bg-white/[0.08]",
+          )}
+        >
+          <BrandIcon src={tool.icon} color={open ? tool.color : "var(--gray-text)"} className="size-5" />
+        </span>
+        <span
+          className={cn(
+            "font-display text-base font-semibold tracking-[-0.01em] transition-colors md:text-lg",
+            open ? "text-white" : "text-gray-light group-hover:text-white",
           )}
         >
           {tool.name}
@@ -160,7 +168,7 @@ function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
             exit={{ height: 0, opacity: 0 }}
             transition={transition(DURATION.base, 0, EASE.outQuart)}
           >
-            <div className="pb-4 pl-9 text-[0.9375rem] leading-relaxed text-gray-text md:text-base">
+            <div className="px-3 pb-4 text-[0.9375rem] leading-relaxed text-gray-light sm:pl-[4.125rem] md:text-base">
               {description && <p>{description}</p>}
               {points && (
                 <ul className="mt-2 space-y-1.5">
@@ -176,7 +184,7 @@ function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-green-bright transition-colors hover:text-white"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-green-bright/50 px-4 py-2 text-sm font-semibold text-green-bright transition-colors hover:bg-green-bright hover:text-navy-dark"
               >
                 Visitar {tool.name}
                 <ArrowUpRight aria-hidden="true" className="size-3.5" />

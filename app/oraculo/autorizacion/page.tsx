@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DraftNotice, WithPending } from "@/components/oraculo/LegalText";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
 import { PrintButton } from "@/components/oraculo/PrintButton";
+import { SiteFooter } from "@/components/ui/SiteFooter";
 import { AUTHORIZATION_FORM as F, CONTROLLERS, LEGAL } from "@/lib/oraculo/config/legal";
 
 export const metadata: Metadata = {
@@ -104,6 +105,7 @@ export default function AutorizacionPage() {
           </footer>
         </article>
       </main>
+      <SiteFooter />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MousePointerClick } from "lucide-react";
 import { useState, type PointerEvent } from "react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -75,7 +75,8 @@ function TrafficLightReport({ id, index, label, report }: SectionProps & { repor
                 />
               ))}
             </ul>
-            <p className="hud-label mt-4">
+            <p className="mt-4 flex items-center gap-2 text-sm text-gray-text">
+              <MousePointerClick aria-hidden="true" className="size-4 shrink-0 text-green-bright" />
               <span className="hidden [@media(hover:hover)]:inline">{report.hint.pointer}</span>
               <span className="[@media(hover:hover)]:hidden">{report.hint.touch}</span>
             </p>
@@ -103,13 +104,16 @@ function TrafficLightReport({ id, index, label, report }: SectionProps & { repor
 
 function Legend({ scale }: { scale: readonly string[] }) {
   return (
-    <div className="flex flex-wrap gap-x-5 gap-y-2">
-      {scale.map((step, i) => (
-        <span key={step} className="flex items-center gap-2 text-sm text-gray-text">
-          <span aria-hidden="true" className="size-2.5 rounded-sm" style={{ backgroundColor: SCALE_COLORS[i] }} />
-          {step}
-        </span>
-      ))}
+    <div className="rounded-xl border border-white/10 bg-navy/40 px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-text">Cada color de la barra es un nivel</p>
+      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5">
+        {scale.map((step, i) => (
+          <span key={step} className="flex items-center gap-2 text-sm text-gray-light">
+            <span aria-hidden="true" className="size-3 rounded-sm" style={{ backgroundColor: SCALE_COLORS[i] }} />
+            {step}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -135,21 +139,27 @@ function Row({ row, total, on, dimmed, onSelect }: RowProps) {
         onClick={onSelect}
         onFocus={onSelect}
         className={cn(
-          "grid w-full grid-cols-[1.25rem_minmax(0,1fr)] items-center gap-x-3 gap-y-1.5 py-2.5 text-left transition-opacity duration-300 sm:grid-cols-[1.25rem_minmax(0,13rem)_minmax(0,1fr)]",
+          "-mx-2 grid w-[calc(100%+1rem)] grid-cols-[minmax(0,1fr)] gap-2 rounded-xl px-2 py-3 text-left transition-[opacity,background-color] duration-300 sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] sm:items-center sm:gap-4",
+          on && "bg-white/[0.04]",
           dimmed && "opacity-45",
         )}
       >
-        <span
-          aria-hidden="true"
-          className="size-3 rounded-full"
-          style={{ backgroundColor: status.color, boxShadow: on ? `0 0 12px ${status.color}` : undefined }}
-        />
-        <span className={cn("text-[0.9375rem] font-semibold md:text-base", on ? "text-white" : "text-gray-light")}>
-          {row.label}
+        <span className="flex flex-col gap-1">
+          <span className={cn("text-[0.9375rem] font-semibold md:text-base", on ? "text-white" : "text-gray-light")}>
+            {row.label}
+          </span>
+          <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: status.color }}>
+            <span
+              aria-hidden="true"
+              className="size-2 rounded-full"
+              style={{ backgroundColor: status.color, boxShadow: on ? `0 0 10px ${status.color}` : undefined }}
+            />
+            {status.label}
+          </span>
         </span>
         <motion.span
           aria-hidden="true"
-          className="col-start-2 flex h-2.5 origin-left overflow-hidden rounded-full sm:col-start-3"
+          className="flex h-6 origin-left overflow-hidden rounded-lg"
           variants={{
             hidden: { scaleX: 0 },
             visible: { scaleX: 1, transition: transition(DURATION.slow, 0.2, EASE.outQuart) },
@@ -159,9 +169,11 @@ function Row({ row, total, on, dimmed, onSelect }: RowProps) {
             n > 0 ? (
               <span
                 key={i}
-                className="h-full border-r border-navy-dark last:border-r-0"
+                className="grid h-full place-items-center border-r-2 border-navy-dark text-xs font-bold tabular-nums text-navy-dark last:border-r-0"
                 style={{ width: `${(n / total) * 100}%`, backgroundColor: SCALE_COLORS[i] }}
-              />
+              >
+                {n}
+              </span>
             ) : null,
           )}
         </motion.span>
@@ -263,8 +275,11 @@ function Overview({ report }: { report: Report }) {
       <ul className="grid grid-cols-3 gap-3">
         {tally.map((t) => (
           <li key={t.key} className="rounded-xl border border-white/10 bg-navy/50 p-3 md:p-4">
-            <span className="font-display text-3xl font-extrabold md:text-4xl" style={{ color: t.color }}>
-              {t.count}
+            <span className="flex items-baseline gap-1.5">
+              <span className="font-display text-3xl font-extrabold md:text-4xl" style={{ color: t.color }}>
+                {t.count}
+              </span>
+              <span className="text-sm text-gray-text">de {report.rows.length}</span>
             </span>
             <span className="mt-1 block text-xs leading-tight text-gray-text md:text-sm">{t.label}</span>
           </li>
@@ -277,7 +292,7 @@ function Overview({ report }: { report: Report }) {
       </div>
 
       <p className="mt-7 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-gray-muted">{report.list.title}</p>
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 space-y-2.5">
         {report.list.items.map((item) =>
           item.weight !== undefined ? (
             <li
@@ -294,9 +309,17 @@ function Overview({ report }: { report: Report }) {
               <span className="tabular-nums text-gray-text">{item.value}</span>
             </li>
           ) : (
-            <li key={item.label} className="flex items-baseline gap-3 text-sm md:text-[0.9375rem]">
-              <span className="w-10 shrink-0 font-mono text-xs tracking-[0.08em] text-gray-light">{item.label}</span>
-              <span className="text-gray-text">{item.value}</span>
+            <li key={item.label} className="flex items-start gap-3 text-sm">
+              <span className="w-12 shrink-0 rounded-md bg-white/10 py-0.5 text-center font-mono text-xs font-semibold tracking-[0.06em] text-white">
+                {item.label}
+              </span>
+              <span className="flex flex-wrap gap-1.5">
+                {item.value.split(", ").map((part) => (
+                  <span key={part} className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-gray-light">
+                    {part}
+                  </span>
+                ))}
+              </span>
             </li>
           ),
         )}

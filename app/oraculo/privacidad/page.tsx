@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DraftNotice, LegalSections } from "@/components/oraculo/LegalText";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
 import { PrintButton } from "@/components/oraculo/PrintButton";
+import { SiteFooter } from "@/components/ui/SiteFooter";
 import { LEGAL, PRIVACY_POLICY, TERMS } from "@/lib/oraculo/config/legal";
 
 export const metadata: Metadata = {
@@ -55,6 +56,7 @@ export default function PrivacidadPage() {
           <PrintButton label="Imprimir" />
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

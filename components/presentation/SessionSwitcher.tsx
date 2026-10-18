@@ -50,7 +50,10 @@ export function SessionSwitcher({ track, visible = true }: SessionSwitcherProps)
           onPointerLeave={onMouse(false)}
           onFocus={(e) => e.target.matches(":focus-visible") && setOpen(true)}
           onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}
-          className="fixed left-3 top-3 z-50 flex items-center rounded-full border border-white/10 bg-navy-deep/85 p-1 shadow-[0_10px_30px_-10px_rgb(0_0_0/0.6)] backdrop-blur-md sm:left-5 sm:top-5"
+          className={cn(
+            "fixed left-3 top-3 z-[60] flex items-center rounded-full border bg-navy-deep p-1 shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 sm:left-5 sm:top-5",
+            open ? "border-green-bright/50" : "border-white/15",
+          )}
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
@@ -90,7 +93,7 @@ export function SessionSwitcher({ track, visible = true }: SessionSwitcherProps)
                       "flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors sm:text-sm",
                       link.current
                         ? "bg-green-bright text-navy-dark"
-                        : "text-gray-text hover:bg-white/10 hover:text-white",
+                        : "text-white/90 hover:bg-white/10 hover:text-green-bright",
                     )}
                   >
                     {link.icon && <House aria-hidden="true" className="size-4" strokeWidth={1.75} />}

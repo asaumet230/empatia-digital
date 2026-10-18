@@ -43,12 +43,13 @@ export function StudentIntroSection({ id, index, label }: SectionProps) {
           {STUDENT_INTRO.title}
         </motion.h2>
 
-        <ul className="mt-10 grid gap-4 md:mt-14 md:grid-cols-3 md:gap-6">
+        {/* From lg up the cards share their rows (subgrid), so titles and texts start at the same height */}
+        <ul className="mt-10 grid gap-4 md:mt-14 md:gap-6 lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr]">
           {STUDENT_INTRO.concepts.map(({ question, answer, keywords, icon: Icon }, i) => (
             <motion.li
               key={question}
               variants={fadeUp}
-              className="flex flex-col rounded-2xl border border-white/10 bg-navy-dark/60 p-6 md:p-8"
+              className="flex flex-col rounded-2xl border border-white/10 bg-navy-dark/60 p-6 md:p-8 lg:row-span-3 lg:grid lg:grid-rows-subgrid lg:gap-y-0"
             >
               <span className="flex items-center justify-between">
                 <span className="grid size-12 place-items-center rounded-full bg-green/15 text-green-bright md:size-14">

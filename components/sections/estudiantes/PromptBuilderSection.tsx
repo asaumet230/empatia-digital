@@ -30,7 +30,7 @@ export function PromptBuilderSection({ id, index, label }: SectionProps) {
   return (
     <Section id={id} label={label} className="flex items-center overflow-hidden bg-navy">
       <motion.div
-        className="relative mx-auto grid w-full max-w-7xl items-start gap-8 px-6 py-20 sm:px-10 md:px-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12 lg:py-12"
+        className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-start gap-8 px-6 py-20 sm:px-10 md:px-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12 lg:py-12"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -50,7 +50,7 @@ export function PromptBuilderSection({ id, index, label }: SectionProps) {
             {PROMPT_BUILDER.lead}
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-8 grid gap-6">
+          <motion.div variants={fadeUp} className="mt-8 grid grid-cols-1 gap-6">
             <Picker label={labels.topic} options={PEACE.topics} value={topic} onChange={setTopic} />
             <Picker label={labels.format} options={PEACE.formats} value={format} onChange={setFormat} />
             <StylePicker value={style} onChange={setStyle} />

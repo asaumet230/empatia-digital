@@ -41,7 +41,7 @@ export function CopyButton({ text, label = "Copiar", tone = "ghost", className }
               "border px-4 py-2 text-sm",
               copied
                 ? "border-green-bright text-green-bright"
-                : "border-white/20 text-gray-light hover:border-white/50",
+                : "border-white/20 text-gray-light hover:border-green-bright hover:text-green-bright",
             ),
         className,
       )}

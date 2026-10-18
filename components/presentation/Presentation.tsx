@@ -4,11 +4,12 @@ import { MotionConfig, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo } from "react";
 import { EvaluationButton } from "@/components/presentation/EvaluationButton";
 import { Intro } from "@/components/presentation/Intro";
-import { PresentationFooter } from "@/components/presentation/PresentationFooter";
 import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
 import { ProgressNavigation } from "@/components/presentation/ProgressNavigation";
+import { SiteFooter } from "@/components/ui/SiteFooter";
 import { scrollToSection, useActiveSection } from "@/hooks/useActiveSection";
 import { useIntroTimeline } from "@/hooks/useIntroTimeline";
+import { EVALUATION_FORMS } from "@/lib/content/evaluacion";
 import { INTRO_SECTION, TRACKS, type TrackId } from "@/lib/sections";
 
 const NEXT_KEYS = new Set(["ArrowDown", "PageDown", " "]);
@@ -86,9 +87,9 @@ export function Presentation({ track }: { track: TrackId }) {
           <SectionComponent key={id} id={id} index={i + 1} label={label} />
         ))}
       </main>
-      <PresentationFooter track={track} />
+      <SiteFooter track={track} />
       <SessionSwitcher track={track} visible={ready} />
-      <EvaluationButton track={track} visible={ready} />
+      {EVALUATION_FORMS[track] && <EvaluationButton forms={EVALUATION_FORMS[track]} visible={ready} />}
 
       <ProgressNavigation
         items={navItems}

@@ -150,6 +150,20 @@ html:has(.oraculo-theme) body {
   scroll-snap-type: none;
 }
 
+/* Tailwind 4 leaves buttons with the arrow cursor: everything clickable shows the hand.
+   In the base layer, so a `cursor-*` utility on one element still wins. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="radio"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  summary,
+  select:not(:disabled),
+  label:has(input:not(:disabled)) {
+    cursor: pointer;
+  }
+}
+
 ::selection {
   background: var(--green-bright);
   color: var(--navy-dark);

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Cpu, GraduationCap, X, type LucideIcon } from "lucide-react";
+import { Ban, Cpu, GraduationCap, type LucideIcon, X } from "lucide-react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
@@ -77,18 +77,18 @@ export function AlertKeyIdeaSection({ id, index, label }: SectionProps) {
             hidden: { opacity: 0, y: 16 },
             visible: { opacity: 1, y: 0, transition: transition(DURATION.slow, 0.2) },
           }}
-          className="mt-10 md:mt-12"
+          className="mt-8 rounded-2xl border border-[#FF6B6B]/30 bg-[#FF6B6B]/[0.05] p-5 md:mt-10 md:p-6"
         >
-          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-gray-muted">
+          <p className="flex items-center gap-2.5 font-display text-base font-bold text-white md:text-lg">
+            <span className="grid size-7 place-items-center rounded-full bg-[#FF6B6B]/15">
+              <Ban aria-hidden="true" className="size-4 text-[#FF8A8A]" strokeWidth={2.25} />
+            </span>
             {KEY_IDEA.limitsTitle}
           </p>
-          <ul className="mt-4 flex flex-wrap gap-2.5">
+          <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
             {KEY_IDEA.limits.map((limit) => (
-              <li
-                key={limit}
-                className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-gray-text md:text-base"
-              >
-                <X aria-hidden="true" className="size-4 text-[#FF6B6B]" strokeWidth={2.5} />
+              <li key={limit} className="flex items-start gap-3 text-[0.9375rem] leading-snug text-gray-light md:text-base">
+                <X aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#FF8A8A]" strokeWidth={2.5} />
                 {limit}
               </li>
             ))}

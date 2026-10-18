@@ -5,6 +5,7 @@ import { Section } from "@/components/presentation/Section";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, EASE, fadeUp, staggerContainer, transition } from "@/lib/animations";
+import { cn } from "@/lib/cn";
 import { AI_BLOCK, AI_CATEGORIES, AI_TOOLS } from "@/lib/content/ia-ecosistema";
 import type { SectionProps } from "@/types/presentation";
 
@@ -98,13 +99,17 @@ export function AiOpeningSection({ id, index, label }: SectionProps) {
             return (
               <motion.div
                 key={c.id}
-                className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2"
+                // The top node carries its name above it, away from the spoke and the center
+                className={cn(
+                  "absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-2",
+                  point(i).y < 40 ? "flex-col-reverse" : "flex-col",
+                )}
                 variants={burst(i)}
               >
                 <span className="grid size-11 place-items-center rounded-full border border-white/15 bg-navy-dark text-gray-light sm:size-14">
                   <Icon strokeWidth={1.5} className="size-5 sm:size-6" />
                 </span>
-                <span className="hud-label whitespace-nowrap">{c.label}</span>
+                <span className="hud-label whitespace-nowrap rounded-full bg-navy px-2 py-0.5">{c.label}</span>
               </motion.div>
             );
           })}

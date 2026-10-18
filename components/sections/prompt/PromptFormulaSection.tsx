@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
+import { useRef, useState } from "react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
@@ -15,6 +16,24 @@ const lightUp: Variants = {
 
 /** ROL + CONTEXTO + OBJETIVO + INSTRUCCIONES + LÍMITES + ACCIÓN, lit one after another. */
 export function PromptFormulaSection({ id, index, label }: SectionProps) {
+  // Phone: the six cards are a swipeable carousel with arrows; from sm up, a grid
+  const track = useRef<HTMLOListElement>(null);
+  const [current, setCurrent] = useState(0);
+  const last = PROMPT_PARTS.length - 1;
+
+  const goTo = (i: number) => {
+    const el = track.current?.children[i] as HTMLElement | undefined;
+    el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  };
+
+  const onScroll = () => {
+    const el = track.current;
+    const card = el?.firstElementChild as HTMLElement | null;
+    if (!el || !card) return;
+    // One step = a card plus the 1rem gap
+    setCurrent(Math.round(el.scrollLeft / (card.offsetWidth + 16)));
+  };
+
   return (
     <Section id={id} label={label} className="grain flex items-center overflow-hidden bg-navy-dark">
       <motion.div
@@ -34,12 +53,17 @@ export function PromptFormulaSection({ id, index, label }: SectionProps) {
           {PROMPT_BLOCK.formulaTitle}
         </motion.h2>
 
-        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-6">
+        <div className="relative mt-10 lg:mt-12">
+        <ol
+          ref={track}
+          onScroll={onScroll}
+          className="-mx-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-6 [&::-webkit-scrollbar]:hidden"
+        >
           {PROMPT_PARTS.map((part, i) => (
             <motion.li
               key={part.id}
               variants={lightUp}
-              className="relative flex flex-col rounded-2xl border border-white/10 bg-navy/60 p-5 md:p-6"
+              className="relative flex w-full shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-navy/60 p-5 sm:w-auto md:p-6"
             >
               <span
                 aria-hidden="true"
@@ -58,7 +82,7 @@ export function PromptFormulaSection({ id, index, label }: SectionProps) {
               {(i + 1) % 3 !== 0 && (
                 <span
                   aria-hidden="true"
-                  className="absolute -right-[1.5rem] top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-navy-dark text-gray-muted lg:grid"
+                  className="absolute -right-[2.25rem] top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-navy-dark text-gray-muted lg:grid"
                 >
                   <Plus className="size-3" strokeWidth={2.5} />
                 </span>
@@ -66,6 +90,42 @@ export function PromptFormulaSection({ id, index, label }: SectionProps) {
             </motion.li>
           ))}
         </ol>
+
+        {/* Phone controls: arrows on the sides of the counter */}
+        <div className="mt-5 flex items-center justify-between sm:hidden">
+          <button
+            type="button"
+            aria-label="Parte anterior"
+            onClick={() => goTo(current - 1)}
+            disabled={current === 0}
+            className="grid size-11 place-items-center rounded-full border border-white/15 text-gray-light transition-colors disabled:opacity-30"
+          >
+            <ArrowLeft aria-hidden="true" className="size-5" />
+          </button>
+          <span className="flex items-center gap-2" aria-live="polite">
+            {PROMPT_PARTS.map((part, i) => (
+              <span
+                key={part.id}
+                aria-hidden="true"
+                className="h-1.5 rounded-full transition-all duration-300"
+                style={{ width: i === current ? 20 : 6, backgroundColor: i === current ? part.color : "rgb(255 255 255 / 0.2)" }}
+              />
+            ))}
+            <span className="sr-only">
+              Parte {current + 1} de {last + 1}
+            </span>
+          </span>
+          <button
+            type="button"
+            aria-label="Parte siguiente"
+            onClick={() => goTo(current + 1)}
+            disabled={current === last}
+            className="grid size-11 place-items-center rounded-full border border-green-bright text-green-bright transition-colors disabled:opacity-30"
+          >
+            <ArrowRight aria-hidden="true" className="size-5" />
+          </button>
+        </div>
+        </div>
 
         <motion.blockquote
           variants={{

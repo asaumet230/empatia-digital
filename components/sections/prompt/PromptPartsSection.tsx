@@ -97,8 +97,9 @@ function PartsStepper({ id, index, label, parts }: SectionProps & { parts: reado
                   <span
                     className={cn(
                       "hidden font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-colors sm:block",
-                      on ? "text-white" : "text-gray-muted group-hover:text-gray-text",
+                      on ? "font-bold" : "text-gray-text group-hover:text-white",
                     )}
+                    style={on ? { color: p.color } : undefined}
                   >
                     {p.name}
                   </span>
@@ -109,7 +110,7 @@ function PartsStepper({ id, index, label, parts }: SectionProps & { parts: reado
         </motion.ol>
 
         {/* The current part */}
-        <motion.div variants={fadeUp} className="relative mt-8 min-h-[30rem] md:mt-10 md:min-h-[24rem]">
+        <motion.div variants={fadeUp} className="relative mt-8 md:mt-10">
           <AnimatePresence mode="wait" initial={false} custom={direction}>
             <motion.div
               key={part.id}
@@ -157,27 +158,37 @@ function PartsStepper({ id, index, label, parts }: SectionProps & { parts: reado
         </motion.div>
 
         {/* Navigation */}
-        <motion.div variants={fadeUp} className="mt-8 flex items-center gap-3">
+        {/* Navigation: back on the left, the next part (filled with its color) on the right */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-8 flex items-center justify-between gap-3 border-t border-white/10 pt-6"
+        >
           <button
             type="button"
             onClick={() => goTo(step - 1)}
             disabled={step === 0}
             aria-label="Parte anterior"
-            className="grid size-12 place-items-center rounded-full border border-white/15 text-gray-light transition-colors hover:border-white/40 disabled:opacity-30"
+            className="inline-flex h-12 items-center gap-2 rounded-full border border-white/20 px-4 font-semibold text-gray-light transition-colors hover:border-white/50 hover:text-white disabled:pointer-events-none disabled:opacity-30 sm:px-5"
           >
             <ArrowLeft aria-hidden="true" className="size-5" />
+            <span className="hidden sm:inline">Anterior</span>
           </button>
+          <span className="hidden text-sm text-gray-text [@media(hover:hover)]:inline">o usa las flechas ← →</span>
           <button
             type="button"
-            onClick={() => goTo(step + 1)}
-            disabled={step === last}
-            className="inline-flex h-12 items-center gap-3 rounded-full border px-6 font-semibold transition-colors disabled:opacity-30"
-            style={{ borderColor: parts[Math.min(step + 1, last)].color }}
+            onClick={() => goTo(step === last ? 0 : step + 1)}
+            className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-bold text-navy-dark transition-[filter] hover:brightness-110 sm:px-6"
+            style={{ backgroundColor: step === last ? "var(--gray-light)" : parts[step + 1].color }}
           >
-            {step === last ? "Última parte" : `Siguiente: ${parts[step + 1].name}`}
+            {step === last ? (
+              "Ver desde el inicio"
+            ) : (
+              <>
+                <span className="font-semibold opacity-75">Siguiente:</span> {parts[step + 1].name}
+              </>
+            )}
             <ArrowRight aria-hidden="true" className="size-5" />
           </button>
-          <span className="hud-label ml-2 hidden [@media(hover:hover)]:inline">o usa las flechas ← →</span>
         </motion.div>
       </motion.div>
     </Section>
