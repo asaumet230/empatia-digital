@@ -84,10 +84,11 @@ app/                      rutas, layout, fuentes y tokens de diseño (globals.cs
 components/presentation/  Presentation (raíz), Intro, Section, ProgressNavigation, SessionSwitcher,
                           EvaluationButton (pretest/postest), PresentationFooter
 components/intro/         BootSequence, BrandReveal, NetworkBackground (canvas), IntroHud
-components/sections/      una diapositiva por archivo (ia/, prompt/, report/, familias/, estudiantes/, alertas/)
+components/sections/      una diapositiva por archivo (ia/, prompt/, report/, familias/, estudiantes/, alertas/);
+                          las pantallas del juego del algoritmo están en estudiantes/algoritmo/
 components/ui/            piezas reutilizables (Eyebrow, PulseDot, CopyButton, QrCode, BrandIcon, VideoGuide)
 components/oraculo/       interfaz del Oráculo
-hooks/                    useIntroTimeline, useActiveSection, useOracle
+hooks/                    useIntroTimeline, useActiveSection, useOracle, useDismiss (cerrar menús al tocar afuera o con Esc)
 lib/                      constants, animations, intro-timeline, sections (TRACKS), cn, clipboard
 lib/content/              todos los textos y datos de la presentación
 lib/oraculo/              lógica del Oráculo (§8.3)
@@ -218,11 +219,8 @@ falla por lo largo del prompt, usar "Copiar prompt".
 
 ## 7. Deuda técnica conocida (auditoría del 2026-10-13)
 
-- `components/sections/estudiantes/AlgorithmGameSection.tsx` tiene ~650 líneas y 8 subcomponentes: conviene dividirlo.
 - Código y logos sin usar: eliminados el 2026-10-18 (los originales de los logos de IA siguen en el historial de git).
 - `npm ls` marca 6 paquetes de `sharp` (wasm) como sobrantes; `npm prune` no los quita y no afectan.
-- `PresentationFooter` solo enlaza a la *primera* otra sesión (desde estudiantes y familias lleva a docentes).
-- La lógica de "cerrar al tocar afuera" se repite en `EvaluationButton` y `SessionSwitcher`.
 - eslint 9.39 ya no tiene soporte (aviso de npm).
 - En desarrollo, el ícono "N" de Next.js tapa el botón del Oráculo; en producción no aparece.
 

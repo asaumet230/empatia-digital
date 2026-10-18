@@ -3,7 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { House, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useRef, useState, type PointerEvent } from "react";
+import { useDismiss } from "@/hooks/useDismiss";
 import { DURATION, EASE, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { TRACKS, type TrackId } from "@/lib/sections";
@@ -24,15 +25,8 @@ export function SessionSwitcher({ track, visible = true }: SessionSwitcherProps)
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
-  // Touch: close when tapping anywhere else
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: globalThis.PointerEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", onDown);
-    return () => document.removeEventListener("pointerdown", onDown);
-  }, [open]);
+  // Touch: close when tapping anywhere else (or on Esc)
+  useDismiss(ref, open, () => setOpen(false));
 
   const onMouse = (value: boolean) => (e: PointerEvent) => e.pointerType === "mouse" && setOpen(value);
 
@@ -56,7 +50,6 @@ export function SessionSwitcher({ track, visible = true }: SessionSwitcherProps)
           onPointerLeave={onMouse(false)}
           onFocus={(e) => e.target.matches(":focus-visible") && setOpen(true)}
           onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}
-          onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
           className="fixed left-3 top-3 z-50 flex items-center rounded-full border border-white/10 bg-navy-deep/85 p-1 shadow-[0_10px_30px_-10px_rgb(0_0_0/0.6)] backdrop-blur-md sm:left-5 sm:top-5"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}

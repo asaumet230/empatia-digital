@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ClipboardCheck, ExternalLink, X } from "lucide-react";
 import QRCode from "qrcode";
 import { useEffect, useRef, useState } from "react";
+import { useDismiss } from "@/hooks/useDismiss";
 import { DURATION, EASE, transition } from "@/lib/animations";
 import { EVALUATION, EVALUATION_FORMS } from "@/lib/content/evaluacion";
 import type { TrackId } from "@/lib/sections";
@@ -17,19 +18,7 @@ export function EvaluationButton({ track, visible }: { track: TrackId; visible: 
   const ref = useRef<HTMLDivElement>(null);
   const forms = EVALUATION_FORMS[track];
 
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("pointerdown", onDown);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDismiss(ref, open, () => setOpen(false));
 
   return (
     <AnimatePresence>
