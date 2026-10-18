@@ -311,7 +311,9 @@ export function NetworkBackground({ phase, reducedMotion, originRef }: NetworkBa
     }
 
     const loop = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 0.05);
+      // The first frame's timestamp can be earlier than `last` (set with performance.now()):
+      // a negative step would push the wave backwards, below a zero radius
+      const dt = Math.min(Math.max((now - last) / 1000, 0), 0.05);
       last = now;
       draw(now, dt);
       raf = requestAnimationFrame(loop);
