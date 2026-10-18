@@ -184,7 +184,7 @@ function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-green-bright/50 px-4 py-2 text-sm font-semibold text-green-bright transition-colors hover:bg-green-bright hover:text-navy-dark"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-green-bright/50 px-4 py-2 text-sm font-semibold text-green-bright transition-colors hover:bg-green hover:text-white"
               >
                 Visitar {tool.name}
                 <ArrowUpRight aria-hidden="true" className="size-3.5" />

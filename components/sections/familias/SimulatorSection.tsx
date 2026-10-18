@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { Bot, CheckCircle2, User } from "lucide-react";
+import { Bot, CheckCircle2, MessagesSquare, User } from "lucide-react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
@@ -38,13 +38,16 @@ export function SimulatorSection({ id, index, label }: SectionProps) {
           >
             {SIMULATOR_BLOCK.title}
           </motion.h2>
-          <motion.ol variants={fadeUp} className="mt-8 space-y-4">
+          <motion.ol variants={fadeUp} className="mt-8 grid gap-3">
             {SIMULATOR_BLOCK.steps.map((step, i) => (
-              <li key={step} className="flex items-start gap-4">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full border border-green-bright/50 font-mono text-sm text-green-bright">
+              <li
+                key={step}
+                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-3 pr-4 md:p-4"
+              >
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-green-bright/15 font-display text-base font-bold text-green-bright">
                   {i + 1}
                 </span>
-                <span className="pt-1.5 text-lg font-semibold leading-snug text-gray-light md:text-xl">{step}</span>
+                <span className="text-base font-semibold leading-snug text-gray-light md:text-lg">{step}</span>
               </li>
             ))}
           </motion.ol>
@@ -52,14 +55,30 @@ export function SimulatorSection({ id, index, label }: SectionProps) {
 
         {/* Sample chat */}
         <motion.div
-          className="rounded-2xl border border-white/10 bg-navy/70 p-5 md:p-6"
+          className="overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-navy-deep to-navy-dark shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)]"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
           variants={staggerContainer(0.7, 0.3)}
         >
-          <p className="hud-label">{SIMULATOR_BLOCK.sample}</p>
-          <div className="mt-4 space-y-3">
+          {/* Chat header, like a messaging app */}
+          <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-3.5">
+            <p className="flex items-center gap-2 text-sm font-semibold text-white">
+              <MessagesSquare aria-hidden="true" className="size-4 text-green-bright" strokeWidth={2} />
+              {SIMULATOR_BLOCK.sample}
+            </p>
+            <span className="flex items-center gap-3 text-xs text-gray-text">
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden="true" className="size-2 rounded-full bg-white/40" />
+                Tú
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden="true" className="size-2 rounded-full bg-green-bright" />
+                IA como adolescente
+              </span>
+            </span>
+          </div>
+          <div className="space-y-3 p-5 md:p-6">
             {SIMULATOR_BLOCK.chat.map((message, i) => {
               const adult = message.from === "adult";
               const finish = message.text.startsWith(FINISH);
@@ -67,30 +86,39 @@ export function SimulatorSection({ id, index, label }: SectionProps) {
                 <motion.div
                   key={i}
                   variants={bubble}
-                  className={cn("flex items-end gap-2.5", adult ? "flex-row-reverse" : "flex-row")}
+                  className={cn("flex flex-col", adult ? "items-end" : "items-start")}
                 >
-                  <span
-                    className={cn(
-                      "grid size-8 shrink-0 place-items-center rounded-full",
-                      adult ? "bg-white/10 text-gray-light" : "bg-green/25 text-green-bright",
-                    )}
-                  >
-                    {adult ? (
-                      <User aria-hidden="true" className="size-4" />
-                    ) : (
-                      <Bot aria-hidden="true" className="size-4" />
-                    )}
-                  </span>
-                  <p
-                    className={cn(
-                      "max-w-[85%] rounded-2xl px-4 py-2.5 text-[0.9375rem] leading-snug md:text-base",
-                      adult ? "rounded-br-sm bg-white/[0.08] text-gray-light" : "rounded-bl-sm bg-green/15 text-white",
-                      finish && "border border-yellow/60 font-semibold text-yellow",
-                    )}
-                  >
-                    <span className="sr-only">{adult ? "Tú: " : "Adolescente (IA): "}</span>
-                    {message.text}
-                  </p>
+                  {finish && (
+                    <span className="mb-1 mr-11 text-xs font-semibold uppercase tracking-[0.12em] text-yellow">
+                      Frase para terminar
+                    </span>
+                  )}
+                  <div className={cn("flex w-full items-end gap-2.5", adult ? "flex-row-reverse" : "flex-row")}>
+                    <span
+                      className={cn(
+                        "grid size-8 shrink-0 place-items-center rounded-full",
+                        adult ? "bg-white/10 text-gray-light" : "bg-green/25 text-green-bright",
+                      )}
+                    >
+                      {adult ? (
+                        <User aria-hidden="true" className="size-4" />
+                      ) : (
+                        <Bot aria-hidden="true" className="size-4" />
+                      )}
+                    </span>
+                    <p
+                      className={cn(
+                        "max-w-[85%] rounded-2xl px-4 py-2.5 text-[0.9375rem] leading-snug md:text-base",
+                        adult
+                          ? "rounded-br-sm bg-white/[0.08] text-gray-light"
+                          : "rounded-bl-sm bg-green/15 text-white",
+                        finish && "border border-yellow/60 bg-yellow/10 font-semibold text-yellow",
+                      )}
+                    >
+                      <span className="sr-only">{adult ? "Tú: " : "Adolescente (IA): "}</span>
+                      {message.text}
+                    </p>
+                  </div>
                 </motion.div>
               );
             })}

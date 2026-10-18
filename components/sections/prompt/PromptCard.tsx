@@ -55,8 +55,9 @@ export function PromptActions({ variant, reserveDownload = false, title, sameCha
   };
 
   return (
-    <div>
-      <div className="grid gap-3 sm:grid-cols-3">
+    // Container query: the three buttons sit in a row only when their column has room for them
+    <div className="@container">
+      <div className="grid gap-3 @md:grid-cols-3">
         <button
           type="button"
           onClick={copy}
@@ -68,9 +69,9 @@ export function PromptActions({ variant, reserveDownload = false, title, sameCha
           )}
         >
           {copied ? (
-            <Check aria-hidden="true" className="size-5" strokeWidth={2.5} />
+            <Check aria-hidden="true" className="size-5 shrink-0" strokeWidth={2.5} />
           ) : (
-            <Copy aria-hidden="true" className="size-5" strokeWidth={2} />
+            <Copy aria-hidden="true" className="size-5 shrink-0" strokeWidth={2} />
           )}
           <span aria-live="polite">{copied ? "¡Copiado!" : "Copiar prompt"}</span>
         </button>
@@ -138,9 +139,9 @@ export function PromptActions({ variant, reserveDownload = false, title, sameCha
               )}
             >
               {copied ? (
-                <Check aria-hidden="true" className="size-5" strokeWidth={2.5} />
+                <Check aria-hidden="true" className="size-5 shrink-0" strokeWidth={2.5} />
               ) : (
-                <Copy aria-hidden="true" className="size-5" strokeWidth={2} />
+                <Copy aria-hidden="true" className="size-5 shrink-0" strokeWidth={2} />
               )}
               {copied ? "¡Copiado!" : "Copiar prompt"}
             </button>
@@ -243,30 +244,43 @@ export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange
 const BOX = "relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-navy-deep to-navy-dark shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)]";
 
 /** The scrollable text (wheel, touch or keyboard) with its parts in green; the fade below hints there is more. */
-function PromptScroll({ text }: { text: string }) {
+function PromptScroll({ text, fit = false }: { text: string; fit?: boolean }) {
   return (
     <>
       <div
         tabIndex={0}
         aria-label="Vista previa del prompt"
-        className="h-96 overflow-y-auto overscroll-contain px-6 pt-5 pb-16 text-[0.9375rem] leading-relaxed text-gray-light [scrollbar-color:rgb(255_255_255/0.2)_transparent] [scrollbar-width:thin] md:text-base"
+        className={cn(
+          fit ? "max-h-96 pb-5" : "h-96 pb-16",
+          "overflow-y-auto overscroll-contain px-6 pt-5 text-[0.9375rem] leading-relaxed text-gray-light [scrollbar-color:rgb(255_255_255/0.2)_transparent] [scrollbar-width:thin] md:text-base",
+        )}
       >
         <PromptText text={text} />
       </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-navy-dark to-transparent"
-      />
+      {!fit && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-navy-dark to-transparent"
+        />
+      )}
     </>
   );
 }
 
 /** A single prompt (no versions): the same box and actions as the docentes exercises. */
-export function PromptBox({ text, title, sameChat = false }: { text: string; title: string; sameChat?: boolean }) {
+interface PromptBoxProps {
+  text: string;
+  title: string;
+  sameChat?: boolean;
+  /** Short prompt: the box is only as tall as the text (up to the usual height), without the fade. */
+  fit?: boolean;
+}
+
+export function PromptBox({ text, title, sameChat = false, fit = false }: PromptBoxProps) {
   return (
     <div>
       <div className={BOX}>
-        <PromptScroll text={text} />
+        <PromptScroll text={text} fit={fit} />
       </div>
       <div className="mt-5">
         <PromptActions variant={{ text, label: title }} title={title} sameChat={sameChat} />

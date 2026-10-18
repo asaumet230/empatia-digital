@@ -37,9 +37,9 @@ export function EvaluationButton({ forms, visible }: { forms: EvaluationForms; v
               aria-haspopup="dialog"
               aria-label={EVALUATION.button}
               onClick={show}
-              className="group inline-flex items-center gap-2.5 rounded-full border border-green-bright bg-navy-deep p-1.5 md:pr-5 text-sm font-bold text-white shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 hover:bg-green-bright hover:text-navy-dark"
+              className="group inline-flex items-center gap-2.5 rounded-full border border-green-bright bg-navy-deep p-1.5 md:pr-5 text-sm font-bold text-white shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 hover:bg-green hover:text-white"
             >
-              <span className="grid size-8 place-items-center rounded-full bg-green-bright text-navy-dark transition-colors duration-300 group-hover:bg-navy-dark group-hover:text-green-bright">
+              <span className="grid size-8 place-items-center rounded-full bg-green-bright text-navy-dark transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
                 <ClipboardCheck aria-hidden="true" className="size-4" strokeWidth={2.25} />
               </span>
               {/* On a phone, only the icon: the text would cover the content */}

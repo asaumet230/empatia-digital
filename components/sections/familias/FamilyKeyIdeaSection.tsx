@@ -27,7 +27,7 @@ export function FamilyKeyIdeaSection({ id, index, label }: SectionProps) {
         <motion.div variants={fadeUp}>
           <Eyebrow index={index}>{label}</Eyebrow>
         </motion.div>
-        <blockquote className="mt-8 max-w-5xl font-display text-[clamp(1.75rem,4.2vw,3.75rem)] font-bold leading-[1.1] tracking-[-0.03em]">
+        <blockquote className="mt-8 max-w-5xl font-display text-[clamp(1.5rem,3.4vw,3rem)] font-bold leading-[1.1] tracking-[-0.03em]">
           <motion.span variants={fadeUp} className="block text-gray-text">
             “{first}
           </motion.span>

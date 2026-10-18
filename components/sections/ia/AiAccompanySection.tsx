@@ -45,7 +45,7 @@ function AiAccompanySection({ id, index, label, place }: SectionProps & { place:
 
         <motion.p
           variants={fadeUp}
-          className="mt-8 max-w-5xl font-display text-[clamp(1.75rem,4.4vw,3.75rem)] font-bold leading-[1.08] tracking-[-0.03em]"
+          className="mt-8 max-w-5xl font-display text-[clamp(1.5rem,3.6vw,3rem)] font-bold leading-[1.08] tracking-[-0.03em]"
         >
           {adults.lead}
         </motion.p>

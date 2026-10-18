@@ -83,7 +83,7 @@ export default function Home() {
                   className="group flex h-full flex-col rounded-2xl border border-white/10 bg-navy/70 p-6 text-left transition-[border-color,background-color,transform] duration-500 hover:-translate-y-1 hover:border-green-bright/60 hover:bg-navy md:p-7"
                 >
                   <span className="flex items-center gap-4">
-                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-green/15 text-green-bright transition-colors duration-500 group-hover:bg-green-bright group-hover:text-navy-dark">
+                    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-green/15 text-green-bright transition-colors duration-500 group-hover:bg-green group-hover:text-white">
                       <Icon aria-hidden="true" className="size-6" strokeWidth={1.5} />
                     </span>
                     <span className="min-w-0 flex-1 whitespace-nowrap font-display text-xl font-bold leading-tight tracking-[-0.02em] lg:text-[clamp(0.875rem,1.3vw,1.2rem)]">

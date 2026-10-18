@@ -201,10 +201,17 @@ export const CASES_BLOCK = {
   speakerLabel: "Soy",
   childLabel: "Hablo con",
   hint: "Escoge el caso que más se parezca a lo que vives en casa.",
+  caseLabel: "Caso",
   steps: {
-    scenario: "Lee el caso",
+    scenario: "Copia el caso en ChatGPT",
     opening: "Empieza la conversación con esta frase",
     finish: "Cuando quieras terminar, escribe",
+  },
+  /** One line under each step: what it is for. */
+  stepHints: {
+    scenario: "Es el prompt: le explica a la IA la situación y le pide que haga el papel de tu {hijo}.",
+    opening: "Es tu primer mensaje. Escríbelo en el chat después de pegar el caso.",
+    finish: "La IA deja de hacer el papel y te dice qué hiciste bien y qué podrías mejorar.",
   },
 } as const;
 

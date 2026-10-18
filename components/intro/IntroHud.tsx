@@ -57,7 +57,7 @@ export function IntroHud({ phase, onSkip }: IntroHudProps) {
           {...fade}
           type="button"
           onClick={onSkip}
-          className="pointer-events-auto absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-green-bright/60 bg-navy-deep/80 px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_10px_30px_-10px_rgb(0_0_0/0.7)] backdrop-blur-md transition-colors hover:border-green-bright hover:bg-green-bright hover:text-navy-dark sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 md:text-sm"
+          className="pointer-events-auto absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-green-bright/60 bg-navy-deep/80 px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_10px_30px_-10px_rgb(0_0_0/0.7)] backdrop-blur-md transition-colors hover:border-green-bright hover:bg-green hover:text-white sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 md:text-sm"
         >
           Saltar intro <span aria-hidden="true" className="text-base leading-none">→</span>
         </motion.button>

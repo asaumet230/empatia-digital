@@ -167,7 +167,7 @@ export function VideoGuide({ guide }: { guide: Guide }) {
                   <button
                     type="button"
                     onClick={() => setStep(step + 1)}
-                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-green-bright/50 bg-green-bright/10 px-5 text-sm font-semibold text-green-bright transition-colors hover:bg-green-bright hover:text-navy-dark"
+                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-green-bright/50 bg-green-bright/10 px-5 text-sm font-semibold text-green-bright transition-colors hover:bg-green hover:text-white"
                   >
                     Ir al paso {step + 2}
                     <ArrowRight aria-hidden="true" className="size-5" />

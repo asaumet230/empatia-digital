@@ -8,6 +8,9 @@ import { CONFLICTS_BLOCK } from "@/lib/content/familias";
 import type { SectionProps } from "@/types/presentation";
 
 /** What usually goes wrong at home, and the three things the recommendations agree on. */
+/** One color per conflict (the prompt-part palette), so each card reads at a glance. */
+const ICON_COLORS = ["#35C95E", "#5AB8FF", "#FFD23F", "#B69CFF", "#FF7A7A", "#FF9F43"];
+
 export function ConflictsSection({ id, index, label }: SectionProps) {
   return (
     <Section id={id} label={label} className="flex items-center overflow-hidden bg-navy">
@@ -35,8 +38,11 @@ export function ConflictsSection({ id, index, label }: SectionProps) {
               variants={fadeUp}
               className="flex items-center gap-3 rounded-2xl border border-white/10 bg-navy-dark/60 p-4 md:gap-4 md:p-5"
             >
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/[0.06] text-gray-light md:size-12">
-                <Icon aria-hidden="true" className="size-5 md:size-6" strokeWidth={1.5} />
+              <span
+                className="grid size-10 shrink-0 place-items-center rounded-full md:size-12"
+                style={{ color: ICON_COLORS[i % ICON_COLORS.length], backgroundColor: `${ICON_COLORS[i % ICON_COLORS.length]}26` }}
+              >
+                <Icon aria-hidden="true" className="size-5 md:size-6" strokeWidth={1.75} />
               </span>
               <span className="text-[0.9375rem] font-semibold leading-snug text-gray-light md:text-lg">
                 <span className="mr-2 font-mono text-xs text-gray-muted">{String(i + 1).padStart(2, "0")}</span>
