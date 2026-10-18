@@ -1,23 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Vote } from "lucide-react";
+import { Hand, MessageSquareText, Vote } from "lucide-react";
 import { fadeUp } from "@/lib/animations";
 import { cn } from "@/lib/cn";
-import { POLL_HINT, type Poll } from "@/lib/content/estudiantes";
+import type { Poll } from "@/lib/content/estudiantes";
 
 /** A class vote, projected: the question and its options, big enough to read from the back row. */
 export function PollCard({ poll, className }: { poll: Poll; className?: string }) {
   return (
     <motion.div
       variants={fadeUp}
-      className={cn("rounded-2xl border border-yellow/30 bg-yellow/[0.04] p-5 md:p-7", className)}
+      className={cn(
+        "rounded-3xl border border-yellow/30 bg-linear-to-b from-yellow/[0.07] to-yellow/[0.02] p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] md:p-7",
+        className,
+      )}
     >
-      <p className="flex items-center justify-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">
-        <Vote aria-hidden="true" className="size-4" strokeWidth={1.75} />
-        {POLL_HINT}
-      </p>
-      <p className="mt-3 font-display text-xl font-bold leading-tight tracking-[-0.02em] md:text-2xl">
+      {/* How to vote: two clear options instead of one line of small caps */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow/15 px-3 py-1 text-xs font-semibold text-yellow">
+          <Vote aria-hidden="true" className="size-3.5" strokeWidth={2} />
+          Vota en Mentimeter
+        </span>
+        <span className="text-xs text-gray-text">o</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow/15 px-3 py-1 text-xs font-semibold text-yellow">
+          <Hand aria-hidden="true" className="size-3.5" strokeWidth={2} />
+          A mano alzada
+        </span>
+      </div>
+      <p className="mt-4 font-display text-xl font-bold leading-tight tracking-[-0.02em] md:text-2xl">
         {poll.question}
       </p>
       {poll.options.length > 0 ? (
@@ -35,7 +46,10 @@ export function PollCard({ poll, className }: { poll: Poll; className?: string }
           ))}
         </ul>
       ) : (
-        <p className="mt-3 text-sm text-gray-muted">Respuesta abierta</p>
+        <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-sm text-gray-light">
+          <MessageSquareText aria-hidden="true" className="size-4 text-gray-text" strokeWidth={2} />
+          Respuesta abierta
+        </p>
       )}
     </motion.div>
   );

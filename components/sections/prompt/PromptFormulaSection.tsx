@@ -21,9 +21,11 @@ export function PromptFormulaSection({ id, index, label }: SectionProps) {
   const [current, setCurrent] = useState(0);
   const last = PROMPT_PARTS.length - 1;
 
+  // Scrolls only the carousel, never the page
   const goTo = (i: number) => {
-    const el = track.current?.children[i] as HTMLElement | undefined;
-    el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    const el = track.current;
+    const card = el?.children[i] as HTMLElement | undefined;
+    if (el && card) el.scrollTo({ left: card.offsetLeft - el.offsetLeft - parseFloat(getComputedStyle(el).paddingLeft), behavior: "smooth" });
   };
 
   const onScroll = () => {

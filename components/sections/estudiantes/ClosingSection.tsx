@@ -55,7 +55,7 @@ export function ClosingSection({ id, index, label }: SectionProps) {
             hidden: { opacity: 0, y: 18 },
             visible: { opacity: 1, y: 0, transition: transition(DURATION.slow, 0.4) },
           }}
-          className="mt-14 font-display text-[clamp(1.75rem,4.4vw,3.75rem)] font-bold leading-[1.1] tracking-[-0.03em]"
+          className="mt-14 font-display text-[clamp(1.375rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]"
         >
           {first}
           <span className="block text-green-bright text-glow-green">{second}</span>

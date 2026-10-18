@@ -69,17 +69,18 @@ export function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }
               onClick={() => setScene(scene - 1)}
               disabled={scene === 0}
               aria-label={story.prev}
-              className="grid size-12 cursor-pointer place-items-center rounded-full border border-white/15 text-gray-light transition-colors hover:border-white/40 disabled:cursor-default disabled:opacity-30"
+              className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/[0.04] px-4 font-semibold text-gray-light transition-colors hover:border-white/50 hover:text-white disabled:cursor-default disabled:opacity-30"
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
+              Anterior
             </button>
             {scene < last ? (
               <button
                 type="button"
                 onClick={() => setScene(scene + 1)}
-                aria-label="Siguiente"
-                className="grid size-12 cursor-pointer place-items-center rounded-full border border-green-bright text-green-bright transition-colors hover:bg-green-bright hover:text-navy-dark"
+                className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl bg-green-bright px-5 font-bold text-navy-dark shadow-[0_10px_30px_-12px_rgb(53_201_94/0.7)] transition-[filter] hover:brightness-110"
               >
+                Siguiente
                 <ArrowRight aria-hidden="true" className="size-5" />
               </button>
             ) : (
@@ -88,7 +89,7 @@ export function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }
                 <ArrowRight aria-hidden="true" className="size-5" strokeWidth={2} />
               </PrimaryButton>
             )}
-            <span className="hud-label ml-2 hidden [@media(hover:hover)]:inline">o usa las flechas ← →</span>
+            <span className="ml-1 hidden text-sm text-gray-text [@media(hover:hover)]:inline">o usa las flechas ← →</span>
           </div>
         </div>
       </div>

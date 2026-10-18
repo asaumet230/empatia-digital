@@ -165,7 +165,7 @@ puede funcionar como un simulador para practicar conversaciones difíciles."*
 Primeras tres diapositivas del bloque de IA → **"Antes de empezar"** (ciudadanía digital, ciberacoso).
 - **"¿Broma o problema?" (~20 min):**
   - 0–9 min **Tú eres el algoritmo**: la clase es el algoritmo de "Scrollia". Debe llegar a 40.000
-    «me gusta» en 6 rondas cada vez más rápidas (20 → 8 s). Burlarse de Valentina siempre da más; si se
+    «me gusta» en 6 rondas cada vez más rápidas (10, 8, 6, 4, 4, 4 s; en celular las publicaciones son un carrusel). Burlarse de Valentina siempre da más; si se
     acaba el tiempo, elige solo la que más da. Al final: puntaje, mensajes de Valentina, la historia en
     6 imágenes (← →, `public/assets/images/historia/`) y cómo funciona un algoritmo real. **No adelantar
     la lección.**

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Timer } from "lucide-react";
+import { ArrowLeft, ArrowRight, Timer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
@@ -23,6 +23,24 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
   const boss = "boss" in ROUNDS[round] ? ROUNDS[round].boss : undefined;
   const [auto, setAuto] = useState(false);
   const next = useRef(onNext);
+  // Phone: the posts are a swipeable carousel with arrows; from sm up, a grid
+  const track = useRef<HTMLUListElement>(null);
+  const [slide, setSlide] = useState(0);
+
+  // Scrolls only the carousel, never the page
+  const goTo = (i: number) => {
+    const el = track.current;
+    const card = el?.children[i] as HTMLElement | undefined;
+    if (el && card) el.scrollTo({ left: card.offsetLeft - el.offsetLeft - parseFloat(getComputedStyle(el).paddingLeft), behavior: "smooth" });
+  };
+
+  const onScroll = () => {
+    const el = track.current;
+    const card = el?.firstElementChild as HTMLElement | null;
+    if (!el || !card) return;
+    // One step = a card plus the 1rem gap
+    setSlide(Math.round(el.scrollLeft / (card.offsetWidth + 16)));
+  };
 
   useEffect(() => {
     next.current = onNext;
@@ -70,9 +88,16 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
         <Countdown seconds={seconds} running={picked === null} onTimeUp={pickByItself} />
       </div>
 
-      <ul className={cn("mt-6 grid gap-4 md:gap-5", posts.length === 2 ? "sm:grid-cols-2 lg:mx-auto lg:max-w-4xl" : "sm:grid-cols-3")}>
+      <ul
+        ref={track}
+        onScroll={onScroll}
+        className={cn(
+          "-mx-6 mt-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:overflow-visible sm:px-0 md:gap-5 [&::-webkit-scrollbar]:hidden",
+          posts.length === 2 ? "sm:grid-cols-2 lg:mx-auto lg:max-w-4xl" : "sm:grid-cols-3",
+        )}
+      >
         {posts.map((p, i) => (
-          <li key={p.id}>
+          <li key={p.id} className="w-[85%] shrink-0 snap-start sm:w-auto">
             <PostCard
               post={p}
               state={picked === null ? "open" : picked === i ? "chosen" : "dimmed"}
@@ -82,6 +107,42 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
           </li>
         ))}
       </ul>
+
+      {/* Phone controls: arrows on the sides of the dots */}
+      <div className="mt-4 flex items-center justify-between sm:hidden">
+        <button
+          type="button"
+          aria-label="Publicación anterior"
+          onClick={() => goTo(slide - 1)}
+          disabled={slide === 0}
+          className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/25 bg-white/[0.06] px-4 font-semibold text-white transition-colors disabled:opacity-30"
+        >
+          <ArrowLeft aria-hidden="true" className="size-5" />
+          Anterior
+        </button>
+        <span className="flex items-center gap-2" aria-live="polite">
+          {posts.map((p, i) => (
+            <span
+              key={p.id}
+              aria-hidden="true"
+              className={cn("h-1.5 rounded-full transition-all duration-300", i === slide ? "w-5 bg-yellow" : "w-1.5 bg-white/25")}
+            />
+          ))}
+          <span className="sr-only">
+            Publicación {slide + 1} de {posts.length}
+          </span>
+        </span>
+        <button
+          type="button"
+          aria-label="Publicación siguiente"
+          onClick={() => goTo(slide + 1)}
+          disabled={slide === posts.length - 1}
+          className="inline-flex h-12 items-center gap-2 rounded-xl bg-yellow px-4 font-bold text-navy-dark transition-opacity disabled:opacity-30"
+        >
+          Siguiente
+          <ArrowRight aria-hidden="true" className="size-5" />
+        </button>
+      </div>
 
       <AnimatePresence>
         {post && (

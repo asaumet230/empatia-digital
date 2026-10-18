@@ -30,7 +30,7 @@ export function GallerySection({ id, index, label }: SectionProps) {
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="mt-5 font-display text-[clamp(2.25rem,6vw,5rem)] font-extrabold leading-none tracking-[-0.04em]"
+          className="mt-5 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
         >
           🖼️ {GALLERY.title}
         </motion.h2>
@@ -69,7 +69,7 @@ export function GallerySection({ id, index, label }: SectionProps) {
             hidden: { opacity: 0, y: 18 },
             visible: { opacity: 1, y: 0, transition: transition(DURATION.slow, 0.4) },
           }}
-          className="mt-12 font-display text-[clamp(1.5rem,3.6vw,3rem)] font-bold leading-[1.1] tracking-[-0.03em]"
+          className="mt-12 font-display text-[clamp(1.375rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em]"
         >
           {first}
           <span className="block text-green-bright text-glow-green">{second}</span>

@@ -17,15 +17,17 @@ import type { Report, ReportRow, Status } from "@/lib/content/report";
 
 const ROLE = "Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.";
 
-const TASK_TALLY = `Entra a Tally con la conexión disponible, abre el formulario “${SURVEY_NAME}” y analiza todas sus respuestas anónimas.`;
+const CONTEXT_TALLY = `Mis estudiantes respondieron la encuesta anónima “${SURVEY_NAME}”. Las respuestas están en Tally.`;
+const TASK_TALLY = `Entra a Tally con la conexión disponible, abre el formulario “${SURVEY_NAME}”, analiza todas sus respuestas anónimas y entrégame el informe.`;
 
-const TASK_PASTED = `Analiza el archivo CSV adjunto con las respuestas anónimas de la encuesta “${SURVEY_NAME}”. Las preguntas están al final de este mensaje.`;
+const CONTEXT_PASTED = `Mis estudiantes respondieron la encuesta anónima “${SURVEY_NAME}”. Te adjunto el archivo CSV con sus respuestas; las preguntas están al final de este mensaje.`;
+const TASK_PASTED = "Analiza el archivo CSV adjunto y entrégame el informe.";
 
 /** Everything after the task: identical in both versions. */
 const ANALYSIS = `OBJETIVO
 Ayúdame a entender cómo viven la convivencia mis estudiantes, en el colegio y en lo digital. Tú muestras los patrones; yo interpreto y decido.
 
-CÓMO QUIERO EL INFORME
+INSTRUCCIONES
 Lenguaje sencillo y frases cortas.
 Nada de porcentajes: di “3 de 7 estudiantes”.
 
@@ -64,7 +66,7 @@ export const ALERTAS_EXERCISE: PromptExercise = {
       id: "sin-tally",
       label: "Sin Tally",
       note: "Descarga el CSV de ejemplo, adjúntalo en ChatGPT con el clip 📎 y pega el prompt. Funciona en cualquier cuenta de ChatGPT.",
-      text: `${ROLE}\n\n${TASK_PASTED}\n\n${ANALYSIS}\n\n${questionsAsText()}`,
+      text: `ROL\n${ROLE}\n\nCONTEXTO\n${CONTEXT_PASTED}\n\n${ANALYSIS}\n\nACCIÓN\n${TASK_PASTED}\n\n${questionsAsText()}`,
       download: { href: "/assets/data/convivencia-en-mi-curso.csv", label: "Descargar respuestas de ejemplo (CSV)" },
     },
     {
@@ -72,7 +74,7 @@ export const ALERTAS_EXERCISE: PromptExercise = {
       label: "Con Tally",
       note: `ChatGPT lee las respuestas directamente de Tally. Para analizar tu propio formulario, cambia “${SURVEY_NAME}” por su nombre.`,
       guide: TALLY_GUIDE,
-      text: `${ROLE}\n\n${TASK_TALLY}\n\n${ANALYSIS}`,
+      text: `ROL\n${ROLE}\n\nCONTEXTO\n${CONTEXT_TALLY}\n\n${ANALYSIS}\n\nACCIÓN\n${TASK_TALLY}`,
     },
   ],
 };

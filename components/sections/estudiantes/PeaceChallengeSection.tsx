@@ -41,7 +41,7 @@ export function PeaceChallengeSection({ id, index, label }: SectionProps) {
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="mt-5 font-display text-[clamp(2.25rem,6vw,5rem)] font-extrabold leading-none tracking-[-0.04em]"
+          className="mt-5 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
         >
           🕊️ {PEACE.title}
         </motion.h2>

@@ -133,10 +133,16 @@ export const partsFor = (
 ): readonly PromptPart[] => PROMPT_PARTS.map((part) => ({ ...part, ...explanations[part.id] }));
 
 /** Todo lo anterior a la acción: idéntico en ambas versiones. */
-const BODY = `Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.
+const BODY = `ROL
+Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.
 
-Tu tarea es diseñar una encuesta breve y anónima para estudiantes de 13 a 16 años, cuyo objetivo sea conocer cómo perciben la convivencia dentro de su curso, tanto en el colegio como en espacios digitales, colócale de nombre “Encuesta Empatía Digital”.
+CONTEXTO
+Mis estudiantes tienen entre 13 y 16 años.
 
+OBJETIVO
+Diseñar una encuesta breve y anónima, llamada “Encuesta Empatía Digital”, para conocer cómo perciben la convivencia dentro de su curso, tanto en el colegio como en espacios digitales.
+
+INSTRUCCIONES
 Crea 10 preguntas claras, breves, neutrales y respetuosas, utilizando un lenguaje fácil de comprender para adolescentes.
 
 Las preguntas deben abordar estos temas:
@@ -156,6 +162,13 @@ Nunca / A veces / Frecuentemente / Siempre.
 
 La pregunta 10 debe ser abierta y permitir que el estudiante escriba libremente qué podría hacerse para mejorar la convivencia.
 
+Antes de comenzar la encuesta incluye este texto:
+“Este formulario es anónimo. No hay respuestas buenas ni malas. Queremos conocer cómo percibes la convivencia en tu curso, tanto en el colegio como en espacios digitales. Tus respuestas nos ayudarán a identificar oportunidades para mejorar la convivencia.”
+
+Al finalizar muestra:
+“Gracias por participar. Tus respuestas son anónimas y nos ayudarán a construir un mejor ambiente para todos.”
+
+LÍMITES
 Evita:
 - pedir nombre, correo, teléfono u otros datos personales;
 - preguntas que diagnostiquen ansiedad, depresión u otros problemas psicológicos;
@@ -163,14 +176,7 @@ Evita:
 - pedir que el estudiante identifique a otros compañeros;
 - lenguaje técnico o difícil.
 
-Antes de comenzar la encuesta incluye este texto:
-
-“Este formulario es anónimo. No hay respuestas buenas ni malas. Queremos conocer cómo percibes la convivencia en tu curso, tanto en el colegio como en espacios digitales. Tus respuestas nos ayudarán a identificar oportunidades para mejorar la convivencia.”
-
-Al finalizar muestra:
-
-“Gracias por participar. Tus respuestas son anónimas y nos ayudarán a construir un mejor ambiente para todos.”
-
+ACCIÓN
 `;
 
 const VARIANTS: readonly PromptVariant[] = [
@@ -178,7 +184,7 @@ const VARIANTS: readonly PromptVariant[] = [
     id: "sin-tally",
     label: "Sin Tally",
     note: "Funciona en cualquier cuenta de ChatGPT, incluso la gratuita. El formulario se arma en Google Forms.",
-    text: `${BODY}Finalmente, entrégame todo listo para copiar y pegar en Google Forms:
+    text: `${BODY}Entrégame todo listo para copiar y pegar en Google Forms:
 1. el nombre del formulario;
 2. una breve descripción;
 3. el texto de introducción;
@@ -191,7 +197,7 @@ const VARIANTS: readonly PromptVariant[] = [
     label: "Con Tally",
     note: "ChatGPT crea el formulario por ti. Necesita el complemento de Tally conectado en ChatGPT (funciona con la cuenta gratuita).",
     guide: TALLY_GUIDE,
-    text: `${BODY}Después de diseñar las preguntas, crea el formulario directamente en Tally usando la conexión disponible.
+    text: `${BODY}Diseña las preguntas y crea el formulario directamente en Tally usando la conexión disponible.
 
 Configúralo para que:
 - sea anónimo;

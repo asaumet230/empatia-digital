@@ -10,14 +10,16 @@ import { CRITERIA, LEVELS, RUBRIC_STUDENTS, countLevels, needSupport } from "@/l
 
 const FILE_NAME = "Rúbrica de Convivencia Escolar";
 
-const DESIGN = `Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.
+const DESIGN = `ROL
+Actúa como asistente de un docente de secundaria en Barranquilla, Colombia.
 
-Diseña una rúbrica sencilla para observar la convivencia de estudiantes de 13 a 16 años.
+CONTEXTO
+Mis estudiantes tienen entre 13 y 16 años. Necesito una rúbrica sencilla para observar su convivencia.
 
 OBJETIVO
 Ver fortalezas y aspectos que necesitan acompañamiento, en el colegio y en lo digital.
 
-LA RÚBRICA
+INSTRUCCIONES
 Criterios: empatía, respeto, manejo de conflictos y convivencia digital.
 Escala:
    1 = Requiere atención
@@ -68,12 +70,11 @@ export const RUBRICA_EXERCISE: PromptExercise = {
       note: "Funciona en cualquier cuenta de ChatGPT. El archivo también se puede abrir en Google Sheets.",
       text: `${DESIGN}
 
-EL ARCHIVO
+ACCIÓN
 Crea un archivo de Excel (.xlsx) descargable llamado “${FILE_NAME}” con tres hojas:
 ${SHEETS}
 
-AL FINAL ENTRÉGAME
-El enlace de descarga y, en pocas frases, cómo usarlo, cómo leer los resultados y cómo abrirlo en Google Sheets.`,
+Al final, entrégame el enlace de descarga y, en pocas frases, cómo usarlo, cómo leer los resultados y cómo abrirlo en Google Sheets.`,
       download: {
         href: "/assets/data/rubrica-convivencia-escolar.xlsx",
         label: "Descargar ejemplo de resultado (Excel)",
@@ -85,12 +86,11 @@ El enlace de descarga y, en pocas frases, cómo usarlo, cómo leer los resultado
       note: "ChatGPT crea el archivo directamente en tu Google Drive. Necesita ChatGPT Plus con Google Drive conectado.",
       text: `${DESIGN}
 
-EL ARCHIVO
+ACCIÓN
 Con la conexión disponible, crea en mi Google Drive un archivo de Google Sheets llamado “${FILE_NAME}” con tres hojas:
 ${SHEETS}
 
-AL FINAL ENTRÉGAME
-El enlace del archivo y, en pocas frases, cómo usarlo y cómo leer los resultados.`,
+Al final, entrégame el enlace del archivo y, en pocas frases, cómo usarlo y cómo leer los resultados.`,
     },
   ],
 };
@@ -102,7 +102,7 @@ El enlace del archivo y, en pocas frases, cómo usarlo y cómo leer los resultad
 const ANALYSIS = `OBJETIVO
 Ayúdame a ver las fortalezas del curso y a quién conviene acompañar. Tú muestras los patrones; yo interpreto y decido.
 
-CÓMO QUIERO EL INFORME
+INSTRUCCIONES
 Lenguaje sencillo y frases cortas.
 Nada de porcentajes ni promedios: di “8 de 15 estudiantes”.
 Describe con palabras, no con números de nivel.
@@ -149,11 +149,16 @@ export const RUBRICA_ANALISIS_EXERCISE: PromptExercise = {
       id: "excel",
       label: "Con archivo de Excel",
       note: "Funciona en cualquier cuenta de ChatGPT: solo adjunta el archivo antes de enviar el prompt.",
-      text: `${ROLE}
+      text: `ROL
+${ROLE}
 
-Analiza el archivo de Excel adjunto “${FILE_NAME}”, hoja “Registro de estudiantes”. ${SCALE}
+CONTEXTO
+Te adjunto el archivo de Excel “${FILE_NAME}”, hoja “Registro de estudiantes”. ${SCALE}
 
-${ANALYSIS}`,
+${ANALYSIS}
+
+ACCIÓN
+Analiza el archivo adjunto y entrégame el informe.`,
       download: {
         href: "/assets/data/rubrica-convivencia-ejemplo.xlsx",
         label: "Descargar rúbrica de ejemplo (15 estudiantes ficticios)",
@@ -163,11 +168,16 @@ ${ANALYSIS}`,
       id: "drive",
       label: "Con Google Drive",
       note: "ChatGPT lee el archivo directamente de tu Google Drive. Necesita ChatGPT Plus con Google Drive conectado.",
-      text: `${ROLE}
+      text: `ROL
+${ROLE}
 
-Entra a Google Drive con la conexión disponible, abre el archivo de Google Sheets “${FILE_NAME}” y analiza la hoja “Registro de estudiantes”. ${SCALE}
+CONTEXTO
+El archivo de Google Sheets “${FILE_NAME}” está en mi Google Drive, hoja “Registro de estudiantes”. ${SCALE}
 
-${ANALYSIS}`,
+${ANALYSIS}
+
+ACCIÓN
+Entra a Google Drive con la conexión disponible, abre el archivo, analiza la hoja “Registro de estudiantes” y entrégame el informe.`,
     },
   ],
 };

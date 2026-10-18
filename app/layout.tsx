@@ -38,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${unbounded.variable} ${manrope.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >

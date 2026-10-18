@@ -53,7 +53,7 @@ export function AiOpeningSection({ id, index, label }: SectionProps) {
           <motion.div variants={fadeUp}>
             <Eyebrow index={index}>{label}</Eyebrow>
           </motion.div>
-          <h2 className="mt-8 font-display text-[clamp(2.5rem,7.5vw,6.75rem)] font-extrabold leading-[0.95] tracking-[-0.04em]">
+          <h2 className="mt-8 font-display text-[clamp(2.25rem,6.5vw,5.75rem)] font-extrabold leading-[0.95] tracking-[-0.04em]">
             <motion.span variants={fadeUp} className="block">
               {lineA}
             </motion.span>

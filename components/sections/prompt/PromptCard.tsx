@@ -12,10 +12,12 @@ import {
   FileText,
   Link2,
   Maximize2,
+  MessagesSquare,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { PromptText } from "@/components/sections/prompt/PromptText";
 import { DURATION, transition } from "@/lib/animations";
 import { copyText } from "@/lib/clipboard";
 import { cn } from "@/lib/cn";
@@ -26,11 +28,22 @@ import type { PromptVariant } from "@/lib/content/prompt-exercise";
  * modal (native <dialog>: Esc, the close button or a click on the backdrop close it),
  * plus an optional download.
  */
-export function PromptActions({ variant, reserveDownload = false }: { variant: PromptVariant; reserveDownload?: boolean }) {
+interface PromptActionsProps {
+  variant: Pick<PromptVariant, "text" | "label" | "download">;
+  /** When another version has a file, keep its room so switching tabs never moves the slide. */
+  reserveDownload?: boolean;
+  /** Title of the "Ver completo" modal; defaults to "Prompt <version>". */
+  title?: string;
+  /** The prompt continues an open chat: instead of "Abrir en ChatGPT", a hint to paste it there. */
+  sameChat?: boolean;
+}
+
+export function PromptActions({ variant, reserveDownload = false, title, sameChat = false }: PromptActionsProps) {
   const [copied, setCopied] = useState(false);
   const timer = useRef(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const { text, download, label } = variant;
+  const heading = title ?? `Prompt ${lowerFirst(label)}`;
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -50,8 +63,8 @@ export function PromptActions({ variant, reserveDownload = false }: { variant: P
           className={cn(
             "inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border px-3 text-sm font-semibold transition-colors duration-300",
             copied
-              ? "border-green-bright bg-green-bright text-navy-dark"
-              : "border-green-bright/50 bg-green-bright/10 text-green-bright hover:border-green-bright hover:bg-green-bright hover:text-navy-dark",
+              ? "border-green bg-green text-white"
+              : "border-green-bright/50 bg-green-bright/10 text-green-bright hover:border-green hover:bg-green hover:text-white",
           )}
         >
           {copied ? (
@@ -61,20 +74,30 @@ export function PromptActions({ variant, reserveDownload = false }: { variant: P
           )}
           <span aria-live="polite">{copied ? "¡Copiado!" : "Copiar prompt"}</span>
         </button>
-        <a
-          href={`https://chatgpt.com/?q=${encodeURIComponent(text)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#5AB8FF]/50 bg-[#5AB8FF]/10 px-3 text-sm font-semibold text-[#8FCDFF] transition-colors hover:border-[#5AB8FF] hover:bg-[#5AB8FF] hover:text-navy-dark"
-        >
-          <ExternalLink aria-hidden="true" className="size-5 shrink-0" strokeWidth={2} />
-          Abrir en ChatGPT
-        </a>
+        {sameChat ? (
+          <p className="flex h-12 items-center gap-2.5 rounded-xl border border-yellow/40 bg-yellow/[0.06] px-3 text-left">
+            <MessagesSquare aria-hidden="true" className="size-5 shrink-0 text-yellow" strokeWidth={2} />
+            <span className="leading-tight">
+              <span className="block text-sm font-semibold text-yellow">En el mismo chat</span>
+              <span className="block text-xs text-gray-text">No abras uno nuevo</span>
+            </span>
+          </p>
+        ) : (
+          <a
+            href={`https://chatgpt.com/?q=${encodeURIComponent(text)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#5AB8FF]/50 bg-[#5AB8FF]/10 px-3 text-sm font-semibold text-[#8FCDFF] transition-colors hover:border-[#2D7FD3] hover:bg-[#2D7FD3] hover:text-white"
+          >
+            <ExternalLink aria-hidden="true" className="size-5 shrink-0" strokeWidth={2} />
+            Abrir en ChatGPT
+          </a>
+        )}
         <button
           type="button"
           aria-haspopup="dialog"
           onClick={() => dialog.current?.showModal()}
-          className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#B69CFF]/50 bg-[#B69CFF]/10 px-3 text-sm font-semibold text-[#CDBBFF] transition-colors hover:border-[#B69CFF] hover:bg-[#B69CFF] hover:text-navy-dark"
+          className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#B69CFF]/50 bg-[#B69CFF]/10 px-3 text-sm font-semibold text-[#CDBBFF] transition-colors hover:border-[#7A5CE0] hover:bg-[#7A5CE0] hover:text-white"
         >
           <Maximize2 aria-hidden="true" className="size-5 shrink-0" strokeWidth={2} />
           Ver completo
@@ -83,13 +106,13 @@ export function PromptActions({ variant, reserveDownload = false }: { variant: P
 
       <dialog
         ref={dialog}
-        aria-label={`Prompt ${lowerFirst(label)}`}
+        aria-label={heading}
         onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
         className="m-auto h-[min(92svh,60rem)] w-[min(calc(100vw-1.5rem),64rem)] rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/75 backdrop:backdrop-blur-sm"
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-8">
-            <p className="font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">Prompt {lowerFirst(label)}</p>
+            <p className="font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">{heading}</p>
             <button
               type="button"
               aria-label="Cerrar"
@@ -100,9 +123,9 @@ export function PromptActions({ variant, reserveDownload = false }: { variant: P
             </button>
           </div>
           {/* Focusable so the long text can be scrolled with the keyboard */}
-          <pre tabIndex={0} className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap px-5 py-6 font-sans text-base leading-relaxed text-gray-light sm:px-8 md:text-lg">
-            {text}
-          </pre>
+          <div tabIndex={0} className="min-h-0 flex-1 overflow-y-auto px-5 py-6 text-base leading-relaxed text-gray-light sm:px-8 md:text-lg">
+            <PromptText text={text} />
+          </div>
           <div className="flex flex-wrap items-center gap-3 border-t border-white/10 px-5 py-4 sm:px-8">
             <button
               type="button"
@@ -110,8 +133,8 @@ export function PromptActions({ variant, reserveDownload = false }: { variant: P
               className={cn(
                 "inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl border px-5 text-sm font-semibold transition-colors duration-300",
                 copied
-                  ? "border-green-bright bg-green-bright text-navy-dark"
-                  : "border-green-bright/50 bg-green-bright/10 text-green-bright hover:border-green-bright hover:bg-green-bright hover:text-navy-dark",
+                  ? "border-green bg-green text-white"
+                  : "border-green-bright/50 bg-green-bright/10 text-green-bright hover:border-green hover:bg-green hover:text-white",
               )}
             >
               {copied ? (
@@ -163,7 +186,7 @@ const VARIANT_ICONS: Record<string, LucideIcon> = {
 /** A short look at the prompt, with its two versions as tabs. The whole text opens from "Ver completo". */
 export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange }: PromptPreviewProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-navy-deep to-navy-dark shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)]">
+    <div className={BOX}>
       {/* Header: the two versions as a segmented control */}
       <div className="border-b border-white/10 p-2">
         <div role="tablist" aria-label="Versión del prompt" className="grid grid-cols-2 gap-1 rounded-2xl bg-white/[0.04] p-1">
@@ -203,27 +226,51 @@ export function PromptPreview({ layoutPrefix, variants, variant, onVariantChange
         </div>
       </div>
       <AnimatePresence mode="wait" initial={false}>
-        <motion.pre
+        <motion.div
           key={variant.id}
-          // Scrollable (wheel, touch or keyboard); the fade below hints there is more
-          tabIndex={0}
-          aria-label="Vista previa del prompt"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={transition(DURATION.fast)}
-          className={cn(
-            "h-96 overflow-y-auto overscroll-contain whitespace-pre-wrap px-6 pt-5 pb-16 font-sans [scrollbar-color:rgb(255_255_255/0.2)_transparent] [scrollbar-width:thin] text-[0.9375rem] leading-relaxed text-gray-light md:text-base",
-          )}
         >
-          {variant.text}
-        </motion.pre>
+          <PromptScroll text={variant.text} />
+        </motion.div>
       </AnimatePresence>
+    </div>
+  );
+}
 
+const BOX = "relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-b from-navy-deep to-navy-dark shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)]";
+
+/** The scrollable text (wheel, touch or keyboard) with its parts in green; the fade below hints there is more. */
+function PromptScroll({ text }: { text: string }) {
+  return (
+    <>
+      <div
+        tabIndex={0}
+        aria-label="Vista previa del prompt"
+        className="h-96 overflow-y-auto overscroll-contain px-6 pt-5 pb-16 text-[0.9375rem] leading-relaxed text-gray-light [scrollbar-color:rgb(255_255_255/0.2)_transparent] [scrollbar-width:thin] md:text-base"
+      >
+        <PromptText text={text} />
+      </div>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-navy-dark to-transparent"
       />
+    </>
+  );
+}
+
+/** A single prompt (no versions): the same box and actions as the docentes exercises. */
+export function PromptBox({ text, title, sameChat = false }: { text: string; title: string; sameChat?: boolean }) {
+  return (
+    <div>
+      <div className={BOX}>
+        <PromptScroll text={text} />
+      </div>
+      <div className="mt-5">
+        <PromptActions variant={{ text, label: title }} title={title} sameChat={sameChat} />
+      </div>
     </div>
   );
 }

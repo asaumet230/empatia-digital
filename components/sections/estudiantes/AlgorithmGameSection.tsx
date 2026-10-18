@@ -62,13 +62,13 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
 
       <div className="relative mx-auto w-full max-w-7xl px-6 py-20 sm:px-10 md:px-16 lg:py-10">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+          <div className={cn(stage === "inicio" && "w-full")}>
             <Eyebrow index={index}>{label}</Eyebrow>
             {/* Only on the start screen: after that, every step needs the room */}
             <h2
               className={cn(
                 "font-display font-bold leading-[1.05] tracking-[-0.03em]",
-                stage === "inicio" ? "mt-4 text-[clamp(1.5rem,3vw,2.5rem)]" : "sr-only",
+                stage === "inicio" ? "mt-4 text-center text-[clamp(1.5rem,3vw,2.5rem)]" : "sr-only",
               )}
             >
               🤖 {GAME.title}

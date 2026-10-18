@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, MessagesSquare } from "lucide-react";
 import { Section } from "@/components/presentation/Section";
 import { PollCard } from "@/components/sections/estudiantes/PollCard";
-import { CopyButton } from "@/components/ui/CopyButton";
+import { PromptBox } from "@/components/sections/prompt/PromptCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { AI_STEPS, type AiStep } from "@/lib/content/estudiantes";
@@ -43,34 +42,17 @@ function AiStepSection({ id, index, label, step }: SectionProps & { step: AiStep
             {step.lead}
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-6 rounded-2xl border border-white/10 bg-navy-deep/80">
-            <pre className="max-h-[42svh] overflow-y-auto whitespace-pre-wrap p-5 font-sans text-[0.9375rem] leading-relaxed text-gray-text md:text-base">
-              {step.prompt}
-            </pre>
-            <div className="flex flex-wrap items-center gap-3 border-t border-white/10 p-4">
-              <CopyButton text={step.prompt} label="Copiar prompt" tone="primary" />
-              {step.sameChat ? (
-                <p className="flex items-center gap-2 text-sm text-gray-muted">
-                  <MessagesSquare aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                  Pégalo en el mismo chat del paso anterior
-                </p>
-              ) : (
-                <a
-                  href={`https://chatgpt.com/?q=${encodeURIComponent(step.prompt)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-gray-light transition-colors hover:border-green-bright hover:text-white"
-                >
-                  <ExternalLink aria-hidden="true" className="size-4" strokeWidth={2} />
-                  Abrir en ChatGPT
-                </a>
-              )}
-            </div>
+          <motion.div variants={fadeUp} className="mt-6">
+            <PromptBox text={step.prompt} title={step.title} sameChat={step.sameChat} />
           </motion.div>
         </div>
 
         <div className="flex flex-col items-center text-center">
-          <motion.p variants={fadeUp} className="hud-label">
+          <motion.p
+            variants={fadeUp}
+            className="inline-flex items-center gap-2 rounded-full border border-green-bright/40 bg-green-bright/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-green-bright"
+          >
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-green-bright" />
             {step.then.label}
           </motion.p>
           <motion.p

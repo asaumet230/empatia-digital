@@ -139,7 +139,7 @@ function Row({ row, total, on, dimmed, onSelect }: RowProps) {
         onClick={onSelect}
         onFocus={onSelect}
         className={cn(
-          "-mx-2 grid w-[calc(100%+1rem)] grid-cols-[minmax(0,1fr)] gap-2 rounded-xl px-2 py-3 text-left transition-[opacity,background-color] duration-300 sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] sm:items-center sm:gap-4",
+          "-mx-4 grid w-[calc(100%+2rem)] grid-cols-[minmax(0,1fr)] gap-2 rounded-xl px-4 py-3 text-left transition-[opacity,background-color] duration-300 sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] sm:items-center sm:gap-4",
           on && "bg-white/[0.04]",
           dimmed && "opacity-45",
         )}

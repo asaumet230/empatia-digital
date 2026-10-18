@@ -305,7 +305,7 @@ export const ALGORITHM_GAME = {
   rounds: [
     {
       title: "¿Qué le muestras a todo el colegio?",
-      seconds: 20,
+      seconds: 10,
       posts: [
         { id: "perro", image: "/assets/images/algoritmo/1.jpg", user: "@firulais_oficial", avatar: "🐶", art: "🐶💃", caption: "Mi perro bailando champeta 🔥", likes: 800, harm: 0 },
         { id: "examen", image: "/assets/images/algoritmo/2.jpg", user: "@profe_mate", avatar: "📐", art: "📚✏️", caption: "Recuerden: examen de matemáticas el viernes.", likes: 50, harm: 0 },
@@ -314,7 +314,7 @@ export const ALGORITHM_GAME = {
     },
     {
       title: "La gente quiere más. ¿Qué impulsas?",
-      seconds: 18,
+      seconds: 8,
       posts: [
         { id: "gol", image: "/assets/images/algoritmo/4.jpg", user: "@hinchas_barranquilla", avatar: "⚽", art: "⚽🥅", caption: "¡Golazo en el último minuto!", likes: 1500, harm: 0 },
         { id: "orejas", image: "/assets/images/algoritmo/5.jpg", user: "@tomas_09", avatar: "🤪", art: "🐰📸", caption: "Le puse orejas de conejo a la foto 😂", likes: 4000, harm: 2 },
@@ -323,7 +323,7 @@ export const ALGORITHM_GAME = {
     },
     {
       title: "Los comentarios están explotando",
-      seconds: 15,
+      seconds: 6,
       posts: [
         { id: "comentarios", image: "/assets/images/algoritmo/7.jpg", user: "@andres.v", avatar: "😂", art: "💬💬💬", caption: "«Siempre en la suya» 😂 — 300 comentarios", likes: 6000, harm: 2 },
         { id: "freestyle", image: "/assets/images/algoritmo/8.jpg", user: "@mc_recreo", avatar: "🎤", art: "🎤🔥", caption: "Freestyle en el recreo", likes: 2000, harm: 0 },
@@ -332,7 +332,7 @@ export const ALGORITHM_GAME = {
     },
     {
       title: "Esto se está volviendo viral",
-      seconds: 12,
+      seconds: 4,
       posts: [
         { id: "remix", image: "/assets/images/algoritmo/10.jpg", user: "@memes_del_cole", avatar: "🤡", art: "🐰🎶", caption: "REMIX: «Siempre en la suya» con la foto", likes: 10000, harm: 3 },
         { id: "gato", image: "/assets/images/algoritmo/11.jpg", user: "@michis_caos", avatar: "🐱", art: "🐱💥", caption: "Mi gato tumbando todo de la mesa", likes: 3000, harm: 0 },
@@ -341,7 +341,7 @@ export const ALGORITHM_GAME = {
     },
     {
       title: "Último empujón antes del récord",
-      seconds: 10,
+      seconds: 4,
       posts: [
         { id: "exagera", image: "/assets/images/algoritmo/13.jpg", user: "@sofi.x", avatar: "🙄", art: "🙄💬", caption: "«Tampoco exageres» — 200 respuestas", likes: 8000, harm: 2 },
         { id: "baile", image: "/assets/images/algoritmo/14.jpg", user: "@9a_oficial", avatar: "🕺", art: "🕺💃", caption: "Reto de baile del curso", likes: 4000, harm: 0 },
@@ -350,7 +350,7 @@ export const ALGORITHM_GAME = {
     },
     {
       title: "Ronda final",
-      seconds: 8,
+      seconds: 4,
       boss: {
         from: "El jefe de Scrollia 🤑",
         text: "¡Estamos cerca del récord! Si mostramos la foto de Valentina en otros colegios, lo rompemos.",
