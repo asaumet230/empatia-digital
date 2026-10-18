@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, Backpack, GraduationCap, House, LayoutGrid, M
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { BackToTop } from "@/components/ui/BackToTop";
 import { LOGOS } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import { SITE_FOOTER as F } from "@/lib/content/sitio";
@@ -23,11 +24,10 @@ const linkClass = "text-gray-text transition-colors hover:text-green-bright";
  * Site-wide footer (home, sessions and the Oráculo's legal pages): legal pages, allies,
  * contact and the two emergency lines. Not shown inside the chat itself.
  * At the end of a session (`track`), it opens with the links to the home page and the other sessions.
- * The bottom padding keeps it clear of the floating buttons.
  */
 export function SiteFooter({ track }: { track?: TrackId }) {
   return (
-    <footer className="border-t border-line bg-navy-deep pb-24 text-sm print:hidden">
+    <footer className="border-t border-line bg-navy-deep pb-6 text-sm print:hidden">
       {track && <SessionEnd track={track} />}
 
       <div className="mx-auto grid max-w-6xl gap-10 px-6 pt-12 sm:px-10 md:grid-cols-2 lg:grid-cols-4">
@@ -129,6 +129,9 @@ export function SiteFooter({ track }: { track?: TrackId }) {
         <p className="text-center text-xs leading-relaxed text-gray-muted">
           © {new Date().getFullYear()} {F.project}. {F.disclaimer}
         </p>
+        <div className="mt-6 flex justify-center">
+          <BackToTop />
+        </div>
       </div>
     </footer>
   );

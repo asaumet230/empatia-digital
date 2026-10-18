@@ -110,7 +110,7 @@ export function CasesSection({ id, index, label }: SectionProps) {
           <Choice step={2} label={CASES_BLOCK.childLabel} options={CHILDREN} value={child} onChange={setChild} />
         </motion.div>
 
-        <div className="mt-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12">
+        <div className="mt-8 grid grid-cols-1 items-start gap-8 lg:items-stretch lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12">
           {/* The ten cases */}
           <motion.div variants={fadeUp} className="min-w-0">
             <ul
@@ -190,20 +190,20 @@ export function CasesSection({ id, index, label }: SectionProps) {
           </motion.div>
 
           {/* The selected case, in three steps */}
-          <motion.div ref={detailRef} variants={fadeUp} aria-live="polite" className="scroll-mt-6 lg:min-h-[34rem]">
+          <motion.div ref={detailRef} variants={fadeUp} aria-live="polite" className="scroll-mt-6">
             <AnimatePresence mode="wait" initial={false}>
               {selected === null ? (
                 <motion.div
                   key="empty"
                   {...swap}
-                  className="grid h-full place-items-center rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center lg:min-h-[34rem]"
+                  className="grid h-full place-items-center rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center"
                 >
                   <div className="flex max-w-sm flex-col items-center gap-4">
                     <span className="grid size-14 place-items-center rounded-2xl bg-green-bright/15 text-green-bright">
                       <MousePointerClick aria-hidden="true" className="size-7" strokeWidth={1.75} />
                     </span>
                     <p className="text-lg leading-snug text-gray-light">{CASES_BLOCK.hint}</p>
-                    <p className="flex items-center gap-2 text-sm text-gray-text">
+                    <p className="flex items-center gap-2 text-sm font-semibold text-green-bright">
                       <ArrowLeft aria-hidden="true" className="hidden size-4 lg:block" />
                       Toca uno de los 10 casos
                     </p>
