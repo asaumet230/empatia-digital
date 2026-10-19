@@ -25,9 +25,10 @@ export function LikesCard({ value }: { value: number }) {
   const progress = Math.min(1, value / GAME.goal);
 
   return (
-    <div className="min-w-60 rounded-xl border-2 border-white/20 bg-white/[0.06] px-4 py-2.5">
+    // Compact, so the round (title, timer and the three posts) fits on a laptop screen
+    <div className="min-w-56 rounded-xl border border-white/20 bg-white/[0.06] px-3 py-1.5">
       <div className="flex items-center justify-between gap-3">
-        <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.08em] text-white md:text-sm">
+        <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.08em] text-white">
           <Heart aria-hidden="true" className="size-4 fill-[#FF6B6B] text-[#FF6B6B]" strokeWidth={2} />
           {GAME.likesLabel}
         </span>
@@ -36,21 +37,21 @@ export function LikesCard({ value }: { value: number }) {
           aria-live="polite"
           initial={{ scale: 1.3 }}
           animate={{ scale: 1, transition: transition(DURATION.base) }}
-          className="origin-right whitespace-nowrap font-display text-2xl font-extrabold tabular-nums"
+          className="origin-right whitespace-nowrap font-display text-lg font-extrabold tabular-nums"
         >
           {formatNumber(shown)}
+          <span className="ml-1 font-sans text-xs font-semibold text-gray-text">
+            / {formatNumber(GAME.goal)}
+          </span>
         </motion.span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
         <motion.div
           className="h-full rounded-full bg-linear-to-r from-yellow to-[#FF6B6B]"
           animate={{ width: `${progress * 100}%` }}
           transition={transition(DURATION.slow)}
         />
       </div>
-      <p className="mt-1 text-right font-mono text-[0.625rem] uppercase tracking-[0.14em] text-gray-muted">
-        {GAME.goalLabel} {formatNumber(GAME.goal)}
-      </p>
     </div>
   );
 }

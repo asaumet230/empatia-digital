@@ -23,6 +23,9 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
   const boss = "boss" in ROUNDS[round] ? ROUNDS[round].boss : undefined;
   const [auto, setAuto] = useState(false);
   const next = useRef(onNext);
+  // A new random order every round, so the post that mocks Valentina is never in the same place.
+  // Rounds only render after "Empezar" (on the client), so this never runs on the server.
+  const [order] = useState(() => shuffle(posts.map((_, i) => i)));
   // Phone: the posts are a swipeable carousel with arrows; from sm up, a grid
   const track = useRef<HTMLUListElement>(null);
   const [slide, setSlide] = useState(0);
@@ -31,7 +34,11 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
   const goTo = (i: number) => {
     const el = track.current;
     const card = el?.children[i] as HTMLElement | undefined;
-    if (el && card) el.scrollTo({ left: card.offsetLeft - el.offsetLeft - parseFloat(getComputedStyle(el).paddingLeft), behavior: "smooth" });
+    if (el && card)
+      el.scrollTo({
+        left: card.offsetLeft - el.offsetLeft - parseFloat(getComputedStyle(el).paddingLeft),
+        behavior: "smooth",
+      });
   };
 
   const onScroll = () => {
@@ -96,16 +103,21 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
           posts.length === 2 ? "sm:grid-cols-2 lg:mx-auto lg:max-w-4xl" : "sm:grid-cols-3",
         )}
       >
-        {posts.map((p, i) => (
-          <li key={p.id} className="w-[85%] shrink-0 snap-start sm:w-auto">
-            <PostCard
-              post={p}
-              state={picked === null ? "open" : picked === i ? "chosen" : "dimmed"}
-              trending={p.likes === topLikes}
-              onBoost={() => onPick(i)}
-            />
-          </li>
-        ))}
+        {order
+          .map((i) => posts[i])
+          .map((p, k) => {
+            const i = order[k];
+            return (
+              <li key={p.id} className="w-[85%] shrink-0 snap-start sm:w-auto">
+                <PostCard
+                  post={p}
+                  state={picked === null ? "open" : picked === i ? "chosen" : "dimmed"}
+                  trending={p.likes === topLikes}
+                  onBoost={() => onPick(i)}
+                />
+              </li>
+            );
+          })}
       </ul>
 
       {/* Phone controls: arrows on the sides of the dots */}
@@ -125,7 +137,10 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
             <span
               key={p.id}
               aria-hidden="true"
-              className={cn("h-1.5 rounded-full transition-all duration-300", i === slide ? "w-5 bg-yellow" : "w-1.5 bg-white/25")}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-300",
+                i === slide ? "w-5 bg-yellow" : "w-1.5 bg-white/25",
+              )}
             />
           ))}
           <span className="sr-only">
@@ -151,7 +166,12 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
             animate={{ opacity: 1, y: 0, transition: transition(DURATION.base, 0.5) }}
             className="mt-6"
           >
-            <p className={cn("flex items-center gap-2 text-base font-semibold", auto ? "text-[#FF8A8A]" : "text-gray-text")}>
+            <p
+              className={cn(
+                "flex items-center gap-2 text-base font-semibold",
+                auto ? "text-[#FF8A8A]" : "text-gray-text",
+              )}
+            >
               {auto && <Timer aria-hidden="true" className="size-5" strokeWidth={2.25} />}
               {auto ? GAME.autoPick : `+${formatNumber(post.likes)} «me gusta». ${GAME.toGoal(missing)}`}
             </p>
@@ -168,4 +188,14 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
       </AnimatePresence>
     </div>
   );
+}
+
+/** Fisher–Yates: every order is equally likely. */
+function shuffle<T>(items: T[]): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
 }

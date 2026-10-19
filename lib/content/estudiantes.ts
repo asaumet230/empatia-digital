@@ -298,7 +298,6 @@ export const ALGORITHM_GAME = {
     missing > 0 ? `Les faltan ${missing.toLocaleString("es-CO")} para la meta.` : "¡Ya llegaron a la meta!",
   goal: 40000,
   likesLabel: "Me gusta",
-  goalLabel: "Meta",
   boost: "Impulsar",
   timeUp: "¡Tiempo!",
   autoPick: "Se acabó el tiempo: el algoritmo eligió solo lo que más «me gusta» daba.",

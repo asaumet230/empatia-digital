@@ -70,7 +70,7 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_10%,rgb(255_107_107/0.12)_0%,transparent_50%),radial-gradient(ellipse_at_10%_90%,rgb(36_157_74/0.12)_0%,transparent_50%)]"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 py-20 sm:px-10 md:px-16 lg:py-10">
+      <div className={cn("relative mx-auto w-full max-w-7xl px-6 py-20 sm:px-10 md:px-16", playing ? "lg:py-5" : "lg:py-10")}>
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className={cn(stage === "inicio" && "w-full")}>
             <Eyebrow index={index}>{label}</Eyebrow>
@@ -93,7 +93,7 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
         </div>
 
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={stage} {...swap} className="mt-6 md:mt-8">
+          <motion.div key={stage} {...swap} className={playing ? "mt-4" : "mt-6 md:mt-8"}>
             {stage === "inicio" ? (
               <StartStep onStart={() => setStage(0)} />
             ) : typeof stage === "number" ? (
