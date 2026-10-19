@@ -12,6 +12,7 @@ import {
   FileText,
   Link2,
   Maximize2,
+  MessageSquareText,
   MessagesSquare,
   X,
   type LucideIcon,
@@ -113,7 +114,13 @@ export function PromptActions({ variant, reserveDownload = false, title, sameCha
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-8">
-            <p className="font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">{heading}</p>
+            <p className="flex items-center gap-3 font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">
+              {/* What this is at a glance: a message to paste into the AI */}
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-green-bright/15 text-green-bright">
+                <MessageSquareText aria-hidden="true" className="size-5" strokeWidth={2} />
+              </span>
+              {heading}
+            </p>
             <button
               type="button"
               aria-label="Cerrar"
