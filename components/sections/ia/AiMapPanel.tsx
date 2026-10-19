@@ -1,12 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import type { PointerEvent } from "react";
+import { ArrowUpRight, PlayCircle, X } from "lucide-react";
+import { useRef, type PointerEvent } from "react";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { DURATION, EASE, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
-import { AI_BLOCK, AI_TOOLS, type AiCategory, type AiToolId } from "@/lib/content/ia-ecosistema";
+import { AI_BLOCK, AI_TOOLS, type AiCategory, type AiCategoryTool, type AiToolId } from "@/lib/content/ia-ecosistema";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -53,6 +53,7 @@ export function AiMapPanel({ categories, activeId, toolId, onSelectCategory, onS
                   open={t.id === toolId}
                   description={t.description}
                   points={t.points}
+                  example={t.example}
                   onSelect={onSelectTool}
                 />
               ))}
@@ -112,10 +113,11 @@ interface ToolRowProps {
   open: boolean;
   description?: string;
   points?: readonly string[];
+  example?: AiCategoryTool["example"];
   onSelect: (id: AiToolId) => void;
 }
 
-function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
+function ToolRow({ id, open, description, points, example, onSelect }: ToolRowProps) {
   const tool = AI_TOOLS[id];
   const select = () => onSelect(id);
 
@@ -180,20 +182,84 @@ function ToolRow({ id, open, description, points, onSelect }: ToolRowProps) {
                   ))}
                 </ul>
               )}
-              <a
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-green-bright/50 px-4 py-2 text-sm font-semibold text-green-bright transition-colors hover:bg-green hover:text-white"
-              >
-                Visitar {tool.name}
-                <ArrowUpRight aria-hidden="true" className="size-3.5" />
-                <span className="sr-only">(se abre en una pestaña nueva)</span>
-              </a>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a
+                  href={tool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-green-bright/50 px-4 py-2 text-sm font-semibold text-green-bright transition-colors hover:bg-green hover:text-white"
+                >
+                  Visitar {tool.name}
+                  <ArrowUpRight aria-hidden="true" className="size-3.5" />
+                  <span className="sr-only">(se abre en una pestaña nueva)</span>
+                </a>
+                {example && <ExampleVideo example={example} />}
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </li>
+  );
+}
+
+/**
+ * "Ver ejemplo": a video made with the tool, in a large modal like the other ones
+ * (native <dialog>: Esc, the close button or a click on the backdrop close it). The video only
+ * plays when the viewer presses play, and pauses when the modal closes.
+ */
+function ExampleVideo({ example }: { example: NonNullable<AiCategoryTool["example"]> }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-haspopup="dialog"
+        onClick={() => dialog.current?.showModal()}
+        className="inline-flex items-center gap-1.5 rounded-full border border-[#B69CFF]/50 bg-[#B69CFF]/10 px-4 py-2 text-sm font-semibold text-[#CDBBFF] transition-colors hover:border-[#7A5CE0] hover:bg-[#7A5CE0] hover:text-white"
+      >
+        <PlayCircle aria-hidden="true" className="size-4" strokeWidth={2} />
+        Ver ejemplo
+      </button>
+
+      <dialog
+        ref={dialog}
+        aria-label={example.title}
+        onClose={() => video.current?.pause()}
+        onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
+        className="m-auto w-[min(calc(100vw-1.5rem),64rem)] rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+      >
+        <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-8">
+          <p className="flex items-center gap-3 font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#B69CFF]/15 text-[#CDBBFF]">
+              <PlayCircle aria-hidden="true" className="size-5" strokeWidth={2} />
+            </span>
+            {example.title}
+          </p>
+          <button
+            type="button"
+            aria-label="Cerrar"
+            onClick={() => dialog.current?.close()}
+            className="grid size-10 shrink-0 place-items-center rounded-full text-gray-light transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <X aria-hidden="true" className="size-5" strokeWidth={2} />
+          </button>
+        </div>
+        <div className="p-5 sm:p-8">
+          <video
+            ref={video}
+            src={example.src}
+            poster={example.poster}
+            controls
+            playsInline
+            preload="metadata"
+            className="max-h-[70svh] w-full rounded-2xl border border-white/10 bg-black object-contain"
+          />
+        </div>
+      </dialog>
+    </>
   );
 }

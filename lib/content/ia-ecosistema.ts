@@ -51,6 +51,8 @@ export interface AiCategoryTool {
   description?: string;
   /** Capacidades en lista, cuando el texto lo pide. */
   points?: readonly string[];
+  /** Video de ejemplo hecho con la herramienta: se abre en una ventana desde "Ver ejemplo". */
+  example?: { title: string; src: string; poster: string };
 }
 
 export interface AiCategory {
@@ -144,6 +146,11 @@ export const AI_CATEGORIES: readonly AiCategory[] = [
         id: "runway",
         description:
           "Es una plataforma especializada en creación y edición audiovisual con IA. Permite generar videos a partir de texto o de una imagen y controlar escenas y movimientos mediante prompts.",
+        example: {
+          title: "Video de ejemplo hecho con Runway",
+          src: "/assets/videos/runway-ejemplo.mp4",
+          poster: "/assets/videos/runway-ejemplo.jpg",
+        },
       },
       {
         id: "firefly",

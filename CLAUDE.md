@@ -189,6 +189,7 @@ Primeras tres diapositivas del bloque de IA → **"Antes de empezar"** (ciudadan
 | `public/assets/data/rubrica-convivencia-escolar.xlsx` | Rúbrica vacía (ejemplo de resultado) |
 | `public/assets/data/rubrica-convivencia-ejemplo.xlsx` | Rúbrica con 15 estudiantes (E01–E15) para practicar |
 | `public/assets/videos/tally-*.mp4` | Guía en video de Tally |
+| `public/assets/videos/runway-ejemplo.mp4` | Video de ejemplo de Runway (botón "Ver ejemplo" en el mapa de la IA; campo `example` en `ia-ecosistema.ts`) |
 
 Lo que el análisis debe encontrar:
 - **Encuesta:** 🟢 saber a quién acudir (6 de 7) · 🔴 respeto en redes (3 de 7 "nunca"), fotos sin permiso,
