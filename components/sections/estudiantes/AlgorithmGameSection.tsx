@@ -53,6 +53,16 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
 
   const playing = typeof stage === "number";
 
+  // During the rounds the floating buttons (Oráculo, pretest) hide, so nothing covers the posts
+  useEffect(() => {
+    const root = document.documentElement;
+    if (playing) root.dataset.game = "playing";
+    else delete root.dataset.game;
+    return () => {
+      delete root.dataset.game;
+    };
+  }, [playing]);
+
   return (
     <Section id={id} label={label} className="grain flex items-center overflow-hidden bg-navy-dark">
       <div

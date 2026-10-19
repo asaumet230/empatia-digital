@@ -130,6 +130,17 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* While the algorithm game's rounds run, the floating buttons step aside (AlgorithmGameSection) */
+.game-hides {
+  transition: opacity 0.4s ease, visibility 0s;
+}
+html[data-game="playing"] .game-hides {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
 /* While the intro boots, the page is held in place */
 html[data-intro="booting"] {
   overflow: hidden;

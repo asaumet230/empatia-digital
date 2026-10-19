@@ -54,6 +54,7 @@ export const SITE_FOOTER = {
   ],
   contactTitle: "Contacto",
   contactNote: "Consultas y reclamos sobre datos personales",
+  instagram: { handle: "@fundacion.porunasonrisa", href: "https://www.instagram.com/fundacion.porunasonrisa" },
   helpTitle: "¿Necesitas ayuda ya?",
   /** The number comes from the Oráculo's help lines; `label` is the short name under it. */
   helpLines: [

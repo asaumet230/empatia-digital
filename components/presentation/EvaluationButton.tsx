@@ -26,7 +26,7 @@ export function EvaluationButton({ forms, visible }: { forms: EvaluationForms; v
       <AnimatePresence>
         {visible && (
           <motion.div
-            className="fixed bottom-3 right-3 z-50 sm:bottom-5 sm:right-5"
+            className="game-hides fixed bottom-3 right-3 z-50 sm:bottom-5 sm:right-5"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}

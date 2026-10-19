@@ -102,6 +102,18 @@ export function SiteFooter({ track }: { track?: TrackId }) {
                   {CONTROLLERS.email}
                 </a>
               </li>
+              <li>
+                <a
+                  href={F.instagram.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Instagram de la Fundación Por Una Sonrisa: ${F.instagram.handle} (se abre en una pestaña nueva)`}
+                  className={`inline-flex items-center gap-2 break-all ${linkClass}`}
+                >
+                  <InstagramIcon />
+                  {F.instagram.handle}
+                </a>
+              </li>
             </ul>
           </div>
           <nav aria-label={F.alliesTitle}>
@@ -219,5 +231,25 @@ function SessionLink({ href, icon: Icon, small, label, primary = false }: Sessio
         strokeWidth={2}
       />
     </Link>
+  );
+}
+
+/** Instagram's outline glyph, drawn like the lucide icons (lucide-react no longer ships brand icons). */
+function InstagramIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="size-4 shrink-0 text-green-bright"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
   );
 }
