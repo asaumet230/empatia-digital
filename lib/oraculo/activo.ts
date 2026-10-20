@@ -1,8 +1,7 @@
 /**
- * Launch switch. Until the Oráculo is approved, production hides the floating button, the chat page
- * and its API: set `ORACULO_ACTIVO=true` in Vercel and redeploy to turn it on (`false`, or no value,
- * keeps it hidden). Always on with `npm run dev`, so it can still be built and tried locally. The
- * legal pages stay public: the site's own policy and terms link to them.
+ * Launch switch. Until the Oráculo is approved it stays hidden: no floating button, no chat page
+ * and no API. `ORACULO_ACTIVO=true` turns it on (in `.env.local` to work on it, in Vercel plus a
+ * redeploy to launch it); `false`, or no value, keeps it hidden. The legal pages stay public: the
+ * site's own policy and terms link to them.
  */
-export const ORACLE_ENABLED =
-  process.env.ORACULO_ACTIVO?.trim().toLowerCase() === "true" || process.env.NODE_ENV === "development";
+export const ORACLE_ENABLED = process.env.ORACULO_ACTIVO?.trim().toLowerCase() === "true";

@@ -20,8 +20,8 @@ npm run eval:riesgo  # banco de riesgo del Oráculo contra la IA real (gasta un 
 ```
 
 El Oráculo necesita un archivo `.env.local` (no se sube a GitHub) con `OPENAI_API_KEY` y `ORACULO_SECRET`
-(32+ caracteres al azar, por ejemplo `openssl rand -base64 48`). En producción el Oráculo queda oculto hasta
-poner `ORACULO_ACTIVO=true` en Vercel (`false` lo oculta) y volver a publicar; con `npm run dev` siempre se ve.
+(32+ caracteres al azar, por ejemplo `openssl rand -base64 48`). El Oráculo queda oculto salvo con
+`ORACULO_ACTIVO=true` (`false` lo oculta): en `.env.local` para verlo en local y en Vercel, con redeploy, para publicarlo.
 
 ## Rutas
 

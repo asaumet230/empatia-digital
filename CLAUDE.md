@@ -330,9 +330,9 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 
 - El orquestador solo conoce el modelo y el evaluador de riesgo por sus interfaces: en las pruebas se usan
   versiones falsas, y cambiar de proveedor solo toca `ia/`.
-- **Interruptor de lanzamiento** (`lib/oraculo/activo.ts`): en producción el botón flotante, `/oraculo` (404) y
-  la API (404) están ocultos salvo con `ORACULO_ACTIVO=true` (`false` o sin valor: oculto); con `npm run dev` siempre está activo. Se lee al
-  compilar, así que hay que hacer redeploy en Vercel. Las páginas legales del Oráculo siguen públicas (las
+- **Interruptor de lanzamiento** (`lib/oraculo/activo.ts`): el botón flotante, `/oraculo` (404) y la API (404)
+  están ocultos salvo con `ORACULO_ACTIVO=true` (`false` o sin valor: oculto), también en `npm run dev`: para
+  trabajar en el Oráculo, ponerla en `.env.local` y reiniciar `next dev`. Se lee al compilar, así que hay que hacer redeploy en Vercel. Las páginas legales del Oráculo siguen públicas (las
   enlazan la política y los términos del sitio). Playwright lo enciende en `playwright.config.ts`.
 - Variables de entorno: `ORACULO_ACTIVO`, `OPENAI_API_KEY`, `ORACULO_SECRET` (32+ caracteres), `OPENAI_MODEL` y
   `OPENAI_RISK_MODEL` (opcionales). `ORACULO_IA_SIMULADA=1` activa la IA simulada (solo pruebas; en Vercel
