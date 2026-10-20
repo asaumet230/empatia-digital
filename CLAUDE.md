@@ -31,9 +31,12 @@ Next.js que mantiene `next dev`; no borrarla.
 **Git y publicación**
 - `main` se publica sola en Vercel (https://empatia-digital.vercel.app) con cada push. **No unir a `main`
   ni hacer push sin permiso explícito.**
-- El Oráculo ya está unido a `main` **en local** (`main` iba 11 commits por delante de `origin/main`, sin
+- El Oráculo ya está unido a `main` **en local** (`main` va 13 commits por delante de `origin/main`, sin
   push; `feature/oraculo` quedó atrás). Un push a `main` lo publicaría: **no hacer push ni configurar Vercel
-  hasta que el usuario lo pida** (decisión del 2026-10-13; verificado el 2026-10-19).
+  hasta que el usuario lo pida** (decisión del 2026-10-13; verificado el 2026-10-20).
+- La rama `feature/oraculo-chat-directo` tiene commits que **aún no están en `main`** (desde `0d17d54`:
+  pantalla de carga, inicio conversado, chat estilo WhatsApp, emojis, tema, apodo, ícono de la persona en sus
+  mensajes y la corrección del origen `null` en la API).
 - Commits solo cuando el usuario lo pide, uno por paso, con mensaje en español.
 
 **Secretos**
@@ -44,7 +47,8 @@ Next.js que mantiene `next dev`; no borrarla.
 - `npm test` · `npx eslint .` · `npx next build`.
 - Si cambió la interfaz del Oráculo: `npm run test:e2e`.
 - Si cambió el prompt de riesgo o el modelo de riesgo: `npm run eval:riesgo` (gasta un poco de saldo).
-- Para ver la interfaz: Playwright sin ventana (ya instalado, con Chromium y WebKit). La extensión de
+- Para ver la interfaz: Playwright sin ventana (con Chromium y WebKit; si faltan los navegadores,
+  `npx playwright install chromium webkit`). La extensión de
   Chrome no siempre está conectada.
 
 **Estilo de código** (seguir lo que ya existe)
@@ -347,7 +351,7 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 | Prompts | `lib/oraculo/prompts/` (subir `version`) |
 | Qué hacer con cada nivel de riesgo | `lib/oraculo/riesgo/politica.ts` |
 | Frases de prueba de riesgo | `lib/oraculo/riesgo/banco.ts` |
-| Política, términos y autorización | `lib/oraculo/config/legal.ts` (`approved: false`; responsable: Fundación Por Una Sonrisa, NIT 900.804.571-1) |
+| Política, términos y autorización | `lib/oraculo/config/legal.ts` (`approved: true`; responsable: Fundación Por Una Sonrisa, NIT 900.804.571-1) |
 | Colores del tema | `.oraculo-theme` en `app/globals.css` (tokens `o-*`; al imprimir se fuerza papel blanco) |
 
 ### 8.5 Pruebas

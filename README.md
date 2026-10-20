@@ -31,7 +31,8 @@ El Oráculo necesita un archivo `.env.local` (no se sube a GitHub) con `OPENAI_A
 | `/estudiantes` | Ciudadanía digital y creadores de paz con IA |
 | `/familias` | Hogares conectados, familias empáticas |
 | `/oraculo` | Oráculo: chat de escucha y orientación con IA |
-| `/oraculo/privacidad` · `/oraculo/autorizacion` | Política, términos y formato de autorización (borrador) |
+| `/oraculo/privacidad` · `/oraculo/terminos` · `/oraculo/autorizacion` | Privacidad, términos y autorización del Oráculo |
+| `/privacidad` · `/terminos` | Privacidad y términos del sitio |
 
 ## Estructura
 
@@ -41,7 +42,7 @@ components/presentation/  la presentación: Presentation, Intro, Section, navega
 components/sections/      una "diapositiva" por archivo
 components/oraculo/       interfaz del Oráculo
 components/ui/            piezas reutilizables
-hooks/                    useIntroTimeline, useActiveSection, useOracle
+hooks/                    useIntroTimeline, useActiveSection, useOracle, useDismiss
 lib/content/              textos y datos de la presentación
 lib/oraculo/              lógica del Oráculo (prompts, riesgo, pase firmado, OpenAI)
 lib/sections.ts           el recorrido de cada sesión (TRACKS)
