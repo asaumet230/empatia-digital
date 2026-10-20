@@ -1,5 +1,6 @@
 import "server-only";
 import { z, type ZodType } from "zod";
+import { ORACLE_ENABLED } from "@/lib/oraculo/activo";
 import { LIMITS } from "@/lib/oraculo/config/limites";
 import { InvalidMessageError } from "@/lib/oraculo/conversacion/orquestador";
 import { AiUnavailableError } from "@/lib/oraculo/ia/modelo";
@@ -63,9 +64,11 @@ function errorResponse(error: unknown) {
   return Response.json({ error: code }, { status, headers: NO_STORE });
 }
 
-/** Wraps a POST handler: same-origin check, body validation, JSON reply, error mapping. */
+/** Wraps a POST handler: launch switch, same-origin check, body validation, JSON reply, error mapping. */
 export function postHandler<T>(schema: ZodType<T>, run: (body: T) => Promise<unknown> | unknown) {
   return async (request: Request) => {
+    // Not launched yet: the API does not exist, and no call can reach OpenAI
+    if (!ORACLE_ENABLED) return Response.json({ error: "no_disponible" }, { status: 404, headers: NO_STORE });
     try {
       assertSameOrigin(request);
       const result = await run(await readBody(request, schema));

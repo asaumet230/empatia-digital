@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Manrope, Unbounded } from "next/font/google";
 import { OracleLauncher } from "@/components/oraculo/OracleLauncher";
 import { SITE_URL } from "@/lib/constants";
+import { ORACLE_ENABLED } from "@/lib/oraculo/activo";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -44,7 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-svh">
         {children}
-        <OracleLauncher />
+        {ORACLE_ENABLED && <OracleLauncher />}
       </body>
     </html>
   );

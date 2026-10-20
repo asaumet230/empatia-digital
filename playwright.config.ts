@@ -28,6 +28,7 @@ export default defineConfig({
     timeout: 240_000,
     reuseExistingServer: false,
     env: {
+      ORACULO_ACTIVO: "true",
       ORACULO_IA_SIMULADA: "1",
       ORACULO_SECRET: "solo-para-pruebas-e2e-0123456789abcdefghijklmnopqrstuvwxyz",
     },

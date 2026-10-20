@@ -330,7 +330,11 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 
 - El orquestador solo conoce el modelo y el evaluador de riesgo por sus interfaces: en las pruebas se usan
   versiones falsas, y cambiar de proveedor solo toca `ia/`.
-- Variables de entorno: `OPENAI_API_KEY`, `ORACULO_SECRET` (32+ caracteres), `OPENAI_MODEL` y
+- **Interruptor de lanzamiento** (`lib/oraculo/activo.ts`): en producción el botón flotante, `/oraculo` (404) y
+  la API (404) están ocultos salvo con `ORACULO_ACTIVO=true` (`false` o sin valor: oculto); con `npm run dev` siempre está activo. Se lee al
+  compilar, así que hay que hacer redeploy en Vercel. Las páginas legales del Oráculo siguen públicas (las
+  enlazan la política y los términos del sitio). Playwright lo enciende en `playwright.config.ts`.
+- Variables de entorno: `ORACULO_ACTIVO`, `OPENAI_API_KEY`, `ORACULO_SECRET` (32+ caracteres), `OPENAI_MODEL` y
   `OPENAI_RISK_MODEL` (opcionales). `ORACULO_IA_SIMULADA=1` activa la IA simulada (solo pruebas; en Vercel
   se ignora). En la IA simulada, las etiquetas `#peligro`, `#alto`, `#revisar` y `#falla` eligen el caso.
 - Llamadas a OpenAI con `store: false` y razonamiento `low`. OpenAI no entrena con datos de la API y los
@@ -372,7 +376,8 @@ Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alar
 4. OpenAI: tope de gasto mensual (Settings → Limits) y, si se puede, pedir la retención cero; si la
    aprueban, actualizar la política.
 5. Vercel → Environment Variables (Production): `OPENAI_API_KEY` y un `ORACULO_SECRET` **nuevo**
-   (`openssl rand -base64 48`). Nunca `ORACULO_IA_SIMULADA`.
+   (`openssl rand -base64 48`). Nunca `ORACULO_IA_SIMULADA`. Cuando se apruebe, `ORACULO_ACTIVO=true` y redeploy
+   (sin ella, el sitio se puede publicar con el Oráculo oculto).
 6. Vercel → Firewall: límite por visitante para `/api/oraculo/` (por ejemplo, 20 por minuto por IP).
 7. Hacer push de `main` (el Oráculo ya está unido en local) y probar en un iPhone y un Android reales: un caso normal, uno serio
    (sale el panel) y uno de peligro (se pausa).
