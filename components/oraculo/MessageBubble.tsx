@@ -1,3 +1,4 @@
+import { UserRound } from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -29,16 +30,20 @@ export function MessageBubble({ role, text, pending = false }: Message & { pendi
     );
   }
   return (
-    <div className="flex justify-end">
+    <div className="flex items-start justify-end gap-2">
       <div
         className={cn(
-          "max-w-[85%] whitespace-pre-line rounded-3xl rounded-br-lg bg-o-user px-4 py-3 text-base leading-relaxed text-o-user-text sm:max-w-[75%] md:px-5",
+          "max-w-[85%] whitespace-pre-line rounded-3xl rounded-tr-lg bg-o-user px-4 py-3 text-base leading-relaxed text-o-user-text sm:max-w-[75%] md:px-5",
           pending && "opacity-70",
         )}
       >
         <span className="sr-only">{ORACLE_TEXT.chat.you}: </span>
         {text}
       </div>
+      {/* The person's side mirrors the owl: a round avatar next to their bubble */}
+      <span aria-hidden="true" className="mt-1 grid size-8 shrink-0 place-items-center rounded-full bg-o-user text-o-user-text">
+        <UserRound className="size-5" />
+      </span>
     </div>
   );
 }

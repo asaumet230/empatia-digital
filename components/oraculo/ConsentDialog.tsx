@@ -38,8 +38,8 @@ function ConsentContent({ profile, starting, error, onBack, onStart }: ConsentDi
 
   return (
     <div className="p-5 sm:p-6">
-      <span className="inline-flex items-center gap-2 rounded-full bg-green-bright/15 px-3 py-1.5 text-sm font-semibold text-o-accent">
-        <Icon aria-hidden="true" className="size-4" />
+      <span className="inline-flex items-center gap-2.5 rounded-full bg-green-bright/15 px-4 py-2 text-lg font-bold text-o-accent">
+        <Icon aria-hidden="true" className="size-5" />
         {label}
       </span>
 
