@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { FinishDialog } from "@/components/oraculo/FinishDialog";
 import { MessageBubble, TypingIndicator } from "@/components/oraculo/MessageBubble";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
+import { OracleSplash } from "@/components/oraculo/OracleSplash";
 import { SafetyPanel } from "@/components/oraculo/SafetyPanel";
 import type { OracleControls } from "@/hooks/useOracle";
 import { ORACLE_TEXT, PROFILE_OPTIONS } from "@/lib/oraculo/config/textos";
@@ -158,10 +159,6 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
 
           {!started ? (
             <Composer disabled={state.phase !== "perfil"} locked={asking} onSend={introduce} />
-          ) : closing ? (
-            <p role="status" className="py-3 text-center text-sm font-semibold text-o-muted">
-              {ORACLE_TEXT.finish.working}
-            </p>
           ) : state.locked ? (
             <Notice title={ORACLE_TEXT.locked.title} text={ORACLE_TEXT.locked.text}>
               <FooterButton onClick={finish}>{t.finish}</FooterButton>
@@ -181,6 +178,15 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
           )}
         </div>
       </footer>
+
+      {/* While the summary is written, the owl covers the chat, as on the way in */}
+      {closing && (
+        <OracleSplash
+          title={ORACLE_TEXT.finish.working.title}
+          text={ORACLE_TEXT.finish.working.text}
+          className="fixed inset-0 z-50 bg-o-bg"
+        />
+      )}
 
       <ConsentDialog
         profile={state.phase === "consentimiento" ? profile : null}

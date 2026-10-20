@@ -155,7 +155,8 @@ export const ORACLE_TEXT = {
     text: "Verás un resumen para copiar o imprimir. Después, la conversación se borra de esta pantalla.",
     confirm: "Sí, finalizar",
     cancel: "Seguir hablando",
-    working: "Preparando el resumen…",
+    /** Shown with the owl while the AI writes the summary. */
+    working: { title: "Preparando tu resumen", text: "Un momento, estoy ordenando lo que hablamos…" },
   },
 
   limit: {
@@ -179,6 +180,8 @@ export const ORACLE_TEXT = {
     print: "Imprimir",
     restart: "Nueva conversación",
     helpTitle: "Si lo necesitas, aquí tienes ayuda",
+    helpLead: "Toca un número para llamar.",
+    call: "Llamar",
   },
 
   helpDialog: {
