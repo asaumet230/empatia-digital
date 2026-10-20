@@ -262,8 +262,13 @@ Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los d
   ("Hola, ¿cómo estás?…") preguntando si es estudiante, docente o papá, mamá o cuidador; luego se activa la
   caja. La persona responde con sus palabras y `lib/oraculo/perfil.ts` reconoce el perfil **sin IA** (si no
   queda claro, vuelve a preguntar y recuerda el 123). Después se abre la ventana de autorización con el texto
-  de ese perfil y, al aceptar, empieza la sesión. Se puede "Cambiar" hasta el primer mensaje. Estos mensajes
-  del inicio son fijos y no van a la IA ni al historial.
+  de ese perfil y, al aceptar, empieza la sesión. Luego el búho pregunta **cómo quiere que lo llame** (apodo
+  opcional, "sigamos" para omitirlo): `lib/oraculo/apodo.ts` lo lee sin IA (solo letras, máx. 20 caracteres y
+  3 palabras, `AliasSchema`), la bienvenida lo usa y viaja con cada mensaje para que la IA lo use (aviso
+  `prompts/apodo.ts`); no va en el pase ni se guarda. Se puede "Cambiar perfil" hasta el primer mensaje.
+  Estos mensajes del inicio son fijos y no van a la IA ni al historial. **Pendiente:** que el abogado
+  confirme que el apodo opcional encaja con `legal.ts` ("no solicita nombres… para iniciar") y con la nueva
+  frase de la autorización ("Puedo usar un apodo, pero no mi nombre real…").
 - **Sin mediación entre dos estudiantes:** es una conversación privada de **una persona**. Tres perfiles:
   **estudiante** (escucha y orientación), **docente** (cómo manejar un caso, ruta de la Ley 1620) y
   **padre, madre o cuidador** (cómo acompañar, incluidos casos de abuso: ICBF, Comisaría, Policía de
@@ -349,8 +354,8 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 
 | Comando | Qué revisa | ¿Gasta saldo? |
 |---|---|---|
-| `npm test` | 158 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
-| `npm run test:e2e` | 65 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
+| `npm test` | 173 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
+| `npm run test:e2e` | 71 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
 | `npm run eval:riesgo` | Banco de 51 frases contra la IA real; falla si se escapa un peligro | Sí, poco |
 
 Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alarmas del filtro de OpenAI

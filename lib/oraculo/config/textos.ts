@@ -10,7 +10,7 @@ import type { Profile } from "@/lib/oraculo/tipos";
 export interface ProfileOption {
   label: string;
   icon: LucideIcon;
-  /** Oráculo message right after the person says who they are, shown by the interface. */
+  /** Oráculo message once the session starts, after `intro.thanks`. Shown by the interface. */
   welcome: string;
 }
 
@@ -19,19 +19,19 @@ export const PROFILE_OPTIONS: Record<Profile, ProfileOption> = {
     label: "Soy estudiante",
     icon: Backpack,
     welcome:
-      "Gracias por contarme. Aquí puedes hablar de lo que pasa con tus compañeros, en el colegio o en redes, a tu ritmo y sin decir nombres. ¿Qué te gustaría contarme?",
+      "Aquí puedes hablar de lo que pasa con tus compañeros, en el colegio o en redes, a tu ritmo y sin decir nombres reales. ¿Qué te gustaría contarme?",
   },
   docente: {
     label: "Soy docente",
     icon: GraduationCap,
     welcome:
-      "Gracias. Te oriento para manejar una situación de convivencia con tus estudiantes. Cuéntame qué pasó y qué te preocupa, sin nombres de estudiantes.",
+      "Te oriento para manejar una situación de convivencia con tus estudiantes. Cuéntame qué pasó y qué te preocupa, sin nombres de estudiantes.",
   },
   familia: {
     label: "Soy padre, madre o cuidador",
     icon: House,
     welcome:
-      "Gracias. Te oriento para acompañar a tu hijo o hija en temas de convivencia, acoso y redes. Cuéntame qué está pasando, sin nombres.",
+      "Te oriento para acompañar a tu hijo o hija en temas de convivencia, acoso y redes. Cuéntame qué está pasando, sin nombres.",
   },
 };
 
@@ -91,6 +91,10 @@ export const ORACLE_TEXT = {
       "Perdona, no te entendí bien. ¿Eres estudiante, docente o papá, mamá o cuidador? Si estás en peligro ahora, llama al 123.",
     /** After closing the consent dialog without accepting. */
     again: "Está bien. Cuando quieras, cuéntame: ¿eres estudiante, docente o papá, mamá o cuidador?",
+    /** After the consent: an optional nickname the AI will use (lib/oraculo/apodo.ts reads the answer). */
+    alias:
+      "¿Cómo te gustaría que te llame? Puede ser un apodo o un nombre inventado; mejor no uses tu nombre real. Si prefieres, escribe «sigamos».",
+    thanks: (alias: string | null) => (alias ? `Gracias, ${alias}.` : "Gracias."),
     change: "Cambiar perfil",
   },
 
@@ -101,14 +105,14 @@ export const ORACLE_TEXT = {
       estudiante: [
         "Hablo con una inteligencia artificial, no con una persona. Nadie está leyendo en tiempo real.",
         "Mis mensajes se envían a OpenAI para que el Oráculo pueda responder. EmpatIA Digital no los guarda.",
-        "No debo escribir nombres, colegios ni datos personales.",
+        "Puedo usar un apodo, pero no debo escribir mi nombre real, el de otras personas, colegios ni datos personales.",
         "El Oráculo orienta, pero no reemplaza a mi familia, a mis profesores ni a un orientador.",
         "Si estoy en peligro, llamo al 123 o al 141.",
       ],
       adulto: [
         "Hablo con una inteligencia artificial, no con una persona. Nadie está leyendo en tiempo real.",
         "Mis mensajes se envían a OpenAI para que el Oráculo pueda responder. EmpatIA Digital no los guarda.",
-        "No debo escribir nombres de niños, niñas o adolescentes, ni otros datos personales.",
+        "Puedo usar un apodo, pero no debo escribir nombres de niños, niñas o adolescentes, ni otros datos personales.",
         "El Oráculo orienta, pero no reemplaza al orientador, al comité de convivencia ni a las autoridades.",
         "Si un niño, niña o adolescente está en peligro, llamo al 123.",
       ],

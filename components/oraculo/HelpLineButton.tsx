@@ -32,7 +32,7 @@ export function HelpLineButton({ line, primary = false, compact = false }: HelpL
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-2">
-          <span className={cn("font-display font-bold tracking-[-0.02em]", compact ? "text-lg" : "text-xl")}>
+          <span className={cn("whitespace-nowrap font-display font-bold tracking-[-0.02em]", compact ? "text-lg" : "text-xl")}>
             {line.number}
           </span>
           <span className={cn("font-semibold", compact ? "text-xs" : "text-sm")}>{line.name}</span>

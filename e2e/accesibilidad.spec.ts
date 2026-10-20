@@ -25,7 +25,9 @@ for (const colorScheme of ["light", "dark"] as const) {
 
       await page.getByLabel("Entiendo y quiero empezar").check();
       await page.getByRole("button", { name: "Empezar" }).click();
-      await expect(page.getByText(/Te quedan \d+ mensajes/)).toBeVisible();
+      await expect(page.getByText(/¿Cómo te gustaría que te llame\?/)).toBeVisible();
+      await introduce(page, "sigamos");
+      await expect(page.getByRole("button", { name: "Cambiar perfil" })).toBeVisible();
       await say(page, "#alto se burlan de mí");
       await expect(page.getByRole("heading", { name: "Esto no es una broma" })).toBeVisible();
       expect(await audit(page), "chat con panel de ayuda").toEqual([]);

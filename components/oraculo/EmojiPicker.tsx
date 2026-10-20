@@ -13,7 +13,7 @@ import { EMOJIS, ORACLE_TEXT } from "@/lib/oraculo/config/textos";
 interface EmojiPickerProps {
   disabled: boolean;
   onPick: (emoji: string) => void;
-  /** Where it sits; the panel opens upwards from its right edge. */
+  /** Where it sits; the panel opens upwards, reaching over the send button so it fits on phones. */
   className?: string;
 }
 
@@ -46,7 +46,7 @@ export function EmojiPicker({ disabled, onPick, className }: EmojiPickerProps) {
           id={panelId}
           role="group"
           aria-label={t.title}
-          className="absolute bottom-full right-0 mb-3 w-[min(20rem,calc(100vw-2rem))] rounded-3xl border border-o-line bg-o-surface p-3 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.45)]"
+          className="absolute bottom-full -right-16 mb-3 w-[min(20rem,calc(100vw-2rem))] rounded-3xl border border-o-line bg-o-surface p-3 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.45)]"
         >
           <p className="px-1 pb-2 text-xs font-semibold text-o-muted">{t.title}</p>
           <div className="grid grid-cols-6 gap-1">

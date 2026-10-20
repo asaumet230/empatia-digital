@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { ApiError, closeSession, sendMessage, startSession } from "@/lib/oraculo/cliente";
 import { deserialize, oracleReducer, serialize, type OracleState } from "@/lib/oraculo/estado";
+import { parseAlias } from "@/lib/oraculo/apodo";
 import { detectProfile } from "@/lib/oraculo/perfil";
 
 const STORAGE_KEY = "oraculo:sesion";
@@ -34,6 +35,12 @@ export function useOracle() {
     dispatch({ type: "presentarse", text, profile: detectProfile(text) });
     return true;
   }, []);
+  /** The optional nickname, read in the browser; anything that is not one means "no nickname". */
+  const nameSelf = useCallback(async (text: string) => {
+    dispatch({ type: "apodo", text, alias: parseAlias(text) });
+    return true;
+  }, []);
+
   const back = useCallback(() => dispatch({ type: "volver" }), []);
   const dismissError = useCallback(() => dispatch({ type: "descartar_error" }), []);
 
@@ -55,11 +62,11 @@ export function useOracle() {
 
   /** Resolves true when the message got through, so the composer knows to clear. */
   const send = useCallback(async (text: string) => {
-    const { token, history } = latest.current;
+    const { token, history, alias } = latest.current;
     if (!token) return false;
     dispatch({ type: "enviando", text });
     try {
-      dispatch({ type: "resultado", text, result: await sendMessage(token, history, text) });
+      dispatch({ type: "resultado", text, result: await sendMessage(token, history, text, alias) });
       return true;
     } catch (error) {
       dispatch({ type: "fallo", error: errorCode(error) });
@@ -77,7 +84,7 @@ export function useOracle() {
     }
   }, []);
 
-  return { state, ask, introduce, back, start, send, finish, restart, dismissError };
+  return { state, ask, introduce, nameSelf, back, start, send, finish, restart, dismissError };
 }
 
 export type OracleControls = ReturnType<typeof useOracle>;

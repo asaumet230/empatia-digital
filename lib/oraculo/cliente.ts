@@ -1,6 +1,6 @@
 import type { ErrorCode } from "@/lib/oraculo/config/textos";
 import type { CloseResult, SendResult, SessionInfo } from "@/lib/oraculo/conversacion/orquestador";
-import type { Message, Profile } from "@/lib/oraculo/tipos";
+import type { Alias, Message, Profile } from "@/lib/oraculo/tipos";
 
 /** Browser side of the Oráculo API. Server error codes become `ApiError`s the UI can explain. */
 
@@ -34,8 +34,8 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 
 export const startSession = (profile: Profile) => post<SessionInfo>("sesion", { profile });
 
-export const sendMessage = (token: string, history: readonly Message[], text: string) =>
-  post<SendResult>("mensaje", { token, history, text });
+export const sendMessage = (token: string, history: readonly Message[], text: string, alias: Alias | null) =>
+  post<SendResult>("mensaje", { token, history, text, alias });
 
 export const closeSession = (token: string, history: readonly Message[]) =>
   post<CloseResult>("cierre", { token, history });

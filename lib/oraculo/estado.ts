@@ -2,7 +2,16 @@ import { z } from "zod";
 import { LIMITS } from "@/lib/oraculo/config/limites";
 import { ORACLE_TEXT, type ErrorCode } from "@/lib/oraculo/config/textos";
 import type { CloseResult, SendResult, SessionInfo } from "@/lib/oraculo/conversacion/orquestador";
-import { MessageSchema, ProfileSchema, SafetyKeySchema, type Message, type Profile, type SafetyKey } from "@/lib/oraculo/tipos";
+import {
+  AliasSchema,
+  MessageSchema,
+  ProfileSchema,
+  SafetyKeySchema,
+  type Alias,
+  type Message,
+  type Profile,
+  type SafetyKey,
+} from "@/lib/oraculo/tipos";
 
 /* ------------------------------------------------------------------ */
 /*  What the Oráculo screen remembers, as a pure reducer. The server   */
@@ -19,6 +28,10 @@ const StoredSchema = z.object({
   token: z.string().nullable(),
   /** The opening, before the session: the Oráculo asks who is talking. Shown only, never sent to the AI. */
   intro: z.array(MessageSchema),
+  /** Optional nickname, asked right after the session starts; sent with each message for the AI to use. */
+  alias: AliasSchema.nullable(),
+  /** The nickname question was answered (with one or without). The conversation opens after it. */
+  aliasDone: z.boolean(),
   history: z.array(MessageSchema),
   remaining: z.number().int(),
   /** Help panels shown in the chat, each anchored after a message of `history`. */
@@ -40,6 +53,7 @@ export interface OracleState extends Stored {
 export type OracleAction =
   | { type: "oraculo_pregunta" }
   | { type: "presentarse"; text: string; profile: Profile | null }
+  | { type: "apodo"; text: string; alias: Alias | null }
   | { type: "volver" }
   | { type: "iniciando" }
   | { type: "iniciada"; info: SessionInfo }
@@ -56,6 +70,8 @@ export const INITIAL_STATE: OracleState = {
   profile: null,
   token: null,
   intro: [],
+  alias: null,
+  aliasDone: false,
   history: [],
   remaining: LIMITS.maxUserMessages,
   panels: [],
@@ -103,11 +119,26 @@ function onResult(state: OracleState, text: string, result: SendResult): OracleS
 export function oracleReducer(state: OracleState, action: OracleAction): OracleState {
   switch (action.type) {
     case "oraculo_pregunta": {
-      // The greeting first; after an answer that did not say who they are, the gentle retry
-      if (state.phase !== "perfil") return state;
-      const text = state.intro.length === 0 ? ORACLE_TEXT.intro.greeting : ORACLE_TEXT.intro.retry;
-      return { ...state, intro: [...state.intro, { role: "oraculo", text }] };
+      // The greeting first; after an answer that did not say who they are, the gentle retry;
+      // once the session starts, the optional nickname
+      const text =
+        state.phase === "perfil"
+          ? state.intro.length === 0
+            ? ORACLE_TEXT.intro.greeting
+            : ORACLE_TEXT.intro.retry
+          : state.phase === "chat" && !state.aliasDone
+            ? ORACLE_TEXT.intro.alias
+            : null;
+      return text ? { ...state, intro: [...state.intro, { role: "oraculo", text }] } : state;
     }
+    case "apodo":
+      if (state.phase !== "chat" || state.aliasDone) return state;
+      return {
+        ...state,
+        intro: [...state.intro, { role: "usuario", text: action.text }],
+        alias: action.alias,
+        aliasDone: true,
+      };
     case "presentarse": {
       if (state.phase !== "perfil") return state;
       const intro: Message[] = [...state.intro, { role: "usuario", text: action.text }];

@@ -5,6 +5,7 @@ import { AiUnavailableError, type ChatModel } from "@/lib/oraculo/ia/modelo";
 import { decodePass, PassError } from "@/lib/oraculo/pase/pase";
 import {
   ACCOMPANY_PROMPT,
+  ALIAS_PROMPT,
   CAUTION_PROMPT,
   CLOSING_PROMPT,
   CONVERSATION_PROMPTS,
@@ -73,6 +74,15 @@ describe("orquestador", () => {
 
     await b.say("gracias");
     expect(model.reply.mock.calls[1][0].instructions).toBe(CONVERSATION_PROMPTS.estudiante.text);
+  });
+
+  it("con apodo, la IA recibe el aviso para usarlo, antes del aviso de riesgo", async () => {
+    const { token } = oracle.start("estudiante");
+    risk.assess.mockResolvedValueOnce({ level: "REVIEW", category: "ninguna", reason: "" });
+    await oracle.send({ token, history: [], text: "hola", alias: "Lu" });
+    expect(model.reply.mock.calls[0][0].instructions).toBe(
+      [CONVERSATION_PROMPTS.estudiante.text, ALIAS_PROMPT.text.replace("{apodo}", "Lu"), CAUTION_PROMPT.text].join("\n\n"),
+    );
   });
 
   it("el mensaje número 31 se rechaza sin llamar a la IA", async () => {

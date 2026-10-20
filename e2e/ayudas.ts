@@ -11,13 +11,16 @@ export async function introduce(page: Page, answer: string) {
   await page.getByRole("button", { name: "Enviar" }).click();
 }
 
-export async function startSession(page: Page, answer = "soy estudiante") {
+/** Says who is talking, accepts the consent and answers the optional nickname (none by default). */
+export async function startSession(page: Page, answer = "soy estudiante", alias = "sigamos") {
   await page.goto("/oraculo");
   await introduce(page, answer);
   await page.getByLabel("Entiendo y quiero empezar").check();
   await page.getByRole("button", { name: "Empezar" }).click();
-  // The field exists from the greeting on; the session has started once the counter shows
-  await expect(page.getByText(/Te quedan \d+ mensajes/)).toBeVisible();
+  // After the consent the Oráculo asks for a nickname; the conversation opens once it is answered
+  await expect(page.getByText(/¿Cómo te gustaría que te llame\?/)).toBeVisible();
+  await introduce(page, alias);
+  await expect(page.getByRole("button", { name: "Cambiar perfil" })).toBeVisible();
 }
 
 export async function say(page: Page, text: string) {

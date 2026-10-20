@@ -26,6 +26,17 @@ describe("estado del Oráculo en el navegador", () => {
     ]);
   });
 
+  it("después de la autorización pregunta el apodo, y solo entonces se abre la conversación", () => {
+    let s = oracleReducer(chatting(), { type: "oraculo_pregunta" });
+    expect(s.intro.at(-1)).toEqual({ role: "oraculo", text: ORACLE_TEXT.intro.alias });
+    expect(s.aliasDone).toBe(false);
+    s = oracleReducer(s, { type: "apodo", text: "llámame Lu", alias: "Lu" });
+    expect(s).toMatchObject({ alias: "Lu", aliasDone: true });
+    expect(s.intro.at(-1)).toEqual({ role: "usuario", text: "llámame Lu" });
+    // Asked once: no more nickname questions
+    expect(oracleReducer(s, { type: "oraculo_pregunta" })).toBe(s);
+  });
+
   it("si no dice quién es, sigue en el saludo y el Oráculo vuelve a preguntar", () => {
     const s = run(
       { type: "oraculo_pregunta" },

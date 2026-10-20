@@ -37,11 +37,14 @@ const RETRY_MS = 900;
  * Everything before the session is interface only.
  */
 export function ChatView({ oracle }: { oracle: OracleControls }) {
-  const { state, ask, introduce, back, start, send, finish, restart, dismissError } = oracle;
+  const { state, ask, introduce, nameSelf, back, start, send, finish, restart, dismissError } = oracle;
   const { profile } = state;
   const started = state.phase === "chat" && profile !== null;
-  // The Oráculo owes a line in the opening: at the very start, or after an answer it did not understand
-  const asking = state.phase === "perfil" && state.intro.at(-1)?.role !== "oraculo";
+  // The Oráculo owes a line in the opening: at the very start, after an answer it did not understand,
+  // or the nickname question once the session starts
+  const opening = state.phase === "perfil" || (started && !state.aliasDone);
+  const asking = opening && state.intro.at(-1)?.role !== "oraculo";
+  const open = started && state.aliasDone;
   const [confirming, setConfirming] = useState(false);
   const [away, setAway] = useState(false);
   const audience = profile ? audienceOf(profile) : "estudiante";
@@ -106,10 +109,15 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
           ))}
           {asking && <TypingIndicator />}
           {/* What the app understood from the answer; a wrong profile can be fixed until the first message */}
-          {started && state.history.length === 0 && state.busy === null && (
+          {open && state.history.length === 0 && state.busy === null && (
             <ProfileBadge profile={profile} onChange={restart} />
           )}
-          {started && <MessageBubble role="oraculo" text={PROFILE_OPTIONS[profile].welcome} />}
+          {open && (
+            <MessageBubble
+              role="oraculo"
+              text={`${ORACLE_TEXT.intro.thanks(state.alias)} ${PROFILE_OPTIONS[profile].welcome}`}
+            />
+          )}
           {state.history.map((message, i) => (
             <Fragment key={i}>
               <MessageBubble {...message} />
@@ -167,7 +175,7 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
             </Notice>
           ) : (
             <>
-              <Composer disabled={state.busy !== null} onSend={send} />
+              <Composer disabled={state.busy !== null} locked={asking} onSend={state.aliasDone ? send : nameSelf} />
               <p className="px-4 text-xs text-o-muted">{t.remaining(state.remaining)}</p>
             </>
           )}
@@ -198,7 +206,7 @@ function ProfileBadge({ profile, onChange }: { profile: Profile; onChange: () =>
   const { label, icon: Icon } = PROFILE_OPTIONS[profile];
   return (
     <div className="flex justify-end">
-      <div className="inline-flex items-center gap-2 rounded-full border border-o-line bg-o-surface p-1 pl-3 text-sm shadow-sm">
+      <div className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-o-line bg-o-surface p-1 pl-3 text-sm shadow-sm">
         <Icon aria-hidden="true" className="size-4 text-o-accent" />
         <span className="font-semibold text-o-muted">{label}</span>
         <button

@@ -55,6 +55,13 @@ export const RiskAssessmentSchema = z
   });
 export type RiskAssessment = z.infer<typeof RiskAssessmentSchema>;
 
+/** Optional nickname the person chose: letters only, up to three words, so it can never carry instructions. */
+export const AliasSchema = z
+  .string()
+  .max(20)
+  .regex(/^\p{L}+( \p{L}+){0,2}$/u);
+export type Alias = z.infer<typeof AliasSchema>;
+
 export const MessageSchema = z.object({
   role: z.enum(["usuario", "oraculo"]),
   text: z.string().min(1).max(4000),

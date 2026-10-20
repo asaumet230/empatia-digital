@@ -81,6 +81,22 @@ test("el chat baja solo con cada mensaje y, al subir, ofrece volver al final", a
   await expect(page.getByText(`tres ${MARKER}`)).toBeInViewport();
 });
 
+test("con un apodo, la bienvenida lo usa y viaja con cada mensaje para la IA", async ({ page }) => {
+  await startSession(page, "soy estudiante", "llámame Lu");
+  await expect(page.getByText(/Gracias, Lu\. Aquí puedes hablar/)).toBeVisible();
+  const request = page.waitForRequest("**/api/oraculo/mensaje");
+  await say(page, "hola");
+  expect((await request).postDataJSON()).toMatchObject({ alias: "Lu" });
+});
+
+test("sin apodo, la bienvenida no inventa uno y no se envía nada", async ({ page }) => {
+  await startSession(page, "soy estudiante", "sigamos");
+  await expect(page.getByText(/Gracias\. Aquí puedes hablar/)).toBeVisible();
+  const request = page.waitForRequest("**/api/oraculo/mensaje");
+  await say(page, "hola");
+  expect((await request).postDataJSON()).toMatchObject({ alias: null });
+});
+
 test("se pueden agregar emojis de emociones al mensaje", async ({ page }) => {
   await startSession(page);
   const box = page.getByRole("textbox", { name: "Tu mensaje" });

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { HelpDialog } from "@/components/oraculo/HelpDialog";
 import { ThemeButton } from "@/components/oraculo/ThemeButton";
+import { cn } from "@/lib/cn";
 import { ORACLE_TEXT } from "@/lib/oraculo/config/textos";
 
 /**
@@ -28,7 +29,8 @@ export function OracleHeader({ children }: { children?: ReactNode }) {
             <ArrowLeft aria-hidden="true" className="size-5" />
           </span>
           <Image src="/assets/logos/oraculo.png" alt="" width={36} height={36} className="size-8 shrink-0 sm:size-9" />
-          <span className="min-w-0 leading-tight">
+          {/* On narrow phones with chat buttons, the owl alone names the screen */}
+          <span className={cn("min-w-0 leading-tight", Boolean(children) && "hidden min-[440px]:block")}>
             <span className="block font-display text-base font-bold tracking-[-0.02em] text-o-owl sm:text-lg">
               {ORACLE_TEXT.name}
             </span>

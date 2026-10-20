@@ -6,6 +6,7 @@ import type { ChatModel } from "@/lib/oraculo/ia/modelo";
 import { assertHistory, decodePass, encodePass, hashHistory, newPass, type Pass } from "@/lib/oraculo/pase/pase";
 import {
   ACCOMPANY_PROMPT,
+  ALIAS_PROMPT,
   CAUTION_PROMPT,
   CLOSING_PROMPT,
   CONVERSATION_PROMPTS,
@@ -13,7 +14,7 @@ import {
 } from "@/lib/oraculo/prompts";
 import type { RiskChecker } from "@/lib/oraculo/riesgo/evaluador";
 import { decide, type RiskDecision } from "@/lib/oraculo/riesgo/politica";
-import type { Message, Profile, SafetyKey } from "@/lib/oraculo/tipos";
+import type { Alias, Message, Profile, SafetyKey } from "@/lib/oraculo/tipos";
 
 export interface OracleDeps {
   model: ChatModel;
@@ -75,7 +76,18 @@ export function createOracle({ model, risk, secret, now = Date.now }: OracleDeps
       return info(newPass(profile, now()));
     },
 
-    async send({ token, history, text }: { token: string; history: readonly Message[]; text: string }): Promise<SendResult> {
+    async send({
+      token,
+      history,
+      text,
+      alias = null,
+    }: {
+      token: string;
+      history: readonly Message[];
+      text: string;
+      /** Optional nickname, validated by AliasSchema at the API boundary. */
+      alias?: Alias | null;
+    }): Promise<SendResult> {
       const pass = decodePass(token, secret);
       const stop = stopped(pass);
       if (stop) return stop;
@@ -96,8 +108,9 @@ export function createOracle({ model, risk, secret, now = Date.now }: OracleDeps
       }
 
       const base = CONVERSATION_PROMPTS[pass.profile].text;
-      const notice = noticeFor(decision);
-      const instructions = notice ? `${base}\n\n${notice}` : base;
+      const instructions = [base, alias && ALIAS_PROMPT.text.replace("{apodo}", alias), noticeFor(decision)]
+        .filter(Boolean)
+        .join("\n\n");
       // If the model fails, this throws before a new pass exists: the message is not counted.
       const reply = cleanReply(await model.reply({ instructions, history: withUser }));
       const next: Pass = { ...counted, historyHash: hashHistory([...withUser, { role: "oraculo", text: reply }]) };
