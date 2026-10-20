@@ -16,7 +16,7 @@ describe("pase", () => {
 
   it("arranca sin mensajes, sin bloqueo y con el historial vacío", () => {
     const pass = newPass("docente", 1_000);
-    expect(pass).toMatchObject({ userMessages: 0, lock: null, stage: "escucha", startedAt: 1_000 });
+    expect(pass).toMatchObject({ userMessages: 0, lock: null, startedAt: 1_000 });
     expect(pass.historyHash).toBe(hashHistory([]));
   });
 

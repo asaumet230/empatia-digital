@@ -108,7 +108,7 @@ describe("orquestador", () => {
       safety: "peligro_inmediato",
     });
     expect(model.reply).not.toHaveBeenCalled();
-    expect(decodePass(b.token, SECRET)).toMatchObject({ lock: "peligro_inmediato", stage: "seguridad" });
+    expect(decodePass(b.token, SECRET)).toMatchObject({ lock: "peligro_inmediato" });
 
     // Even if the next message looks safe, the session does not resume on its own
     expect(await b.say("era broma")).toMatchObject({ type: "detenido", safety: "peligro_inmediato" });

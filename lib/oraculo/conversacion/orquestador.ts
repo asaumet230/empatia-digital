@@ -103,7 +103,7 @@ export function createOracle({ model, risk, secret, now = Date.now }: OracleDeps
       const counted = { ...pass, userMessages: pass.userMessages + 1 };
 
       if (decision.action === "detener") {
-        const locked: Pass = { ...counted, stage: "seguridad", lock: decision.safety, historyHash: hashHistory(withUser) };
+        const locked: Pass = { ...counted, lock: decision.safety, historyHash: hashHistory(withUser) };
         return { type: "detenido", safety: decision.safety, token: encodePass(locked, secret) };
       }
 

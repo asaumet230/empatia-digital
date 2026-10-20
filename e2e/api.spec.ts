@@ -24,6 +24,9 @@ test("el mensaje número 31 se rechaza", async ({ request, baseURL }) => {
 test("otro sitio web no puede usar la API", async ({ request }) => {
   const r = await request.post("/api/oraculo/sesion", { headers: { origin: "https://otro-sitio.com" }, data: { profile: "estudiante" } });
   expect(r.status()).toBe(403);
+  // Sandboxed iframes and some redirects send the literal "null"
+  const opaque = await request.post("/api/oraculo/sesion", { headers: { origin: "null" }, data: { profile: "estudiante" } });
+  expect(opaque.status()).toBe(403);
 });
 
 test("un pase alterado o un historial falso se rechazan", async ({ request, baseURL }) => {

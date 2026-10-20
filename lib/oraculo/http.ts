@@ -24,7 +24,7 @@ class ForbiddenError extends Error {}
 function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
-  if (!origin || !host || new URL(origin).host !== host) throw new ForbiddenError();
+  if (!origin || !host || !URL.canParse(origin) || new URL(origin).host !== host) throw new ForbiddenError();
 }
 
 async function readBody<T>(request: Request, schema: ZodType<T>): Promise<T> {

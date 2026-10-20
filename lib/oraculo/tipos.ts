@@ -15,11 +15,6 @@ export type Profile = z.infer<typeof ProfileSchema>;
 export type Audience = "estudiante" | "adulto";
 export const audienceOf = (profile: Profile): Audience => (profile === "estudiante" ? "estudiante" : "adulto");
 
-/** Conversation stages. The server owns the transitions; "seguridad" can only be entered, never left. */
-export const STAGES = ["escucha", "seguridad"] as const;
-export const StageSchema = z.enum(STAGES);
-export type Stage = z.infer<typeof StageSchema>;
-
 /** Risk levels, from "within scope" to "possible immediate danger". */
 export const RISK_LEVELS = ["SAFE", "REVIEW", "HIGH_RISK", "IMMEDIATE_DANGER"] as const;
 export const RiskLevelSchema = z.enum(RISK_LEVELS);

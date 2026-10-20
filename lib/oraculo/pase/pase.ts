@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
-import { ProfileSchema, SafetyKeySchema, StageSchema, type Message, type Profile } from "@/lib/oraculo/tipos";
+import { ProfileSchema, SafetyKeySchema, type Message, type Profile } from "@/lib/oraculo/tipos";
 
 /* ------------------------------------------------------------------ */
 /*  The session "pass": the whole session state, signed by the        */
@@ -18,7 +18,6 @@ const PassSchema = z.object({
   profile: ProfileSchema,
   startedAt: z.number().int().positive(),
   userMessages: z.number().int().nonnegative(),
-  stage: StageSchema,
   /** Set when the risk layer stops the conversation. Once set, it never goes back to null. */
   lock: SafetyKeySchema.nullable(),
   historyHash: z.string(),
@@ -42,7 +41,6 @@ export function newPass(profile: Profile, now: number): Pass {
     profile,
     startedAt: now,
     userMessages: 0,
-    stage: "escucha",
     lock: null,
     historyHash: hashHistory([]),
   };
