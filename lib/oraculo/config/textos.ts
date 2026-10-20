@@ -44,7 +44,8 @@ export const ORACLE_TEXT = {
   brand: "EmpatIA Digital",
   back: "Volver a EmpatIA",
 
-  launcher: { label: "¿Necesitas hablar?", short: "Oráculo" },
+  /** `hover` replaces the label while the pointer is on the button (desktop only). */
+  launcher: { label: "¿Necesitas hablar?", hover: "Hablemos, te escucho", short: "Oráculo" },
 
   profile: {
     eyebrow: "Escucha y orientación",
