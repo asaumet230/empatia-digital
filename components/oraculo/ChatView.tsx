@@ -1,40 +1,74 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { ChevronDown, CircleCheck, UserRoundPen } from "lucide-react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { Composer } from "@/components/oraculo/Composer";
 import { ConsentDialog } from "@/components/oraculo/ConsentDialog";
 import { ErrorNotice } from "@/components/oraculo/ErrorNotice";
+import { cn } from "@/lib/cn";
 import { FinishDialog } from "@/components/oraculo/FinishDialog";
 import { MessageBubble, TypingIndicator } from "@/components/oraculo/MessageBubble";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
-import { ProfileChoices } from "@/components/oraculo/ProfileChoices";
 import { SafetyPanel } from "@/components/oraculo/SafetyPanel";
 import type { OracleControls } from "@/hooks/useOracle";
 import { ORACLE_TEXT, PROFILE_OPTIONS } from "@/lib/oraculo/config/textos";
-import { audienceOf } from "@/lib/oraculo/tipos";
+import { audienceOf, type Profile } from "@/lib/oraculo/tipos";
 
 const t = ORACLE_TEXT.chat;
 
+/** How far above the end the person must scroll before the "back to the end" button shows. */
+const AWAY_PX = 200;
+
+const distanceToEnd = () => document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+
+function scrollToEnd() {
+  const instant = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: instant ? "auto" : "smooth" });
+}
+
+/** How long the Oráculo "types" its fixed opening lines: the greeting, then any retry. */
+const GREETING_MS = 1600;
+const RETRY_MS = 900;
+
 /**
- * The conversation, from its first line: the Oráculo asks who is talking (quick replies), the
- * consent dialog opens over the chat, and then come the fixed welcome, the messages and the help
- * panels where the server asked for them. Everything before the session is interface only.
+ * The conversation, from its first line: the Oráculo types a greeting and asks who is talking,
+ * the person answers in their own words, the consent dialog opens over the chat, and then come
+ * the fixed welcome, the messages and the help panels where the server asked for them.
+ * Everything before the session is interface only.
  */
 export function ChatView({ oracle }: { oracle: OracleControls }) {
-  const { state, choose, back, start, send, finish, restart, dismissError } = oracle;
+  const { state, ask, introduce, back, start, send, finish, restart, dismissError } = oracle;
   const { profile } = state;
   const started = state.phase === "chat" && profile !== null;
+  // The Oráculo owes a line in the opening: at the very start, or after an answer it did not understand
+  const asking = state.phase === "perfil" && state.intro.at(-1)?.role !== "oraculo";
   const [confirming, setConfirming] = useState(false);
-  const end = useRef<HTMLDivElement>(null);
-  const latest = useRef<HTMLDivElement>(null);
+  const [away, setAway] = useState(false);
   const audience = profile ? audienceOf(profile) : "estudiante";
   const closing = state.busy === "close";
 
-  // While waiting, follow the bottom; when the answer (or a help panel) arrives, show it from its start
   useEffect(() => {
-    if (state.pending) end.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-    else latest.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [state.history.length, state.pending]);
+    if (!asking) return;
+    const id = setTimeout(ask, state.intro.length === 0 ? GREETING_MS : RETRY_MS);
+    return () => clearTimeout(id);
+  }, [asking, ask, state.intro.length]);
+
+  // Like a messaging app: anything new in the conversation brings it to the end
+  useEffect(() => {
+    scrollToEnd();
+  }, [state.intro.length, state.history.length, state.pending, state.busy, state.locked, state.error, asking, started]);
+
+  // Scrolled up to reread: offer a way back to the end
+  useEffect(() => {
+    const onScroll = () => setAway(distanceToEnd() > AWAY_PX);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   // Closing or reloading the tab mid-conversation asks first: after closing, nothing is left
   useEffect(() => {
@@ -50,15 +84,16 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
       .map((p) => <SafetyPanel key={`${p.after}-${p.key}`} safetyKey={p.key} audience={audience} />);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="oraculo-pattern flex min-h-dvh flex-col">
       <OracleHeader>
         {started && (
           <button
             type="button"
             onClick={() => setConfirming(true)}
             disabled={closing}
-            className="h-10 rounded-full px-3 text-sm font-semibold text-o-muted hover:bg-o-raised hover:text-o-text disabled:opacity-50 sm:px-4"
+            className="inline-flex h-10 items-center gap-1.5 rounded-full border border-o-strong bg-o-surface px-2.5 text-sm font-semibold shadow-sm hover:bg-o-raised disabled:cursor-wait sm:gap-2 sm:px-4"
           >
+            <CircleCheck aria-hidden="true" className="size-4 text-o-accent" />
             {t.finish}
           </button>
         )}
@@ -66,57 +101,39 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
 
       <main className="flex-1">
         <div role="log" aria-live="polite" aria-label="Conversación" className="mx-auto max-w-3xl space-y-4 px-4 py-6 sm:px-6">
-          <MessageBubble role="oraculo" text={ORACLE_TEXT.intro.greeting} />
-          <MessageBubble role="oraculo" text={ORACLE_TEXT.intro.question} />
-          {profile ? (
-            <div className="flex flex-col items-end gap-1">
-              <MessageBubble role="usuario" text={PROFILE_OPTIONS[profile].label} />
-              {/* A wrong choice can be fixed until the first message is sent */}
-              {started && state.history.length === 0 && state.busy === null && (
-                <button
-                  type="button"
-                  onClick={restart}
-                  className="px-2 text-sm font-semibold text-o-muted underline-offset-4 hover:text-o-text hover:underline"
-                >
-                  {ORACLE_TEXT.intro.change}
-                </button>
-              )}
-            </div>
-          ) : (
-            <ProfileChoices onChoose={choose} />
+          {state.intro.map((message, i) => (
+            <MessageBubble key={i} {...message} />
+          ))}
+          {asking && <TypingIndicator />}
+          {/* What the app understood from the answer; a wrong profile can be fixed until the first message */}
+          {started && state.history.length === 0 && state.busy === null && (
+            <ProfileBadge profile={profile} onChange={restart} />
           )}
           {started && <MessageBubble role="oraculo" text={PROFILE_OPTIONS[profile].welcome} />}
-          {state.history.map((message, i) => {
-            const last = i === state.history.length - 1;
-            // A stop has no reply: its panel is what must be read first
-            const anchor = last && (message.role === "oraculo" || state.locked);
-            return (
-              <Fragment key={i}>
-                {anchor && state.locked ? (
-                  <>
-                    <MessageBubble {...message} />
-                    <div ref={latest} className="scroll-mt-20">
-                      {panelsAfter(i)}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div ref={anchor ? latest : undefined} className="scroll-mt-20">
-                      <MessageBubble {...message} />
-                    </div>
-                    {panelsAfter(i)}
-                  </>
-                )}
-              </Fragment>
-            );
-          })}
+          {state.history.map((message, i) => (
+            <Fragment key={i}>
+              <MessageBubble {...message} />
+              {panelsAfter(i)}
+            </Fragment>
+          ))}
           {state.pending && <MessageBubble role="usuario" text={state.pending} pending />}
           {state.busy === "send" && <TypingIndicator />}
-          <div ref={end} />
         </div>
       </main>
 
-      <footer className="sticky bottom-0 border-t border-o-line bg-o-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
+      <footer className="sticky bottom-0 border-t border-o-line bg-o-bar pb-[env(safe-area-inset-bottom)]">
+        {/* Always rendered so it can fade and slide in; `invisible` takes it out of reach while hidden */}
+        <button
+          type="button"
+          onClick={() => scrollToEnd()}
+          aria-label={t.toEnd}
+          className={cn(
+            "absolute -top-16 right-4 grid size-12 place-items-center rounded-full! bg-o-user/90 text-o-user-text shadow-[0_8px_24px_-6px_rgb(0_0_0/0.45)] transition-[opacity,translate,visibility,background-color] duration-300 ease-out hover:bg-o-user sm:right-6 print:hidden",
+            away ? "visible translate-y-0 opacity-100" : "invisible translate-y-3 opacity-0",
+          )}
+        >
+          <ChevronDown aria-hidden="true" className="size-6" strokeWidth={2.5} />
+        </button>
         <div className="mx-auto max-w-3xl space-y-3 px-4 py-3 sm:px-6">
           {started && state.error && (
             <ErrorNotice
@@ -132,7 +149,7 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
           )}
 
           {!started ? (
-            <p className="py-3 text-center text-sm font-semibold text-o-muted">{ORACLE_TEXT.intro.hint}</p>
+            <Composer disabled={state.phase !== "perfil"} locked={asking} onSend={introduce} />
           ) : closing ? (
             <p role="status" className="py-3 text-center text-sm font-semibold text-o-muted">
               {ORACLE_TEXT.finish.working}
@@ -173,6 +190,26 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
           void finish();
         }}
       />
+    </div>
+  );
+}
+
+function ProfileBadge({ profile, onChange }: { profile: Profile; onChange: () => void }) {
+  const { label, icon: Icon } = PROFILE_OPTIONS[profile];
+  return (
+    <div className="flex justify-end">
+      <div className="inline-flex items-center gap-2 rounded-full border border-o-line bg-o-surface p-1 pl-3 text-sm shadow-sm">
+        <Icon aria-hidden="true" className="size-4 text-o-accent" />
+        <span className="font-semibold text-o-muted">{label}</span>
+        <button
+          type="button"
+          onClick={onChange}
+          className="inline-flex items-center gap-1.5 rounded-full bg-green-bright/15 px-3 py-1.5 font-semibold text-o-accent transition-colors hover:bg-green-bright/25"
+        >
+          <UserRoundPen aria-hidden="true" className="size-4" />
+          {ORACLE_TEXT.intro.change}
+        </button>
+      </div>
     </div>
   );
 }

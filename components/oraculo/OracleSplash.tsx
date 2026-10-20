@@ -8,7 +8,7 @@ export function OracleSplash() {
       <OwlMascot className="size-40 sm:size-48" />
       <div className="text-center">
         <p className="font-display text-2xl font-bold tracking-[-0.02em]">{ORACLE_TEXT.loading.title}</p>
-        <p className="mt-2 text-base text-o-muted">{ORACLE_TEXT.loading.text}</p>
+        <p className="mt-2 text-lg font-bold text-o-accent sm:text-xl">{ORACLE_TEXT.loading.text}</p>
       </div>
     </div>
   );

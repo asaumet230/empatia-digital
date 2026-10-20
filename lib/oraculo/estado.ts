@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { LIMITS } from "@/lib/oraculo/config/limites";
-import type { ErrorCode } from "@/lib/oraculo/config/textos";
+import { ORACLE_TEXT, type ErrorCode } from "@/lib/oraculo/config/textos";
 import type { CloseResult, SendResult, SessionInfo } from "@/lib/oraculo/conversacion/orquestador";
 import { MessageSchema, ProfileSchema, SafetyKeySchema, type Message, type Profile, type SafetyKey } from "@/lib/oraculo/tipos";
 
@@ -17,6 +17,8 @@ const StoredSchema = z.object({
   phase: z.enum(["perfil", "consentimiento", "chat", "cierre"]),
   profile: ProfileSchema.nullable(),
   token: z.string().nullable(),
+  /** The opening, before the session: the Oráculo asks who is talking. Shown only, never sent to the AI. */
+  intro: z.array(MessageSchema),
   history: z.array(MessageSchema),
   remaining: z.number().int(),
   /** Help panels shown in the chat, each anchored after a message of `history`. */
@@ -36,7 +38,8 @@ export interface OracleState extends Stored {
 }
 
 export type OracleAction =
-  | { type: "elegir"; profile: Profile }
+  | { type: "oraculo_pregunta" }
+  | { type: "presentarse"; text: string; profile: Profile | null }
   | { type: "volver" }
   | { type: "iniciando" }
   | { type: "iniciada"; info: SessionInfo }
@@ -52,6 +55,7 @@ export const INITIAL_STATE: OracleState = {
   phase: "perfil",
   profile: null,
   token: null,
+  intro: [],
   history: [],
   remaining: LIMITS.maxUserMessages,
   panels: [],
@@ -98,11 +102,22 @@ function onResult(state: OracleState, text: string, result: SendResult): OracleS
 
 export function oracleReducer(state: OracleState, action: OracleAction): OracleState {
   switch (action.type) {
-    case "elegir":
-      return { ...INITIAL_STATE, phase: "consentimiento", profile: action.profile };
+    case "oraculo_pregunta": {
+      // The greeting first; after an answer that did not say who they are, the gentle retry
+      if (state.phase !== "perfil") return state;
+      const text = state.intro.length === 0 ? ORACLE_TEXT.intro.greeting : ORACLE_TEXT.intro.retry;
+      return { ...state, intro: [...state.intro, { role: "oraculo", text }] };
+    }
+    case "presentarse": {
+      if (state.phase !== "perfil") return state;
+      const intro: Message[] = [...state.intro, { role: "usuario", text: action.text }];
+      return action.profile ? { ...state, intro, phase: "consentimiento", profile: action.profile } : { ...state, intro };
+    }
     case "volver":
       // Only the consent dialog goes back; its own closing when the chat starts must not undo that
-      return state.phase === "consentimiento" ? { ...INITIAL_STATE } : state;
+      return state.phase === "consentimiento"
+        ? { ...INITIAL_STATE, intro: [...state.intro, { role: "oraculo", text: ORACLE_TEXT.intro.again }] }
+        : state;
     case "iniciando":
       return { ...state, busy: "start", error: null };
     case "iniciada":

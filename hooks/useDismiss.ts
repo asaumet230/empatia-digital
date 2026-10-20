@@ -4,7 +4,7 @@ import { useEffect, useRef, type RefObject } from "react";
 
 /**
  * Closes a floating menu or panel while it is open: on a tap or click outside `ref`, or on `Esc`.
- * Used by the session menu.
+ * Used by the session menu and the Oráculo's emoji picker.
  */
 export function useDismiss(ref: RefObject<HTMLElement | null>, open: boolean, onDismiss: () => void) {
   const dismiss = useRef(onDismiss);

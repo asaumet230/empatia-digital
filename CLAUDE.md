@@ -258,10 +258,12 @@ Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los d
 - **Pantalla de carga** de 1,2 s (`OracleSplash`): el búho animado (`OwlMascot`: la ilustración real
   `public/assets/logos/oraculo-saludo.webp` por capas en SVG; saluda con el ala y parpadea; animaciones
   `.owl-*` en `globals.css`) y "Me alegra que hayas venido · Cargando…".
-- **Entra directo al chat** (2026-10-19): el búho saluda y pregunta "¿quién eres?" con 3 botones (nunca texto
-  libre: el perfil decide el prompt y la política de riesgo); al elegir se abre la ventana de autorización
-  con el texto de ese perfil, y al aceptar empieza la sesión. Se puede "Cambiar" el perfil hasta el primer
-  mensaje. Esos mensajes del búho son fijos (no van a la IA ni al historial).
+- **Entra directo al chat** (2026-10-19): con la caja de texto desactivada, el búho "escribe" y saluda
+  ("Hola, ¿cómo estás?…") preguntando si es estudiante, docente o papá, mamá o cuidador; luego se activa la
+  caja. La persona responde con sus palabras y `lib/oraculo/perfil.ts` reconoce el perfil **sin IA** (si no
+  queda claro, vuelve a preguntar y recuerda el 123). Después se abre la ventana de autorización con el texto
+  de ese perfil y, al aceptar, empieza la sesión. Se puede "Cambiar" hasta el primer mensaje. Estos mensajes
+  del inicio son fijos y no van a la IA ni al historial.
 - **Sin mediación entre dos estudiantes:** es una conversación privada de **una persona**. Tres perfiles:
   **estudiante** (escucha y orientación), **docente** (cómo manejar un caso, ruta de la Ley 1620) y
   **padre, madre o cuidador** (cómo acompañar, incluidos casos de abuso: ICBF, Comisaría, Policía de
@@ -278,7 +280,13 @@ Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los d
 - **Mensajes de emergencia fijos** (no los escribe la IA), con botones que llaman de un toque (`tel:`).
 - **Modelos:** conversación `gpt-5.6-luna` (pedido del usuario, más económico); riesgo `gpt-5.4-mini`
   (sin fallos en el banco; con el prompt actual luna también pasa).
-- **Diseño:** claro por defecto y oscuro si el dispositivo lo está, con la marca de EmpatIA.
+- **Diseño:** sigue al dispositivo (claro u oscuro) salvo que la persona elija en el encabezado (menú
+  automático/claro/oscuro, `ThemeButton`; se guarda en `localStorage` `oraculo:tema`, única excepción
+  permitida por la guarda de privacidad, y un script del layout lo aplica antes de pintar). Tokens `o-*` con
+  `light-dark()` en `globals.css`. Chat tipo WhatsApp: fondo de dibujitos (`scripts/oraculo-fondo.mjs` →
+  `public/assets/images/oraculo-fondo.svg`), burbujas del Oráculo en turquesa con la carita del búho, barra
+  superior e inferior más oscuras, baja solo al final con cada mensaje y botón para volver al final,
+  selector de emojis de emociones dentro de la caja (`EmojiPicker`, lista `EMOJIS` en `textos.ts`).
 - **Se va a lanzar** para uso real, no solo como piloto, una vez aprobado. Pero **no publicar todavía** en
   Vercel (decisión del 2026-10-13).
 
@@ -307,7 +315,7 @@ lib/oraculo/
   http.ts                       validación, mismo origen, errores; los logs solo llevan un código
   cliente.ts · estado.ts        lado del navegador: llamadas a la API y estado (reducer)
 hooks/useOracle.ts              estado + sessionStorage + llamadas
-components/oraculo/             OracleSplash, OwlMascot, ChatView, ProfileChoices, ConsentDialog, Composer, MessageBubble, SafetyPanel,
+components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog, EmojiPicker, ThemeButton, Composer, MessageBubble, SafetyPanel,
                                 HelpLineButton, HelpDialog, FinishDialog, ClosingView, OracleLauncher, LegalText…
 ```
 
@@ -341,8 +349,8 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ProfileChoice
 
 | Comando | Qué revisa | ¿Gasta saldo? |
 |---|---|---|
-| `npm test` | 138 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
-| `npm run test:e2e` | 52 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
+| `npm test` | 158 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
+| `npm run test:e2e` | 64 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
 | `npm run eval:riesgo` | Banco de 51 frases contra la IA real; falla si se escapa un peligro | Sí, poco |
 
 Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alarmas del filtro de OpenAI

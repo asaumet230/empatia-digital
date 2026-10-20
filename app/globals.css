@@ -42,55 +42,61 @@
 }
 
 /* ------------------------------------------------------------------ */
-/*  Oráculo — light by default like any chat, dark when the device     */
-/*  is. Same brand: navy, green and the same fonts.                    */
+/*  Oráculo — follows the device (light or dark) unless the person     */
+/*  picks one in the header (html[data-oraculo-tema]). Each token is   */
+/*  light-dark(light, dark). Same brand: navy, green, same fonts.      */
 /* ------------------------------------------------------------------ */
 
 .oraculo-theme,
 html:has(.oraculo-theme) {
-  color-scheme: light;
-  --o-bg: #eef1f4;
-  --o-surface: #ffffff;
-  --o-raised: #f6f8fa;
-  --o-text: #142738;
-  --o-muted: #566676;
-  --o-line: rgb(20 39 56 / 0.12);
+  color-scheme: light dark;
+  --o-bg: light-dark(#eef1f4, #0f1f2c);
+  /* Header and footer of the chat: a step darker than the background, so the conversation stands apart */
+  --o-bar: light-dark(#e2e7ec, #0a1620);
+  --o-surface: light-dark(#ffffff, #142738);
+  --o-raised: light-dark(#f6f8fa, #1a3247);
+  --o-text: light-dark(#142738, #f4f6f8);
+  --o-muted: light-dark(#566676, #a3b0bd);
+  --o-line: light-dark(rgb(20 39 56 / 0.12), rgb(201 209 217 / 0.14));
+  /* Border of the header buttons: visible enough to read them as buttons on the bars */
+  --o-strong: light-dark(rgb(20 39 56 / 0.24), rgb(201 209 217 / 0.22));
   /* Accent for text and icons; buttons use green-bright with navy text in both themes */
-  --o-accent: #176b35;
-  --o-user: #142738;
+  --o-accent: light-dark(#176b35, #35c95e);
+  /* The owl's teal as text (the Oráculo name), dark enough to read on the light bars */
+  --o-owl: light-dark(#086a7a, #2dc6d4);
+  /* The moon of the dark-theme option */
+  --o-moon: light-dark(#5b4bc4, #ab9fff);
+  /* Doodles of the chat wallpaper: barely there, like a messaging app */
+  --o-pattern: light-dark(rgb(20 39 56 / 0.1), rgb(255 255 255 / 0.05));
+  /* Oráculo bubbles: a soft tint of the owl's teal, so each side of the chat has its colour */
+  --o-bot: light-dark(#e3f5f7, #10313c);
+  --o-bot-line: light-dark(rgb(23 171 192 / 0.35), rgb(45 198 212 / 0.3));
+  --o-user: light-dark(#142738, #2a4a63);
   --o-user-text: #ffffff;
-  --o-alert: #c4323a;
-  --o-alert-soft: #fdeeee;
-  --o-help: #9a5b00;
-  --o-help-soft: #fff6e6;
+  --o-alert: light-dark(#c4323a, #ff7a7a);
+  --o-alert-soft: light-dark(#fdeeee, rgb(255 107 107 / 0.12));
+  --o-help: light-dark(#9a5b00, #ffd23f);
+  --o-help-soft: light-dark(#fff6e6, rgb(255 210 63 / 0.1));
 }
 
-@media (prefers-color-scheme: dark) {
-  .oraculo-theme,
-  html:has(.oraculo-theme) {
-    color-scheme: dark;
-    --o-bg: #0f1f2c;
-    --o-surface: #142738;
-    --o-raised: #1a3247;
-    --o-text: #f4f6f8;
-    --o-muted: #a3b0bd;
-    --o-line: rgb(201 209 217 / 0.14);
-    --o-accent: #35c95e;
-    --o-user: #2a4a63;
-    --o-user-text: #ffffff;
-    --o-alert: #ff7a7a;
-    --o-alert-soft: rgb(255 107 107 / 0.12);
-    --o-help: #ffd23f;
-    --o-help-soft: rgb(255 210 63 / 0.1);
-  }
+html[data-oraculo-tema="claro"]:has(.oraculo-theme),
+html[data-oraculo-tema="claro"] .oraculo-theme {
+  color-scheme: light;
+}
+
+html[data-oraculo-tema="oscuro"]:has(.oraculo-theme),
+html[data-oraculo-tema="oscuro"] .oraculo-theme {
+  color-scheme: dark;
 }
 
 /* Paper is always white: printing from a phone in dark mode must not give light-gray text */
 @media print {
   .oraculo-theme,
   html:has(.oraculo-theme) {
-    color-scheme: light;
+    /* Beats a theme picked in the header */
+    color-scheme: light !important;
     --o-bg: #ffffff;
+    --o-bar: #ffffff;
     --o-surface: #ffffff;
     --o-raised: #ffffff;
     --o-text: #000000;
@@ -104,12 +110,18 @@ html:has(.oraculo-theme) {
 
 @theme inline {
   --color-o-bg: var(--o-bg);
+  --color-o-bar: var(--o-bar);
   --color-o-surface: var(--o-surface);
   --color-o-raised: var(--o-raised);
   --color-o-text: var(--o-text);
   --color-o-muted: var(--o-muted);
   --color-o-line: var(--o-line);
+  --color-o-strong: var(--o-strong);
   --color-o-accent: var(--o-accent);
+  --color-o-owl: var(--o-owl);
+  --color-o-moon: var(--o-moon);
+  --color-o-bot: var(--o-bot);
+  --color-o-bot-line: var(--o-bot-line);
   --color-o-user: var(--o-user);
   --color-o-user-text: var(--o-user-text);
   --color-o-alert: var(--o-alert);
@@ -269,6 +281,29 @@ html:has(.oraculo-theme) body {
 @keyframes dash-flow {
   to {
     stroke-dashoffset: -2.6;
+  }
+}
+
+/* Chat wallpaper: the doodle tile (scripts/oraculo-fondo.mjs) as a mask, so the theme sets its colour.
+   Fixed behind the conversation; the element needs its own stacking context to keep it there. */
+.oraculo-pattern {
+  isolation: isolate;
+}
+
+.oraculo-pattern::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--o-pattern);
+  -webkit-mask: url("/assets/images/oraculo-fondo.svg") 0 0 / 400px 400px repeat;
+  mask: url("/assets/images/oraculo-fondo.svg") 0 0 / 400px 400px repeat;
+}
+
+@media print {
+  .oraculo-pattern::before {
+    display: none;
   }
 }
 

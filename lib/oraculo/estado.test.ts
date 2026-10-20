@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { ORACLE_TEXT } from "@/lib/oraculo/config/textos";
 import { deserialize, INITIAL_STATE, oracleReducer, serialize, type OracleAction, type OracleState } from "@/lib/oraculo/estado";
 
 const run = (...actions: OracleAction[]) => actions.reduce(oracleReducer, INITIAL_STATE);
 const chatting = (): OracleState =>
   run(
-    { type: "elegir", profile: "estudiante" },
+    { type: "oraculo_pregunta" },
+    { type: "presentarse", text: "soy estudiante", profile: "estudiante" },
     { type: "iniciando" },
     { type: "iniciada", info: { token: "t0", remaining: 30, endsAt: 0 } },
   );
@@ -15,9 +17,33 @@ const reply = (text: string, safety: OracleState["locked"] = null): OracleAction
 });
 
 describe("estado del Oráculo en el navegador", () => {
-  it("perfil → consentimiento → chat", () => {
+  it("saludo → la persona dice quién es → consentimiento → chat", () => {
     const s = chatting();
-    expect(s).toMatchObject({ phase: "chat", profile: "estudiante", token: "t0", busy: null });
+    expect(s).toMatchObject({ phase: "chat", profile: "estudiante", token: "t0", busy: null, history: [] });
+    expect(s.intro).toEqual([
+      { role: "oraculo", text: ORACLE_TEXT.intro.greeting },
+      { role: "usuario", text: "soy estudiante" },
+    ]);
+  });
+
+  it("si no dice quién es, sigue en el saludo y el Oráculo vuelve a preguntar", () => {
+    const s = run(
+      { type: "oraculo_pregunta" },
+      { type: "presentarse", text: "hola", profile: null },
+      { type: "oraculo_pregunta" },
+    );
+    expect(s).toMatchObject({ phase: "perfil", profile: null });
+    expect(s.intro.map((m) => m.text)).toEqual([ORACLE_TEXT.intro.greeting, "hola", ORACLE_TEXT.intro.retry]);
+  });
+
+  it("cerrar la autorización vuelve a preguntar sin borrar el saludo", () => {
+    const s = run(
+      { type: "oraculo_pregunta" },
+      { type: "presentarse", text: "soy profe", profile: "docente" },
+      { type: "volver" },
+    );
+    expect(s).toMatchObject({ phase: "perfil", profile: null });
+    expect(s.intro.at(-1)).toEqual({ role: "oraculo", text: ORACLE_TEXT.intro.again });
   });
 
   it("cerrar la autorización ya en el chat no reinicia la conversación", () => {
@@ -26,7 +52,7 @@ describe("estado del Oráculo en el navegador", () => {
 
   it("si se cierra la autorización mientras abre la sesión, no entra al chat", () => {
     const s = run(
-      { type: "elegir", profile: "docente" },
+      { type: "presentarse", text: "soy docente", profile: "docente" },
       { type: "iniciando" },
       { type: "volver" },
       { type: "iniciada", info: { token: "t0", remaining: 30, endsAt: 0 } },

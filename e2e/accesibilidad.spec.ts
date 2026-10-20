@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { say, startSession } from "./ayudas";
+import { introduce, say, startSession } from "./ayudas";
 
 /** Serious or critical accessibility problems (contrast, names, labels, structure). */
 async function audit(page: Page) {
@@ -17,14 +17,15 @@ for (const colorScheme of ["light", "dark"] as const) {
 
     test("perfil, consentimiento, chat con panel, emergencia y cierre", async ({ page }) => {
       await page.goto("/oraculo");
-      await expect(page.getByRole("button", { name: /Soy estudiante/ })).toBeVisible();
-      expect(await audit(page), "perfil").toEqual([]);
+      await expect(page.getByRole("textbox", { name: "Tu mensaje" })).toBeEnabled({ timeout: 10_000 });
+      expect(await audit(page), "saludo").toEqual([]);
 
-      await page.getByRole("button", { name: /Soy estudiante/ }).click();
+      await introduce(page, "soy estudiante");
       expect(await audit(page), "consentimiento").toEqual([]);
 
       await page.getByLabel("Entiendo y quiero empezar").check();
       await page.getByRole("button", { name: "Empezar" }).click();
+      await expect(page.getByText(/Te quedan \d+ mensajes/)).toBeVisible();
       await say(page, "#alto se burlan de mí");
       await expect(page.getByRole("heading", { name: "Esto no es una broma" })).toBeVisible();
       expect(await audit(page), "chat con panel de ayuda").toEqual([]);

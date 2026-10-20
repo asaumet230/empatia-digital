@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { ApiError, closeSession, sendMessage, startSession } from "@/lib/oraculo/cliente";
 import { deserialize, oracleReducer, serialize, type OracleState } from "@/lib/oraculo/estado";
-import type { Profile } from "@/lib/oraculo/tipos";
+import { detectProfile } from "@/lib/oraculo/perfil";
 
 const STORAGE_KEY = "oraculo:sesion";
 
@@ -26,7 +26,14 @@ export function useOracle() {
     sessionStorage.setItem(STORAGE_KEY, serialize(state));
   }, [state]);
 
-  const choose = useCallback((profile: Profile) => dispatch({ type: "elegir", profile }), []);
+  /** The Oráculo's next fixed line in the opening (greeting or retry); the screen times it. */
+  const ask = useCallback(() => dispatch({ type: "oraculo_pregunta" }), []);
+
+  /** The person says who they are, in their own words. Recognised in the browser, never by the AI. */
+  const introduce = useCallback(async (text: string) => {
+    dispatch({ type: "presentarse", text, profile: detectProfile(text) });
+    return true;
+  }, []);
   const back = useCallback(() => dispatch({ type: "volver" }), []);
   const dismissError = useCallback(() => dispatch({ type: "descartar_error" }), []);
 
@@ -70,7 +77,7 @@ export function useOracle() {
     }
   }, []);
 
-  return { state, choose, back, start, send, finish, restart, dismissError };
+  return { state, ask, introduce, back, start, send, finish, restart, dismissError };
 }
 
 export type OracleControls = ReturnType<typeof useOracle>;

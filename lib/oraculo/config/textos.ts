@@ -35,6 +35,40 @@ export const PROFILE_OPTIONS: Record<Profile, ProfileOption> = {
   },
 };
 
+/** Feelings the person can add from the composer, with the name a screen reader says. */
+export const EMOJIS = [
+  { emoji: "😊", label: "contento" },
+  { emoji: "🙂", label: "tranquilo" },
+  { emoji: "😄", label: "feliz" },
+  { emoji: "🥰", label: "con cariño" },
+  { emoji: "🤗", label: "abrazo" },
+  { emoji: "😌", label: "aliviado" },
+  { emoji: "😐", label: "indiferente" },
+  { emoji: "😕", label: "confundido" },
+  { emoji: "🤔", label: "pensando" },
+  { emoji: "😔", label: "decaído" },
+  { emoji: "😢", label: "triste" },
+  { emoji: "😭", label: "llorando" },
+  { emoji: "😟", label: "preocupado" },
+  { emoji: "😰", label: "angustiado" },
+  { emoji: "😨", label: "con miedo" },
+  { emoji: "😳", label: "avergonzado" },
+  { emoji: "😠", label: "enojado" },
+  { emoji: "😡", label: "furioso" },
+  { emoji: "😤", label: "frustrado" },
+  { emoji: "😞", label: "decepcionado" },
+  { emoji: "😴", label: "cansado" },
+  { emoji: "🥺", label: "suplicando" },
+  { emoji: "😶", label: "sin palabras" },
+  { emoji: "🙄", label: "fastidiado" },
+  { emoji: "💙", label: "corazón" },
+  { emoji: "💔", label: "corazón roto" },
+  { emoji: "🙏", label: "gracias" },
+  { emoji: "👍", label: "de acuerdo" },
+  { emoji: "👎", label: "no estoy de acuerdo" },
+  { emoji: "🤝", label: "trato" },
+] as const;
+
 export const ORACLE_TEXT = {
   name: "Oráculo",
   brand: "EmpatIA Digital",
@@ -45,14 +79,19 @@ export const ORACLE_TEXT = {
   /** `hover` replaces the label (or `short`, on phones) while the pointer or a finger is on the button. */
   launcher: { label: "¿Necesitas hablar?", hover: "Hablemos, te escucho", short: "Oráculo" },
 
-  /** Opening of the chat, before a session exists: the Oráculo asks who is talking. */
+  /**
+   * Opening of the chat, before a session exists: the Oráculo asks who is talking and the person
+   * answers in their own words. Fixed text, never sent to the AI.
+   */
   intro: {
     greeting:
-      "Hola, soy el Oráculo: una inteligencia artificial que escucha y orienta sobre convivencia escolar, acoso y ciberacoso. No pido tu nombre ni guardo la conversación.",
-    question: "Antes de empezar, cuéntame: ¿quién eres?",
-    choices: "¿Quién eres?",
-    hint: "Elige una opción para empezar.",
-    change: "Cambiar",
+      "Hola, ¿cómo estás? Soy el Oráculo y estoy aquí para escucharte. Antes de empezar, cuéntame: ¿eres estudiante, docente o papá, mamá o cuidador?",
+    /** When the answer does not say who they are. It also points to help, since nothing is risk-checked yet. */
+    retry:
+      "Perdona, no te entendí bien. ¿Eres estudiante, docente o papá, mamá o cuidador? Si estás en peligro ahora, llama al 123.",
+    /** After closing the consent dialog without accepting. */
+    again: "Está bien. Cuando quieras, cuéntame: ¿eres estudiante, docente o papá, mamá o cuidador?",
+    change: "Cambiar perfil",
   },
 
   consent: {
@@ -90,9 +129,21 @@ export const ORACLE_TEXT = {
     typing: "El Oráculo está escribiendo…",
     remaining: (n: number) => (n === 1 ? "Te queda 1 mensaje" : `Te quedan ${n} mensajes`),
     finish: "Finalizar",
+    toEnd: "Ir al final de la conversación",
     help: "Líneas de ayuda",
     retry: "Reintentar",
     tooLong: (max: number) => `Máximo ${max} caracteres.`,
+  },
+
+  theme: {
+    label: "Tema",
+    names: { auto: "automático", claro: "claro", oscuro: "oscuro" },
+    options: { auto: "Automático", claro: "Claro", oscuro: "Oscuro" },
+  },
+
+  emojis: {
+    open: "Agregar un emoji",
+    title: "¿Cómo te sientes?",
   },
 
   finish: {

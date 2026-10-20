@@ -24,9 +24,16 @@ describe("privacidad en el código", () => {
   });
 
   it("no usa localStorage ni cookies para la conversación", () => {
-    for (const f of sources) {
+    // The one exception: the light/dark preference, which holds nothing from the conversation
+    for (const f of sources.filter((f) => f !== "lib/oraculo/tema.ts")) {
       expect(read(f), f).not.toMatch(/\blocalStorage\.|document\.cookie/);
     }
+    const theme = read("lib/oraculo/tema.ts");
+    expect(theme.match(/localStorage\.\w+\([^)]*\)/g)).toEqual([
+      "localStorage.getItem(\"${THEME_KEY}\")",
+      "localStorage.removeItem(THEME_KEY)",
+      "localStorage.setItem(THEME_KEY, theme)",
+    ]);
   });
 
   it("le pide a OpenAI no guardar las respuestas para consultarlas después", () => {
