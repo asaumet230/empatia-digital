@@ -231,9 +231,11 @@ falla por lo largo del prompt, usar "Copiar prompt".
 - `npm ls` marca 6 paquetes de `sharp` (wasm) como sobrantes; `npm prune` no los quita y no afectan.
 - eslint 9.39 ya no tiene soporte (aviso de npm). `eslint-config-next` 16.4 ya acepta ESLint 10, pero no aporta nada
   a la app; quedan avisos de `npm audit` en `braces` (solo herramientas de desarrollo, no llega a la página).
-- La prueba de accesibilidad "perfil, consentimiento, chat con panel…" en iPhone falla ~1 de cada 4 veces
-  (contraste de un botón desactivado, `disabled:opacity-50`): es inestable desde antes de Next 16.4.
-- En desarrollo, el ícono "N" de Next.js tapa el botón del Oráculo; en producción no aparece.
+- La prueba de accesibilidad "perfil, consentimiento, chat con panel…" fallaba a veces por contraste del botón
+  "Finalizar": el encabezado del Oráculo era semitransparente y el chat pasaba por debajo. Desde el 2026-10-19 el
+  encabezado es sólido (`OracleHeader`).
+- El ícono "N" de Next.js (solo en desarrollo) va arriba a la derecha (`devIndicators` en `next.config.ts`)
+  para no tapar el botón del Oráculo.
 
 ---
 
@@ -249,8 +251,17 @@ Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los d
 ("Oráculo de la Mediación") que se adaptó con el usuario.
 
 ### 8.1 Decisiones tomadas (no volver a discutirlas)
-- **Dentro de EmpatIA Digital:** botón flotante "¿Necesitas hablar?" (abajo a la izquierda) en todas las
-  páginas, que abre la página propia `/oraculo` (no un panel). Se esconde durante la intro y en `/oraculo`.
+- **Dentro de EmpatIA Digital:** botón flotante con el búho del Oráculo (`public/assets/logos/oraculo.png`)
+  y "¿Necesitas hablar?" ("Oráculo" en celular), abajo a la izquierda en todas las páginas; al pasar el mouse
+  o tocarlo, el búho gira y dice "Hablemos, te escucho". Abre la página propia `/oraculo` (no un panel). Se
+  esconde durante la intro y en `/oraculo`.
+- **Pantalla de carga** de 1,2 s (`OracleSplash`): el búho animado (`OwlMascot`: la ilustración real
+  `public/assets/logos/oraculo-saludo.webp` por capas en SVG; saluda con el ala y parpadea; animaciones
+  `.owl-*` en `globals.css`) y "Me alegra que hayas venido · Cargando…".
+- **Entra directo al chat** (2026-10-19): el búho saluda y pregunta "¿quién eres?" con 3 botones (nunca texto
+  libre: el perfil decide el prompt y la política de riesgo); al elegir se abre la ventana de autorización
+  con el texto de ese perfil, y al aceptar empieza la sesión. Se puede "Cambiar" el perfil hasta el primer
+  mensaje. Esos mensajes del búho son fijos (no van a la IA ni al historial).
 - **Sin mediación entre dos estudiantes:** es una conversación privada de **una persona**. Tres perfiles:
   **estudiante** (escucha y orientación), **docente** (cómo manejar un caso, ruta de la Ley 1620) y
   **padre, madre o cuidador** (cómo acompañar, incluidos casos de abuso: ICBF, Comisaría, Policía de
@@ -259,7 +270,7 @@ Chat con IA (OpenAI) sobre convivencia, acoso y ciberacoso. Responsable de los d
   navegador guarda la conversación en `sessionStorage` (se borra al cerrar la pestaña); el servidor firma
   un **pase** con el contador y la hora de inicio. Límites: **30 mensajes o 60 minutos**.
 - **Consentimiento:** el colegio recoge el permiso firmado de los padres (formato en `/oraculo/autorizacion`)
-  y en la app hay un check "Entiendo que…" antes de empezar.
+  y en la app hay un check "Entiendo que…" en la ventana de autorización antes de empezar.
 - **Riesgo, dos revisiones en paralelo** (gana la más grave): filtro de moderación de OpenAI + clasificador
   propio. Política acordada: **solo un estudiante en peligro inmediato corta la conversación**. Alto riesgo
   (cualquier perfil) y peligro inmediato contado por un adulto → la IA sigue respondiendo y aparece el panel
@@ -296,7 +307,7 @@ lib/oraculo/
   http.ts                       validación, mismo origen, errores; los logs solo llevan un código
   cliente.ts · estado.ts        lado del navegador: llamadas a la API y estado (reducer)
 hooks/useOracle.ts              estado + sessionStorage + llamadas
-components/oraculo/             ProfileStep, ConsentStep, ChatView, Composer, MessageBubble, SafetyPanel,
+components/oraculo/             OracleSplash, OwlMascot, ChatView, ProfileChoices, ConsentDialog, Composer, MessageBubble, SafetyPanel,
                                 HelpLineButton, HelpDialog, FinishDialog, ClosingView, OracleLauncher, LegalText…
 ```
 
@@ -330,8 +341,8 @@ components/oraculo/             ProfileStep, ConsentStep, ChatView, Composer, Me
 
 | Comando | Qué revisa | ¿Gasta saldo? |
 |---|---|---|
-| `npm test` | 136 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
-| `npm run test:e2e` | 49 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
+| `npm test` | 138 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
+| `npm run test:e2e` | 52 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
 | `npm run eval:riesgo` | Banco de 51 frases contra la IA real; falla si se escapa un peligro | Sí, poco |
 
 Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alarmas del filtro de OpenAI

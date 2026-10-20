@@ -13,16 +13,32 @@ test("el botón flotante lleva al Oráculo y se esconde durante la intro", async
   await page.goto("/");
   await page.getByRole("link", { name: /Necesitas hablar|Oráculo/ }).click();
   await expect(page).toHaveURL(/\/oraculo$/);
-  await expect(page.getByRole("heading", { name: "¿Quién eres?" })).toBeVisible();
+  await expect(page.getByText("Antes de empezar, cuéntame: ¿quién eres?")).toBeVisible();
 });
 
-test("no se puede empezar sin aceptar", async ({ page }) => {
+test("entra directo al chat: pregunta quién eres y pide la autorización en una ventana", async ({ page }) => {
   await page.goto("/oraculo");
+  await expect(page.getByRole("textbox", { name: "Tu mensaje" })).toBeHidden();
   await page.getByRole("button", { name: /Soy docente/ }).click();
-  const start = page.getByRole("button", { name: "Empezar" });
+
+  const dialog = page.getByRole("dialog", { name: "Antes de empezar" });
+  const start = dialog.getByRole("button", { name: "Empezar" });
   await expect(start).toBeDisabled();
-  await page.getByLabel("Entiendo y quiero empezar").check();
+  await dialog.getByLabel("Entiendo y quiero empezar").check();
   await expect(start).toBeEnabled();
+
+  // Closing the dialog goes back to the choice
+  await dialog.getByRole("button", { name: "Volver" }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole("button", { name: /Soy estudiante/ })).toBeVisible();
+});
+
+test("se puede cambiar el perfil antes del primer mensaje", async ({ page }) => {
+  await startSession(page, /Soy docente/);
+  await expect(page.getByRole("log").getByText("Soy docente")).toBeVisible();
+  await page.getByRole("button", { name: "Cambiar" }).click();
+  await expect(page.getByRole("button", { name: /Soy padre/ })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Tu mensaje" })).toBeHidden();
 });
 
 test("una conversación normal responde, descuenta mensajes y sobrevive a una recarga", async ({ page }) => {
@@ -90,7 +106,7 @@ test("al finalizar muestra el resumen para copiar o imprimir", async ({ page }) 
   await expect(page.getByRole("button", { name: "Imprimir" })).toBeVisible();
 
   await page.getByRole("button", { name: "Nueva conversación" }).click();
-  await expect(page.getByRole("heading", { name: "¿Quién eres?" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Soy estudiante/ })).toBeVisible();
 });
 
 test("los textos legales son la versión final, sin aviso de borrador", async ({ page }) => {

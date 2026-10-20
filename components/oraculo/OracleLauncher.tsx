@@ -38,7 +38,11 @@ export function OracleLauncher() {
           {ORACLE_TEXT.launcher.hover}
         </span>
       </span>
-      <span className="sm:hidden">{ORACLE_TEXT.launcher.short}</span>
+      {/* Phones: the short name, swapped for the warm message on touch (the button grows with it) */}
+      <span className="group-hover:hidden group-focus-visible:hidden sm:hidden">{ORACLE_TEXT.launcher.short}</span>
+      <span aria-hidden="true" className="hidden text-green-bright group-hover:inline group-focus-visible:inline sm:hidden! sm:group-hover:hidden! sm:group-focus-visible:hidden!">
+        {ORACLE_TEXT.launcher.hover}
+      </span>
     </Link>
   );
 }

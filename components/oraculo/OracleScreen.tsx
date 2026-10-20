@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { OracleSplash } from "@/components/oraculo/OracleSplash";
 
 /**
  * The session lives in sessionStorage, which only exists in the browser: rendering the flow on
@@ -8,5 +9,5 @@ import dynamic from "next/dynamic";
  */
 export const OracleScreen = dynamic(() => import("@/components/oraculo/OracleApp"), {
   ssr: false,
-  loading: () => <div className="min-h-dvh" aria-busy="true" />,
+  loading: () => <OracleSplash />,
 });

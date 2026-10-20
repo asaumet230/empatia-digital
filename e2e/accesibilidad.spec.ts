@@ -17,6 +17,7 @@ for (const colorScheme of ["light", "dark"] as const) {
 
     test("perfil, consentimiento, chat con panel, emergencia y cierre", async ({ page }) => {
       await page.goto("/oraculo");
+      await expect(page.getByRole("button", { name: /Soy estudiante/ })).toBeVisible();
       expect(await audit(page), "perfil").toEqual([]);
 
       await page.getByRole("button", { name: /Soy estudiante/ }).click();

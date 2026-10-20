@@ -14,7 +14,7 @@ export function OracleHeader({ children }: { children?: ReactNode }) {
   const [help, setHelp] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-o-line bg-o-bg/90 backdrop-blur-md print:hidden">
+    <header className="sticky top-0 z-20 border-b border-o-line bg-o-bg print:hidden">
       <div className="mx-auto flex h-16 max-w-3xl items-center gap-2 px-4 sm:px-6">
         <Link
           href="/"

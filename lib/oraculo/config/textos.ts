@@ -9,33 +9,29 @@ import type { Profile } from "@/lib/oraculo/tipos";
 
 export interface ProfileOption {
   label: string;
-  description: string;
   icon: LucideIcon;
-  /** First Oráculo message, shown by the interface. */
+  /** Oráculo message right after the person says who they are, shown by the interface. */
   welcome: string;
 }
 
 export const PROFILE_OPTIONS: Record<Profile, ProfileOption> = {
   estudiante: {
     label: "Soy estudiante",
-    description: "Cuéntame lo que pasa con tus compañeros, en el colegio o en redes.",
     icon: Backpack,
     welcome:
-      "Hola. Soy el Oráculo, una inteligencia artificial que te escucha y te ayuda a pensar qué hacer. Puedes contarme lo que pasa a tu ritmo, sin decir nombres. ¿Qué te gustaría contarme?",
+      "Gracias por contarme. Aquí puedes hablar de lo que pasa con tus compañeros, en el colegio o en redes, a tu ritmo y sin decir nombres. ¿Qué te gustaría contarme?",
   },
   docente: {
     label: "Soy docente",
-    description: "Te oriento para manejar una situación de convivencia con tus estudiantes.",
     icon: GraduationCap,
     welcome:
-      "Hola. Soy el Oráculo, una inteligencia artificial que orienta sobre convivencia escolar. Cuéntame la situación sin nombres de estudiantes: qué pasó y qué te preocupa.",
+      "Gracias. Te oriento para manejar una situación de convivencia con tus estudiantes. Cuéntame qué pasó y qué te preocupa, sin nombres de estudiantes.",
   },
   familia: {
     label: "Soy padre, madre o cuidador",
-    description: "Te oriento para acompañar a tu hijo o hija.",
     icon: House,
     welcome:
-      "Hola. Soy el Oráculo, una inteligencia artificial que orienta a las familias sobre convivencia, acoso y redes. Cuéntame qué está pasando, sin nombres.",
+      "Gracias. Te oriento para acompañar a tu hijo o hija en temas de convivencia, acoso y redes. Cuéntame qué está pasando, sin nombres.",
   },
 };
 
@@ -43,19 +39,25 @@ export const ORACLE_TEXT = {
   name: "Oráculo",
   brand: "EmpatIA Digital",
   back: "Volver a EmpatIA",
+  /** Loading screen: a warm hello first, then what is happening. */
+  loading: { title: "Me alegra que hayas venido", text: "Cargando…" },
 
-  /** `hover` replaces the label while the pointer is on the button (desktop only). */
+  /** `hover` replaces the label (or `short`, on phones) while the pointer or a finger is on the button. */
   launcher: { label: "¿Necesitas hablar?", hover: "Hablemos, te escucho", short: "Oráculo" },
 
-  profile: {
-    eyebrow: "Escucha y orientación",
-    title: "¿Quién eres?",
-    lead: "El Oráculo escucha y orienta sobre convivencia escolar, acoso y ciberacoso. No pide tu nombre ni guarda la conversación.",
+  /** Opening of the chat, before a session exists: the Oráculo asks who is talking. */
+  intro: {
+    greeting:
+      "Hola, soy el Oráculo: una inteligencia artificial que escucha y orienta sobre convivencia escolar, acoso y ciberacoso. No pido tu nombre ni guardo la conversación.",
+    question: "Antes de empezar, cuéntame: ¿quién eres?",
+    choices: "¿Quién eres?",
+    hint: "Elige una opción para empezar.",
+    change: "Cambiar",
   },
 
   consent: {
     title: "Antes de empezar",
-    change: "Cambiar",
+    back: "Volver",
     items: {
       estudiante: [
         "Hablo con una inteligencia artificial, no con una persona. Nadie está leyendo en tiempo real.",

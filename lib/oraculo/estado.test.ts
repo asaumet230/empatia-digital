@@ -20,6 +20,20 @@ describe("estado del Oráculo en el navegador", () => {
     expect(s).toMatchObject({ phase: "chat", profile: "estudiante", token: "t0", busy: null });
   });
 
+  it("cerrar la autorización ya en el chat no reinicia la conversación", () => {
+    expect(oracleReducer(chatting(), { type: "volver" })).toMatchObject({ phase: "chat", token: "t0" });
+  });
+
+  it("si se cierra la autorización mientras abre la sesión, no entra al chat", () => {
+    const s = run(
+      { type: "elegir", profile: "docente" },
+      { type: "iniciando" },
+      { type: "volver" },
+      { type: "iniciada", info: { token: "t0", remaining: 30, endsAt: 0 } },
+    );
+    expect(s).toMatchObject({ phase: "perfil", profile: null, token: null, busy: null });
+  });
+
   it("muestra el mensaje enviado mientras llega la respuesta, y luego guarda ambos", () => {
     let s = oracleReducer(chatting(), { type: "enviando", text: "hola" });
     expect(s).toMatchObject({ busy: "send", pending: "hola" });

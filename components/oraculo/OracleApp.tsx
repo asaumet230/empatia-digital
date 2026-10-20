@@ -2,42 +2,31 @@
 
 import { ChatView } from "@/components/oraculo/ChatView";
 import { ClosingView } from "@/components/oraculo/ClosingView";
-import { ConsentStep } from "@/components/oraculo/ConsentStep";
-import { OracleHeader } from "@/components/oraculo/OracleHeader";
-import { ProfileStep } from "@/components/oraculo/ProfileStep";
-import { useEffect } from "react";
+import { OracleSplash } from "@/components/oraculo/OracleSplash";
+import { useEffect, useState } from "react";
 import { useOracle } from "@/hooks/useOracle";
 
-/** The Oráculo flow: profile → consent → chat → closing. Each screen only renders; the hook decides. */
+/** How long the welcome owl stays on screen: a short greeting, not a real wait. */
+const SPLASH_MS = 1200;
+
+/** The Oráculo flow: the chat (who are you → consent → talk), then the closing. The hook decides. */
 export default function OracleApp() {
   const oracle = useOracle();
+  const [greeted, setGreeted] = useState(false);
   const { state } = oracle;
   const { profile } = state;
 
-  // Every screen starts at the top
+  // The closing screen starts at the top
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (state.phase === "cierre") window.scrollTo(0, 0);
   }, [state.phase]);
 
-  if (state.phase === "chat" && profile) return <ChatView profile={profile} oracle={oracle} />;
-  if (state.phase === "cierre" && profile) return <ClosingView profile={profile} state={state} onRestart={oracle.restart} />;
+  useEffect(() => {
+    const id = setTimeout(() => setGreeted(true), SPLASH_MS);
+    return () => clearTimeout(id);
+  }, []);
 
-  return (
-    <div className="min-h-dvh">
-      <OracleHeader />
-      <main>
-        {state.phase === "consentimiento" && profile ? (
-          <ConsentStep
-            profile={profile}
-            starting={state.busy === "start"}
-            error={state.error}
-            onBack={oracle.back}
-            onStart={oracle.start}
-          />
-        ) : (
-          <ProfileStep onChoose={oracle.choose} />
-        )}
-      </main>
-    </div>
-  );
+  if (!greeted) return <OracleSplash />;
+  if (state.phase === "cierre" && profile) return <ClosingView profile={profile} state={state} onRestart={oracle.restart} />;
+  return <ChatView oracle={oracle} />;
 }

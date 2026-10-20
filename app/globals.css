@@ -283,6 +283,61 @@ html:has(.oraculo-theme) body {
   animation: owl-turn 0.9s cubic-bezier(0.45, 0, 0.25, 1.08);
 }
 
+/* The Oráculo owl (components/oraculo/OwlMascot.tsx): the raised wing waves from the shoulder,
+   the eyes blink now and then, and the motion lines pulse with the wave */
+.owl-mascot .owl-wing {
+  transform-origin: 275px 310px;
+  animation: owl-wave 1.6s ease-in-out infinite;
+}
+
+/* Each eye sets its own transform-origin (its centre) inline */
+.owl-mascot .owl-eye {
+  animation: owl-blink 3.6s ease-in-out infinite;
+  /* Starts mid-cycle so the first blink comes within a second (the loading screen is short) */
+  animation-delay: -2.6s;
+}
+
+.owl-mascot .owl-waves {
+  animation: owl-waves 1.6s ease-in-out infinite;
+}
+
+@keyframes owl-wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes owl-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes owl-waves {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
 @utility animate-dash-flow {
   animation: dash-flow 0.9s linear infinite;
 }

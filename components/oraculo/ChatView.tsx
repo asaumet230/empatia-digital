@@ -2,24 +2,32 @@
 
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { Composer } from "@/components/oraculo/Composer";
+import { ConsentDialog } from "@/components/oraculo/ConsentDialog";
 import { ErrorNotice } from "@/components/oraculo/ErrorNotice";
 import { FinishDialog } from "@/components/oraculo/FinishDialog";
 import { MessageBubble, TypingIndicator } from "@/components/oraculo/MessageBubble";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
+import { ProfileChoices } from "@/components/oraculo/ProfileChoices";
 import { SafetyPanel } from "@/components/oraculo/SafetyPanel";
 import type { OracleControls } from "@/hooks/useOracle";
 import { ORACLE_TEXT, PROFILE_OPTIONS } from "@/lib/oraculo/config/textos";
-import { audienceOf, type Profile } from "@/lib/oraculo/tipos";
+import { audienceOf } from "@/lib/oraculo/tipos";
 
 const t = ORACLE_TEXT.chat;
 
-/** The conversation: fixed welcome, messages, help panels where the server asked for them. */
-export function ChatView({ profile, oracle }: { profile: Profile; oracle: OracleControls }) {
-  const { state, send, finish, restart, dismissError } = oracle;
+/**
+ * The conversation, from its first line: the Oráculo asks who is talking (quick replies), the
+ * consent dialog opens over the chat, and then come the fixed welcome, the messages and the help
+ * panels where the server asked for them. Everything before the session is interface only.
+ */
+export function ChatView({ oracle }: { oracle: OracleControls }) {
+  const { state, choose, back, start, send, finish, restart, dismissError } = oracle;
+  const { profile } = state;
+  const started = state.phase === "chat" && profile !== null;
   const [confirming, setConfirming] = useState(false);
   const end = useRef<HTMLDivElement>(null);
   const latest = useRef<HTMLDivElement>(null);
-  const audience = audienceOf(profile);
+  const audience = profile ? audienceOf(profile) : "estudiante";
   const closing = state.busy === "close";
 
   // While waiting, follow the bottom; when the answer (or a help panel) arrives, show it from its start
@@ -44,19 +52,40 @@ export function ChatView({ profile, oracle }: { profile: Profile; oracle: Oracle
   return (
     <div className="flex min-h-dvh flex-col">
       <OracleHeader>
-        <button
-          type="button"
-          onClick={() => setConfirming(true)}
-          disabled={closing}
-          className="h-10 rounded-full px-3 text-sm font-semibold text-o-muted hover:bg-o-raised hover:text-o-text disabled:opacity-50 sm:px-4"
-        >
-          {t.finish}
-        </button>
+        {started && (
+          <button
+            type="button"
+            onClick={() => setConfirming(true)}
+            disabled={closing}
+            className="h-10 rounded-full px-3 text-sm font-semibold text-o-muted hover:bg-o-raised hover:text-o-text disabled:opacity-50 sm:px-4"
+          >
+            {t.finish}
+          </button>
+        )}
       </OracleHeader>
 
       <main className="flex-1">
         <div role="log" aria-live="polite" aria-label="Conversación" className="mx-auto max-w-3xl space-y-4 px-4 py-6 sm:px-6">
-          <MessageBubble role="oraculo" text={PROFILE_OPTIONS[profile].welcome} />
+          <MessageBubble role="oraculo" text={ORACLE_TEXT.intro.greeting} />
+          <MessageBubble role="oraculo" text={ORACLE_TEXT.intro.question} />
+          {profile ? (
+            <div className="flex flex-col items-end gap-1">
+              <MessageBubble role="usuario" text={PROFILE_OPTIONS[profile].label} />
+              {/* A wrong choice can be fixed until the first message is sent */}
+              {started && state.history.length === 0 && state.busy === null && (
+                <button
+                  type="button"
+                  onClick={restart}
+                  className="px-2 text-sm font-semibold text-o-muted underline-offset-4 hover:text-o-text hover:underline"
+                >
+                  {ORACLE_TEXT.intro.change}
+                </button>
+              )}
+            </div>
+          ) : (
+            <ProfileChoices onChoose={choose} />
+          )}
+          {started && <MessageBubble role="oraculo" text={PROFILE_OPTIONS[profile].welcome} />}
           {state.history.map((message, i) => {
             const last = i === state.history.length - 1;
             // A stop has no reply: its panel is what must be read first
@@ -89,7 +118,7 @@ export function ChatView({ profile, oracle }: { profile: Profile; oracle: Oracle
 
       <footer className="sticky bottom-0 border-t border-o-line bg-o-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
         <div className="mx-auto max-w-3xl space-y-3 px-4 py-3 sm:px-6">
-          {state.error && (
+          {started && state.error && (
             <ErrorNotice
               code={state.error}
               action={
@@ -102,7 +131,9 @@ export function ChatView({ profile, oracle }: { profile: Profile; oracle: Oracle
             />
           )}
 
-          {closing ? (
+          {!started ? (
+            <p className="py-3 text-center text-sm font-semibold text-o-muted">{ORACLE_TEXT.intro.hint}</p>
+          ) : closing ? (
             <p role="status" className="py-3 text-center text-sm font-semibold text-o-muted">
               {ORACLE_TEXT.finish.working}
             </p>
@@ -125,6 +156,14 @@ export function ChatView({ profile, oracle }: { profile: Profile; oracle: Oracle
           )}
         </div>
       </footer>
+
+      <ConsentDialog
+        profile={state.phase === "consentimiento" ? profile : null}
+        starting={state.busy === "start"}
+        error={state.error}
+        onBack={back}
+        onStart={start}
+      />
 
       <FinishDialog
         open={confirming}

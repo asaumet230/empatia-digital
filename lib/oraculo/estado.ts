@@ -101,10 +101,13 @@ export function oracleReducer(state: OracleState, action: OracleAction): OracleS
     case "elegir":
       return { ...INITIAL_STATE, phase: "consentimiento", profile: action.profile };
     case "volver":
-      return { ...INITIAL_STATE };
+      // Only the consent dialog goes back; its own closing when the chat starts must not undo that
+      return state.phase === "consentimiento" ? { ...INITIAL_STATE } : state;
     case "iniciando":
       return { ...state, busy: "start", error: null };
     case "iniciada":
+      // The consent dialog may have been closed while the session was opening: stay where we are
+      if (state.phase !== "consentimiento") return { ...state, busy: null };
       return { ...state, phase: "chat", busy: null, token: action.info.token, remaining: action.info.remaining };
     case "enviando":
       return { ...state, busy: "send", pending: action.text, error: null };
