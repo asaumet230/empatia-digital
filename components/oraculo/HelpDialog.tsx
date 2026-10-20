@@ -11,10 +11,10 @@ export function HelpDialog({ open, onClose }: { open: boolean; onClose: () => vo
   const t = ORACLE_TEXT.helpDialog;
   return (
     <Modal open={open} onClose={onClose} labelledBy="ayuda-titulo">
-      <div className="p-5 md:p-6">
+      <div className="p-4 md:p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 id="ayuda-titulo" className="font-display text-xl font-bold tracking-[-0.02em]">
+            <h2 id="ayuda-titulo" className="font-display text-lg font-bold tracking-[-0.02em]">
               {t.title}
             </h2>
             <p className="mt-1 text-sm text-o-muted">{t.lead}</p>
@@ -23,14 +23,14 @@ export function HelpDialog({ open, onClose }: { open: boolean; onClose: () => vo
             type="button"
             onClick={onClose}
             aria-label={t.close}
-            className="grid size-10 shrink-0 place-items-center rounded-full border border-o-line hover:bg-o-raised"
+            className="grid size-9 shrink-0 place-items-center rounded-full! border border-o-line hover:bg-o-raised"
           >
             <X aria-hidden="true" className="size-5" />
           </button>
         </div>
-        <div className="mt-5 grid gap-3">
+        <div className="mt-4 grid gap-2">
           {Object.entries(HELP_LINES).map(([id, line], i) => (
-            <HelpLineButton key={id} line={line} primary={i === 0} />
+            <HelpLineButton key={id} line={line} primary={i === 0} compact />
           ))}
         </div>
       </div>

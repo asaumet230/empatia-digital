@@ -350,7 +350,7 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 | Comando | Qué revisa | ¿Gasta saldo? |
 |---|---|---|
 | `npm test` | 158 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
-| `npm run test:e2e` | 64 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
+| `npm run test:e2e` | 65 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
 | `npm run eval:riesgo` | Banco de 51 frases contra la IA real; falla si se escapa un peligro | Sí, poco |
 
 Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alarmas del filtro de OpenAI

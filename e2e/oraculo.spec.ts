@@ -128,6 +128,16 @@ test("en un celular pequeño el encabezado cabe completo", async ({ page }) => {
   await expect(page.getByRole("banner").getByRole("button", { name: /^Tema:/ })).toBeInViewport({ ratio: 1 });
 });
 
+test("las líneas de ayuda caben en la ventana sin scroll en un portátil", async ({ page, isMobile }) => {
+  test.skip(isMobile, "pantalla de computador");
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await startSession(page);
+  await page.getByRole("button", { name: "Líneas de ayuda" }).click();
+  const dialog = page.getByRole("dialog", { name: "Líneas de ayuda" });
+  await expect(dialog).toBeVisible();
+  expect(await dialog.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(0);
+});
+
 test("alto riesgo: responde y muestra el panel con botones para llamar", async ({ page }) => {
   await startSession(page);
   await say(page, "#alto todos los días se burlan de mí");
