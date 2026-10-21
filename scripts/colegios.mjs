@@ -55,6 +55,15 @@ function shortName(official) {
   return title.startsWith(NORMAL) ? title.replace(NORMAL, "Escuela Normal Superior La ") : title;
 }
 
+/** Names the schools go by now, when the directory still has the old one (by DANE code). */
+const RENAMED = { "108001009783": "Colegio Mayor de Barranquilla" }; // was IED Alexander Von Humboldt
+
+/** Directory entries that are now part of another school on the list (by DANE code). */
+const MERGED = new Set([
+  "108001000123", // IED Técnica Cruzada Social, now IED Lestonnac
+  "108001079277", // IED Olga Emiliani, now IED Boston
+]);
+
 async function latestYear() {
   const url = `${DATASET}?$select=max(a_o) as year&$where=cod_dane_municipio='${BARRANQUILLA}'`;
   const [{ year }] = await (await fetch(url)).json();
@@ -66,7 +75,8 @@ const where = `cod_dane_municipio='${BARRANQUILLA}' AND a_o='${year}' AND sector
 const rows = await (await fetch(`${DATASET}?$where=${encodeURIComponent(where)}&$limit=1000`)).json();
 
 const schools = rows
-  .map((r) => ({ dane: r.codigo_dane, name: shortName(r.nombre_establecimiento) }))
+  .filter((r) => !MERGED.has(r.codigo_dane))
+  .map((r) => ({ dane: r.codigo_dane, name: RENAMED[r.codigo_dane] ?? shortName(r.nombre_establecimiento) }))
   .sort((a, b) => a.name.localeCompare(b.name, "es"));
 
 const body = `/* ------------------------------------------------------------------ */

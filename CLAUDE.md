@@ -31,10 +31,10 @@ Next.js que mantiene `next dev`; no borrarla.
 **Git y publicación**
 - `main` se publica sola en Vercel (https://empatia-digital.vercel.app) con cada push. **No unir a `main`
   ni hacer push sin permiso explícito.**
-- `main` tiene **en local** todo el trabajo (Oráculo, galería e interruptor `ORACULO_ACTIVO`): va 27 commits por
-  delante de `origin/main`, sin push (`feature/oraculo-chat-directo` se unió el 2026-10-20). Un push a `main` lo
-  publica: el Oráculo saldría oculto (sin `ORACULO_ACTIVO` en Vercel) y la galería activa (`GALERIA_SCRIPT_URL` y
-  `GALERIA_SECRET` ya están en Vercel). **No hacer push sin que el usuario lo pida.**
+- `origin/main` ya tiene el Oráculo, la galería y el interruptor `ORACULO_ACTIVO` (push del 2026-10-20): están
+  **publicados**, con el Oráculo oculto (sin `ORACULO_ACTIVO` en Vercel) y la galería activa (`GALERIA_SCRIPT_URL`
+  y `GALERIA_SECRET` en Vercel). Solo los cambios de esta guía van por delante en local. **No hacer push sin que
+  el usuario lo pida.**
 - Commits solo cuando el usuario lo pide, uno por paso, con mensaje en español.
 
 **Secretos**
@@ -187,8 +187,8 @@ Primeras tres diapositivas del bloque de IA → **"Antes de empezar"** (ciudadan
   6–8 "Sortear reto" por equipo · 8–20 crear en ChatGPT y editar en Canva · 20–25 Galería y votación.
   **Plan B:** si ChatGPT gratis limita las imágenes, el presentador las genera desde su cuenta.
 - **Subir a la galería (`/subir`):** botón "Subir imagen" y la dirección en la diapositiva de la galería. El
-  equipo elige su colegio (autocompletado, solo de la lista: `lib/content/colegios.ts`, 160 colegios públicos de
-  Barranquilla del directorio del MEN 2025, generado con `node scripts/colegios.mjs`) y suelta o elige imágenes.
+  equipo elige su colegio (autocompletado, solo de la lista: `lib/content/colegios.ts`, 158 colegios públicos de
+  Barranquilla del directorio del MEN 2025, generado con `node scripts/colegios.mjs`; nombres corregidos a mano en `RENAMED` y colegios unidos en `MERGED`) y suelta o elige imágenes.
   El navegador las re-dibuja en un canvas (WEBP o JPEG, máx. 2048 px; quita datos ocultos como el GPS) y el
   servidor revisa mismo origen, colegio, tamaño (4 MB, por el límite de 4,5 MB de Vercel) y el tipo real por sus
   bytes (solo PNG, JPEG, WEBP; nunca SVG). Se guardan en el Drive de la Fundación, una carpeta por colegio, con
@@ -382,7 +382,7 @@ components/oraculo/             OracleSplash, OwlMascot, ChatView, ConsentDialog
 
 | Comando | Qué revisa | ¿Gasta saldo? |
 |---|---|---|
-| `npm test` | 173 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
+| `npm test` | 177 pruebas: reglas, pase, riesgo, orquestador, estado, textos legales y guardas de privacidad del código | No |
 | `npm run test:e2e` | 71 pruebas en computador, iPhone (WebKit) y Android con IA simulada: flujo completo, panel, pausa, errores, límite 31, origen y pase falsos, accesibilidad (axe) claro y oscuro, y que ningún mensaje llegue al registro del servidor | No |
 | `npm run eval:riesgo` | Banco de 51 frases contra la IA real; falla si se escapa un peligro | Sí, poco |
 
@@ -399,7 +399,7 @@ Resultado del banco: 0 peligros sin detectar en 6 corridas. Quedan 2 falsas alar
    (`openssl rand -base64 48`). Nunca `ORACULO_IA_SIMULADA`. Cuando se apruebe, `ORACULO_ACTIVO=true` y redeploy
    (sin ella, el sitio se puede publicar con el Oráculo oculto).
 6. Vercel → Firewall: límite por visitante para `/api/oraculo/` (por ejemplo, 20 por minuto por IP).
-7. Hacer push de `main` (el Oráculo ya está unido en local) y probar en un iPhone y un Android reales: un caso normal, uno serio
+7. El código ya está publicado (oculto): tras activarlo, probar en un iPhone y un Android reales: un caso normal, uno serio
    (sale el panel) y uno de peligro (se pausa).
 
 ### 8.7 Avance
