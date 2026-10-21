@@ -1,7 +1,7 @@
 "use client";
 
 import { MotionConfig, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { EvaluationButton } from "@/components/presentation/EvaluationButton";
 import { Intro } from "@/components/presentation/Intro";
 import { SessionSwitcher } from "@/components/presentation/SessionSwitcher";
@@ -29,14 +29,29 @@ export function Presentation({ track }: { track: TrackId }) {
   const ids = useMemo(() => navItems.map((s) => s.id), [navItems]);
   const active = useActiveSection(ids);
 
-  // Always start at the top; hold the scroll while the system boots.
+  // A slide in the address (`/estudiantes#paz-galeria`, e.g. coming back from /subir) opens right
+  // there, without the intro. Otherwise start at the top and hold the scroll while the system boots.
+  const openAt = useRef<string | null>(null);
   useEffect(() => {
     history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
-  }, []);
+    const target = decodeURIComponent(window.location.hash.slice(1));
+    if (target !== INTRO_SECTION.id && ids.includes(target)) {
+      openAt.current = target;
+      skip();
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [ids, skip]);
 
   useEffect(() => {
     document.documentElement.dataset.intro = ready ? "done" : "booting";
+  }, [ready]);
+
+  // After the effect above has unlocked the scroll, jump to the slide from the address
+  useEffect(() => {
+    if (!ready || !openAt.current) return;
+    document.getElementById(openAt.current)?.scrollIntoView({ behavior: "instant", block: "start" });
+    openAt.current = null;
   }, [ready]);
 
   // Leaving the presentation (e.g. back to the home page) must never leave the page locked
