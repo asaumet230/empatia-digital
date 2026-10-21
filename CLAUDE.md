@@ -31,12 +31,10 @@ Next.js que mantiene `next dev`; no borrarla.
 **Git y publicación**
 - `main` se publica sola en Vercel (https://empatia-digital.vercel.app) con cada push. **No unir a `main`
   ni hacer push sin permiso explícito.**
-- El Oráculo ya está unido a `main` **en local** (`main` va 13 commits por delante de `origin/main`, sin
-  push; `feature/oraculo` quedó atrás). Un push a `main` lo publicaría: **no hacer push ni configurar Vercel
-  hasta que el usuario lo pida** (decisión del 2026-10-13; verificado el 2026-10-20).
-- La rama `feature/oraculo-chat-directo` tiene commits que **aún no están en `main`** (desde `0d17d54`:
-  pantalla de carga, inicio conversado, chat estilo WhatsApp, emojis, tema, apodo, ícono de la persona en sus
-  mensajes y la corrección del origen `null` en la API).
+- `main` tiene **en local** todo el trabajo (Oráculo, galería e interruptor `ORACULO_ACTIVO`): va 27 commits por
+  delante de `origin/main`, sin push (`feature/oraculo-chat-directo` se unió el 2026-10-20). Un push a `main` lo
+  publica: el Oráculo saldría oculto (sin `ORACULO_ACTIVO` en Vercel) y la galería activa (`GALERIA_SCRIPT_URL` y
+  `GALERIA_SECRET` ya están en Vercel). **No hacer push sin que el usuario lo pida.**
 - Commits solo cuando el usuario lo pide, uno por paso, con mensaje en español.
 
 **Secretos**
