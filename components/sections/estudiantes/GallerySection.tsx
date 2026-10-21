@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Vote } from "lucide-react";
+import { ImageUp, Vote } from "lucide-react";
+import Link from "next/link";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
+import { PUBLIC_SITE_URL } from "@/lib/constants";
 import { GALLERY, POLL_HINT } from "@/lib/content/estudiantes";
+import { UPLOAD_TEXT } from "@/lib/content/galeria";
 import type { SectionProps } from "@/types/presentation";
 
 /** Each team shows its piece; the class votes with three simple criteria, then the closing line. */
@@ -37,6 +40,22 @@ export function GallerySection({ id, index, label }: SectionProps) {
         <motion.p variants={fadeUp} className="mt-5 text-lg leading-snug text-gray-text md:text-2xl">
           {GALLERY.lead}
         </motion.p>
+
+        {/* The students type this short address on their phones; the button opens it here, and
+            its "Volver" comes back to this slide */}
+        <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link
+            href={UPLOAD_TEXT.path}
+            className="inline-flex items-center gap-3 rounded-full bg-yellow px-7 py-3.5 font-display text-lg font-bold text-navy-dark shadow-lg shadow-yellow/25 transition-[filter,transform] hover:brightness-105 active:scale-[0.98] md:px-8 md:py-4 md:text-xl"
+          >
+            <ImageUp aria-hidden="true" className="size-6" strokeWidth={2.25} />
+            {UPLOAD_TEXT.slideButton}
+          </Link>
+          <span className="font-mono text-base text-gray-light md:text-lg">
+            {new URL(PUBLIC_SITE_URL).host}
+            <span className="text-green-bright">{UPLOAD_TEXT.path}</span>
+          </span>
+        </motion.div>
 
         <ul className="mt-8 grid gap-3 md:grid-cols-3 md:gap-5">
           {GALLERY.criteria.map(({ mark, text }) => (

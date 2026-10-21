@@ -1,6 +1,7 @@
 import "server-only";
 import { z, type ZodType } from "zod";
 import { ORACLE_ENABLED } from "@/lib/oraculo/activo";
+import { isSameOrigin } from "@/lib/mismo-origen";
 import { LIMITS } from "@/lib/oraculo/config/limites";
 import { InvalidMessageError } from "@/lib/oraculo/conversacion/orquestador";
 import { AiUnavailableError } from "@/lib/oraculo/ia/modelo";
@@ -21,11 +22,8 @@ export const HistorySchema = z.array(MessageSchema).max(LIMITS.maxHistoryMessage
 class BadRequestError extends Error {}
 class ForbiddenError extends Error {}
 
-/** Only our own pages may call the API (blocks other sites from spending our OpenAI budget). */
 function assertSameOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (!origin || !host || !URL.canParse(origin) || new URL(origin).host !== host) throw new ForbiddenError();
+  if (!isSameOrigin(request)) throw new ForbiddenError();
 }
 
 async function readBody<T>(request: Request, schema: ZodType<T>): Promise<T> {

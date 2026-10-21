@@ -78,6 +78,7 @@ Por Una Sonrisa, todavía sin publicar.
 | `/familias` | Padres, madres y acudientes | *Hogares conectados, familias empáticas* (2 h) |
 | `/oraculo` | Estudiantes, docentes, familias | Oráculo (en `main` local, sin publicar) |
 | `/oraculo/privacidad`, `/oraculo/terminos`, `/oraculo/autorizacion` | Familias y colegios | Textos legales del Oráculo: privacidad, términos y autorización (2 hojas) finales, 2026-10-18 |
+| `/subir` | Estudiantes | Subir a la galería la imagen de "Creadores de paz" (§4) |
 | `/privacidad`, `/terminos` | Todos | Política de privacidad y términos del sitio (versión final, `components/ui/PolicyPage.tsx`) |
 
 ---
@@ -86,7 +87,8 @@ Por Una Sonrisa, todavía sin publicar.
 
 ```
 app/                      rutas, layout, fuentes y tokens de diseño (globals.css)
-  api/oraculo/            único backend: sesion, mensaje, cierre (POST)
+  api/oraculo/            backend del Oráculo: sesion, mensaje, cierre (POST)
+  api/galeria/            subida de imágenes de la galería (POST, multipart)
 components/presentation/  Presentation (raíz), Intro, Section, ProgressNavigation, SessionSwitcher,
                           EvaluationButton (pretest/postest)
 components/intro/         BootSequence, BrandReveal, NetworkBackground (canvas), IntroHud
@@ -95,10 +97,13 @@ components/sections/      una diapositiva por archivo (ia/, prompt/, report/, fa
 components/ui/            piezas reutilizables (Eyebrow, PulseDot, CopyButton, QrCode, QrDialogButton, BrandIcon, VideoGuide,
                           SiteFooter: pie general en inicio, sesiones —con los enlaces a las otras sesiones— y páginas legales del Oráculo)
 components/oraculo/       interfaz del Oráculo
+components/galeria/       subida a la galería: GalleryUpload (caja para soltar), SchoolPicker (autocompletado)
 hooks/                    useIntroTimeline, useActiveSection, useOracle, useDismiss (cerrar menús al tocar afuera o con Esc)
 lib/                      constants, animations, intro-timeline, sections (TRACKS), cn, clipboard
 lib/content/              todos los textos y datos de la presentación
 lib/oraculo/              lógica del Oráculo (§8.3)
+lib/galeria/              subida: imagen (tipo real por bytes, límite), cliente (re-dibuja en canvas), destino (Drive)
+lib/mismo-origen.ts       chequeo de mismo origen compartido por las dos APIs
 e2e/                      pruebas de punta a punta (Playwright)
 public/assets/            logos, imágenes, videos y datos de ejemplo (se referencian como /assets/...)
 ```
@@ -126,6 +131,7 @@ public/assets/            logos, imágenes, videos y datos de ejemplo (se refere
 | Ir a una diapositiva | Índice lateral derecho (escritorio) |
 | Avanzar en "¿Cómo está construido este prompt?" | ← → (no interfieren con ↑ ↓) |
 | Cerrar un panel o volver al resumen | `Esc` |
+| Abrir directo en una diapositiva (sin intro) | `/estudiantes#paz-galeria` (el `id` de `TRACKS`); lo usa "Volver" de `/subir` |
 
 Elementos fijos: menú de sesiones ☰ (arriba a la izquierda, con Inicio, Docentes, Estudiantes y
 Familias), botón **Pretest y postest** (abajo a la derecha, solo en estudiantes; abre una ventana con los dos
@@ -182,6 +188,21 @@ Primeras tres diapositivas del bloque de IA → **"Antes de empezar"** (ciudadan
 - **"Creadores de paz" (~25 min):** 0–3 Arma tu prompt (tema, formato, estilo, colores) · 3–6 partes ·
   6–8 "Sortear reto" por equipo · 8–20 crear en ChatGPT y editar en Canva · 20–25 Galería y votación.
   **Plan B:** si ChatGPT gratis limita las imágenes, el presentador las genera desde su cuenta.
+- **Subir a la galería (`/subir`):** botón "Subir imagen" y la dirección en la diapositiva de la galería. El
+  equipo elige su colegio (autocompletado, solo de la lista: `lib/content/colegios.ts`, 160 colegios públicos de
+  Barranquilla del directorio del MEN 2025, generado con `node scripts/colegios.mjs`) y suelta o elige imágenes.
+  El navegador las re-dibuja en un canvas (WEBP o JPEG, máx. 2048 px; quita datos ocultos como el GPS) y el
+  servidor revisa mismo origen, colegio, tamaño (4 MB, por el límite de 4,5 MB de Vercel) y el tipo real por sus
+  bytes (solo PNG, JPEG, WEBP; nunca SVG). Se guardan en el Drive de la Fundación, una carpeta por colegio, con
+  un Google Apps Script (`GALERIA_SCRIPT_URL`, `GALERIA_SECRET`); sin ellas la API responde
+  `no_configurada`. `GALERIA_SIMULADA=1` acepta todo sin guardar (solo pruebas/local; en Vercel se ignora).
+  **Script de Drive** (`scripts/galeria-drive.gs`): carpeta "Galería EmpatIA" en Drive → script.google.com,
+  proyecto nuevo con ese código → propiedades `SECRET` y `FOLDER_ID` → Implementar como aplicación web
+  (ejecutar como "Yo", acceso "Cualquier usuario") → la URL `/exec` va en `GALERIA_SCRIPT_URL` y el mismo
+  secreto en `GALERIA_SECRET` (`.env.local` y Vercel, con redeploy). Si se cambia el código, hay que crear una
+  versión nueva de la implementación. Archivos: `aaaa-mm-dd HH.mm.ss xxxx.webp`.
+  **Pendiente:** una línea en la política del sitio (`privacidad.ts`, revisión
+  del abogado) sobre las imágenes de la galería; límite por visitante en Vercel para `/api/galeria`.
 - Textos en `lib/content/estudiantes.ts`. Votaciones: Mentimeter o a mano alzada (no hay integración).
 
 ---
@@ -220,6 +241,7 @@ falla por lo largo del prompt, usar "Copiar prompt".
 | Datos de ejemplo | `lib/content/encuesta-ejemplo.ts`, `lib/content/rubrica-ejemplo.ts` |
 | Familias / estudiantes | `lib/content/familias.ts` / `lib/content/estudiantes.ts` |
 | Pretest y postest | `lib/content/evaluacion.ts` |
+| Subida a la galería (textos) / lista de colegios | `lib/content/galeria.ts` / `node scripts/colegios.mjs` |
 | Pie general (políticas, aliados, contacto, líneas 123 y 141) | `lib/content/sitio.ts` (`ready: false` muestra "Próximamente") |
 | Política de privacidad y términos del sitio (`/privacidad`, `/terminos`) | `lib/content/privacidad.ts` y `lib/content/terminos.ts` (responsable: Fundación Por Una Sonrisa; proveedores Vercel, Google Forms, Mentimeter, OpenAI) |
 | Videos de Tally | `lib/content/tally-guia.ts` |
