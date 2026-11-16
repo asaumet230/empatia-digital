@@ -29,7 +29,7 @@ Next.js que mantiene `next dev`; no borrarla.
   misma carpeta: usar el suyo o `next start` en otro puerto. **No cerrar su servidor.**
 
 **Git y publicación**
-- `main` se publica sola en Vercel (https://empatia-digital.vercel.app) con cada push. **No unir a `main`
+- `main` se publica sola en Vercel (https://www.empatia-digital.com) con cada push. **No unir a `main`
   ni hacer push sin permiso explícito.**
 - `origin/main` ya tiene el Oráculo, la galería y el interruptor `ORACULO_ACTIVO` (push del 2026-10-20): están
   **publicados**, con el Oráculo oculto (sin `ORACULO_ACTIVO` en Vercel) y la galería activa (`GALERIA_SCRIPT_URL`
@@ -64,7 +64,7 @@ PowerPoint: es una página web por sesión, donde cada sección es una "diaposit
 teclado o un presentador inalámbrico. Incluye el **Oráculo** (§8), un chat con IA de PazLab y la Fundación
 Por Una Sonrisa, todavía sin publicar.
 
-- **Publicado:** https://empatia-digital.vercel.app · **Repositorio:** https://github.com/asaumet230/empatia-digital
+- **Publicado:** https://www.empatia-digital.com · **Repositorio:** https://github.com/asaumet230/empatia-digital
 - **Stack:** Next.js 16.4 (App Router, Turbopack) · React 19.2 · TypeScript estricto · Tailwind CSS 4 ·
   framer-motion · lucide-react · qrcode. Oráculo: openai 7 · zod 4. Pruebas: Vitest 4 y Playwright.
 
@@ -258,6 +258,12 @@ falla por lo largo del prompt, usar "Copiar prompt".
 - La prueba de accesibilidad "perfil, consentimiento, chat con panel…" fallaba a veces por contraste del botón
   "Finalizar": el encabezado del Oráculo era semitransparente y el chat pasaba por debajo. Desde el 2026-10-19 el
   encabezado es sólido (`OracleHeader`).
+- Auditoría del 2026-10-25: `npm test` (177), `eslint`, `next build` y `npm audit --omit=dev` limpios. Pendientes:
+  límite por visitante en Vercel para `/api/galeria` (ya publicada; el chequeo de origen no frena a un script, que
+  podría llenar el Drive de 15 GB); la política del sitio no nombra la galería ni Google Drive; sin cabeceras de
+  seguridad (`headers()` en `next.config.ts`: `X-Frame-Options`, `nosniff`); actualizaciones menores de
+  `openai`, `lucide-react`, `playwright`, `vitest`. El 2026-11-16 `next` y `eslint-config-next` pasaron a 16.4.6
+  (avisos de seguridad de la 16.4.5; la 16.4.3 arregla el fallo de `next build` con Turbopack al bajar fuentes de Google).
 - El ícono "N" de Next.js (solo en desarrollo) va arriba a la derecha (`devIndicators` en `next.config.ts`)
   para no tapar el botón del Oráculo.
 
