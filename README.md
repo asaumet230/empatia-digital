@@ -7,7 +7,7 @@ y orientación con IA (en desarrollo, sin publicar).
 📘 **[CLAUDE.md](CLAUDE.md)**: la guía completa. Dinámica del taller, materiales, dónde se
 cambia cada cosa, el Oráculo, decisiones e historial.
 
-**Publicado:** https://empatia-digital.vercel.app (cada push a `main` publica)
+**Publicado:** https://www.empatia-digital.com (cada push a `main` publica)
 
 ```bash
 npm install

@@ -3,7 +3,7 @@
  * While developing (`npm run dev`) it points to the local server.
  */
 /** Published address, shown on the home page so attendees can type it even while presenting from localhost. */
-export const PUBLIC_SITE_URL = "https://empatia-digital.vercel.app";
+export const PUBLIC_SITE_URL = "https://www.empatia-digital.com";
 const DEFAULT_SITE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : PUBLIC_SITE_URL;
 export const SITE_URL = (process.env.SITE_URL ?? DEFAULT_SITE_URL).replace(/\/$/, "");
 

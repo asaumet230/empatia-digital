@@ -20,7 +20,7 @@ export const PRIVACY_META = {
   title: "Política de privacidad y tratamiento de datos personales",
   version: "1.0",
   updated: "18 de octubre de 2026",
-  site: "https://empatia-digital.vercel.app",
+  site: "https://www.empatia-digital.com",
 } as const;
 
 /** Plain-language summary shown first: most readers are families and teachers. */
@@ -84,7 +84,7 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
       "Esta política se aplica a los datos personales tratados en el marco de EmpatIA Digital, particularmente mediante:",
       {
         list: [
-          "La plataforma web oficial (https://empatia-digital.vercel.app).",
+          "La plataforma web oficial (https://www.empatia-digital.com).",
           "Las actividades educativas dirigidas a estudiantes.",
           "Las capacitaciones para docentes.",
           "Las actividades formativas para padres, madres y cuidadores.",
@@ -96,7 +96,7 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
         ],
       },
       "La política comprende tanto el tratamiento realizado en medios digitales como aquel efectuado en documentos físicos, cuando corresponda a la ejecución de EmpatIA Digital.",
-      "Tratamiento especial del chat Oráculo: el componente denominado Oráculo, que utiliza inteligencia artificial para orientar conversaciones sobre convivencia escolar, acoso y ciberacoso, dispone de una política de privacidad específica que complementa el presente documento, disponible en https://empatia-digital.vercel.app/oraculo/privacidad.",
+      "Tratamiento especial del chat Oráculo: el componente denominado Oráculo, que utiliza inteligencia artificial para orientar conversaciones sobre convivencia escolar, acoso y ciberacoso, dispone de una política de privacidad específica que complementa el presente documento, disponible en https://www.empatia-digital.com/oraculo/privacidad.",
     ],
   },
   {
@@ -336,7 +336,7 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
     title: "19. Modificaciones de la política",
     blocks: [
       "La Fundación Por Una Sonrisa podrá actualizar esta política cuando se presenten modificaciones normativas, institucionales o tecnológicas, o cambios en las finalidades del tratamiento. Las modificaciones sustanciales se comunicarán oportunamente antes de implementar los tratamientos afectados.",
-      "La versión vigente puede consultarse en https://empatia-digital.vercel.app/privacidad.",
+      "La versión vigente puede consultarse en https://www.empatia-digital.com/privacidad.",
     ],
   },
   {

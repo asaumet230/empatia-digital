@@ -41,7 +41,7 @@ export const TERMS: readonly PolicySection[] = [
           "Teléfono: +57 314 596 7994.",
         ],
       },
-      "Estos términos regulan el acceso y uso de la plataforma general de EmpatIA Digital, sus materiales educativos, presentaciones, actividades y formularios. No sustituyen las condiciones específicas del chat Oráculo, disponibles en https://empatia-digital.vercel.app/oraculo/terminos.",
+      "Estos términos regulan el acceso y uso de la plataforma general de EmpatIA Digital, sus materiales educativos, presentaciones, actividades y formularios. No sustituyen las condiciones específicas del chat Oráculo, disponibles en https://www.empatia-digital.com/oraculo/terminos.",
     ],
   },
   {
@@ -91,7 +91,7 @@ export const TERMS: readonly PolicySection[] = [
       "Las actividades de EmpatIA Digital pueden explicar o demostrar herramientas de inteligencia artificial de terceros. Sus respuestas o resultados pueden contener errores, sesgos o información desactualizada y deben verificarse antes de utilizarse para tomar decisiones relevantes.",
       "El acceso a servicios externos está sujeto a las condiciones, edades mínimas y políticas de privacidad de cada proveedor. Por ejemplo, ChatGPT exige tener al menos 13 años y, para menores de 18, el permiso de su padre, madre o representante legal. Si un estudiante no cumple esos requisitos o no cuenta con el permiso, no debe usar la herramienta: el docente o el facilitador realiza la actividad desde su propia cuenta y la comparte con el grupo.",
       "La Fundación no presenta esos servicios como sustitutos de orientación profesional ni garantiza la disponibilidad o exactitud de plataformas ajenas.",
-      "El chat Oráculo tiene reglas propias, incluidas advertencias sobre su naturaleza automatizada, privacidad y manejo de situaciones de riesgo: https://empatia-digital.vercel.app/oraculo/terminos y https://empatia-digital.vercel.app/oraculo/privacidad.",
+      "El chat Oráculo tiene reglas propias, incluidas advertencias sobre su naturaleza automatizada, privacidad y manejo de situaciones de riesgo: https://www.empatia-digital.com/oraculo/terminos y https://www.empatia-digital.com/oraculo/privacidad.",
     ],
   },
   {
@@ -123,7 +123,7 @@ export const TERMS: readonly PolicySection[] = [
     id: "privacidad",
     title: "11. Privacidad y datos personales",
     blocks: [
-      "El tratamiento de datos personales se rige por la Política de Privacidad y Tratamiento de Datos Personales de EmpatIA Digital, disponible en https://empatia-digital.vercel.app/privacidad. El chat Oráculo tiene además una política específica en https://empatia-digital.vercel.app/oraculo/privacidad.",
+      "El tratamiento de datos personales se rige por la Política de Privacidad y Tratamiento de Datos Personales de EmpatIA Digital, disponible en https://www.empatia-digital.com/privacidad. El chat Oráculo tiene además una política específica en https://www.empatia-digital.com/oraculo/privacidad.",
       "Aceptar estos términos no equivale automáticamente a otorgar autorizaciones para tratamientos de datos que requieran un consentimiento separado, ni para la publicación de fotografías de menores.",
     ],
   },

@@ -285,8 +285,8 @@ export const PRIVACY_POLICY: readonly LegalSection[] = [
     id: "relacion",
     title: "17. Relación con la Política de Privacidad general",
     blocks: [
-      "Esta política complementa la Política de Privacidad y Tratamiento de Datos Personales de EmpatIA Digital, disponible en https://empatia-digital.vercel.app/privacidad. Cuando una disposición de esta política regula específicamente el funcionamiento de Oráculo, se aplicará dicha disposición, sin desconocer las obligaciones legales generales.",
-      "Los términos y condiciones de uso de Oráculo están disponibles en https://empatia-digital.vercel.app/oraculo/terminos.",
+      "Esta política complementa la Política de Privacidad y Tratamiento de Datos Personales de EmpatIA Digital, disponible en https://www.empatia-digital.com/privacidad. Cuando una disposición de esta política regula específicamente el funcionamiento de Oráculo, se aplicará dicha disposición, sin desconocer las obligaciones legales generales.",
+      "Los términos y condiciones de uso de Oráculo están disponibles en https://www.empatia-digital.com/oraculo/terminos.",
     ],
   },
   {
@@ -294,7 +294,7 @@ export const PRIVACY_POLICY: readonly LegalSection[] = [
     title: "18. Cambios y actualizaciones",
     blocks: [
       "La Fundación Por Una Sonrisa podrá actualizar esta política para reflejar modificaciones legales, técnicas, institucionales o cambios en los servicios tecnológicos utilizados. Los cambios sustanciales que afecten el tratamiento de datos personales serán informados oportunamente.",
-      "Cuando una modificación implique nuevas finalidades o tratamientos que requieran autorización adicional, esta deberá obtenerse antes de iniciar dichos tratamientos. La versión vigente permanecerá disponible en https://empatia-digital.vercel.app/oraculo/privacidad.",
+      "Cuando una modificación implique nuevas finalidades o tratamientos que requieran autorización adicional, esta deberá obtenerse antes de iniciar dichos tratamientos. La versión vigente permanecerá disponible en https://www.empatia-digital.com/oraculo/privacidad.",
     ],
   },
   {
@@ -385,7 +385,7 @@ export const TERMS: readonly LegalSection[] = [
     id: "autorizacion",
     title: "5. Autorización para menores de edad",
     blocks: [
-      "Antes de utilizar Oráculo, los estudiantes menores de edad deberán contar con la autorización de su padre, madre o representante legal. La autorización se recoge en el colegio con el formato disponible en https://empatia-digital.vercel.app/oraculo/autorizacion, que informa, entre otros aspectos:",
+      "Antes de utilizar Oráculo, los estudiantes menores de edad deberán contar con la autorización de su padre, madre o representante legal. La autorización se recoge en el colegio con el formato disponible en https://www.empatia-digital.com/oraculo/autorizacion, que informa, entre otros aspectos:",
       {
         list: [
           "La naturaleza de la herramienta.",
@@ -443,7 +443,7 @@ export const TERMS: readonly LegalSection[] = [
     blocks: [
       "Oráculo está diseñado para reducir la recopilación de información personal. Las conversaciones se guardan solo en la pestaña abierta del navegador del usuario y no se almacenan en bases de datos de la Fundación.",
       "Los mensajes son procesados mediante servicios de OpenAI para revisar posibles señales de riesgo y generar las respuestas.",
-      "El tratamiento de datos personales, incluidos los datos que puedan ser sensibles, se regula en la Política de Privacidad de Oráculo, disponible en https://empatia-digital.vercel.app/oraculo/privacidad. Los usuarios deberán consultarla antes de comenzar a utilizar Oráculo.",
+      "El tratamiento de datos personales, incluidos los datos que puedan ser sensibles, se regula en la Política de Privacidad de Oráculo, disponible en https://www.empatia-digital.com/oraculo/privacidad. Los usuarios deberán consultarla antes de comenzar a utilizar Oráculo.",
       "El uso de la herramienta no implica que las conversaciones sean completamente anónimas ni que los proveedores tecnológicos carezcan de acceso técnico a la información necesaria para prestar el servicio.",
     ],
   },
@@ -590,7 +590,7 @@ export const TERMS: readonly LegalSection[] = [
     id: "vigencia",
     title: "20. Modificaciones y vigencia",
     blocks: [
-      "La Fundación Por Una Sonrisa podrá actualizar estos términos cuando existan cambios normativos, técnicos o institucionales. Las modificaciones sustanciales serán comunicadas oportunamente. La versión vigente permanecerá disponible en https://empatia-digital.vercel.app/oraculo/terminos.",
+      "La Fundación Por Una Sonrisa podrá actualizar estos términos cuando existan cambios normativos, técnicos o institucionales. Las modificaciones sustanciales serán comunicadas oportunamente. La versión vigente permanecerá disponible en https://www.empatia-digital.com/oraculo/terminos.",
       "Estos términos rigen a partir de su publicación, el 18 de octubre de 2026. Versión 1.0.",
     ],
   },
