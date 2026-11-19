@@ -1,12 +1,40 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef } from "react";
+import { parseAlias } from "@/lib/oraculo/apodo";
 import { ApiError, closeSession, sendMessage, startSession } from "@/lib/oraculo/cliente";
 import { deserialize, oracleReducer, serialize, type OracleState } from "@/lib/oraculo/estado";
-import { parseAlias } from "@/lib/oraculo/apodo";
 import { detectProfile } from "@/lib/oraculo/perfil";
 
 const STORAGE_KEY = "oraculo:sesion";
+
+/**
+ * sessionStorage can throw (storage blocked, e.g. Chrome with all cookies blocked, or full). The
+ * chat must still work: it just won't survive a reload in that browser.
+ */
+const storage = {
+  read: () => {
+    try {
+      return sessionStorage.getItem(STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  },
+  write: (value: string) => {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      // Blocked or full: keep going without saving
+    }
+  },
+  clear: () => {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Blocked: nothing was saved
+    }
+  },
+};
 
 const errorCode = (error: unknown) => (error instanceof ApiError ? error.code : "error_interno");
 
@@ -17,14 +45,14 @@ const errorCode = (error: unknown) => (error instanceof ApiError ? error.code : 
  */
 export function useOracle() {
   const [state, dispatch] = useReducer(oracleReducer, undefined, () =>
-    deserialize(sessionStorage.getItem(STORAGE_KEY)),
+    deserialize(storage.read()),
   );
   // Calls read the latest state without being recreated on every change
   const latest = useRef<OracleState>(state);
 
   useEffect(() => {
     latest.current = state;
-    sessionStorage.setItem(STORAGE_KEY, serialize(state));
+    storage.write(serialize(state));
   }, [state]);
 
   /** The Oráculo's next fixed line in the opening (greeting or retry); the screen times it. */
@@ -45,7 +73,7 @@ export function useOracle() {
   const dismissError = useCallback(() => dispatch({ type: "descartar_error" }), []);
 
   const restart = useCallback(() => {
-    sessionStorage.removeItem(STORAGE_KEY);
+    storage.clear();
     dispatch({ type: "reiniciar" });
   }, []);
 
