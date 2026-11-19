@@ -52,5 +52,5 @@ Si cambias el código del script, crea una **versión nueva** de la implementaci
 
 ## Pendientes
 
-- **Límite por visitante** en Vercel → Firewall para `/api/galeria`. El chequeo de origen frena a otros sitios web, pero no a un programa, que podría llenar el Drive (15 GB).
+- **Límite por visitante** en Vercel → Firewall para `/api/galeria`. El chequeo de origen frena a otros sitios web, pero no a un programa, que podría llenar el Drive (15 GB). Paso a paso en [vercel.md](vercel.md#3-límite-por-visitante-firewall).
 - **Política de privacidad:** agregar en `lib/content/privacidad.ts` una línea sobre las imágenes de la galería y sobre Google Drive. Debe revisarla el abogado.

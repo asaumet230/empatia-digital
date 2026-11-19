@@ -42,7 +42,7 @@ Como no hay base de datos, el estado de la sesión viaja en el navegador en un *
 
 El pase lleva el perfil, la hora de inicio, cuántos mensajes van, si la sesión está pausada y una huella del historial. El navegador puede leerlo, pero no cambiarlo. La huella impide inventar respuestas del Oráculo.
 
-**Límite conocido:** el servidor no recuerda pases viejos. Alguien con conocimientos técnicos podría reutilizar uno para saltarse una pausa o el límite de mensajes. La interfaz nunca lo hace. La protección real es el límite por visitante en Vercel y el tope de gasto en OpenAI.
+**Límite conocido:** el servidor no recuerda pases viejos. Alguien con conocimientos técnicos podría reutilizar uno para saltarse una pausa o el límite de mensajes. La interfaz nunca lo hace. La protección real es el límite por visitante en Vercel ([vercel.md](vercel.md)) y el tope de gasto en OpenAI.
 
 ## Cómo se detecta el riesgo
 
@@ -158,9 +158,11 @@ Las pruebas de punta a punta levantan su propio servidor en el puerto 3100. Con 
 2. Que los profesionales aprueben los mensajes de emergencia, la política de riesgo y las frases de prueba. Luego, `SAFETY_MESSAGES.approved = true`.
 3. ✅ Números de ayuda confirmados por teléfono.
 4. En OpenAI: poner un tope de gasto mensual (Settings → Limits) y, si se puede, pedir la retención cero. Si la aprueban, actualizar la política.
-5. En Vercel → Environment Variables: poner `OPENAI_API_KEY` y un `ORACULO_SECRET` **nuevo**. Nunca `ORACULO_IA_SIMULADA`.
-6. En Vercel → Firewall: un límite por visitante para `/api/oraculo/`, por ejemplo 20 por minuto.
-7. Poner `ORACULO_ACTIVO=true` y volver a publicar.
+5. En Vercel, poner `OPENAI_API_KEY` y un `ORACULO_SECRET` **nuevo**. Nunca `ORACULO_IA_SIMULADA`.
+6. En Vercel, crear el límite por visitante para `/api/oraculo/mensaje`.
+7. En Vercel, poner `ORACULO_ACTIVO=true` y volver a publicar.
+
+Los pasos 5 a 7 están explicados uno por uno en [vercel.md](vercel.md#4-al-lanzar-el-oráculo).
 8. Probar en un iPhone y un Android de verdad: un caso normal, uno serio (debe salir el panel) y uno de peligro (debe pausarse).
 
 ## Pendientes

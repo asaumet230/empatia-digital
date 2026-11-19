@@ -22,3 +22,4 @@ Instrucciones para asistentes de código (Claude Code y similares) que trabajen 
 @docs/oraculo.md
 @docs/galeria.md
 @docs/mantenimiento.md
+@docs/vercel.md

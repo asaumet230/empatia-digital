@@ -21,9 +21,22 @@ Y además:
 - si cambiaste el chat del Oráculo: `npm run test:e2e`;
 - si cambiaste la detección de riesgo: `npm run eval:riesgo` (gasta un poco de saldo).
 
+## Revisión automática en GitHub
+
+Cada vez que se sube un cambio a `main`, o se abre un pull request, GitHub revisa el proyecto solo (`.github/workflows/ci.yml`).
+
+Hace dos revisiones al mismo tiempo:
+
+1. **Estilo, pruebas y compilación:** `npm run lint` (sin ningún aviso), `npm test` y `npm run build`.
+2. **Pruebas de punta a punta:** `npm run test:e2e` en Chromium y WebKit.
+
+El resultado aparece junto a cada cambio en GitHub: ✅ si todo pasó, ❌ si algo falló. Si fallan las pruebas de punta a punta, el detalle se guarda 7 días en la pestaña **Actions**, dentro de esa revisión.
+
+La revisión no publica nada (eso lo hace Vercel) y no usa claves: el Oráculo se prueba con la IA falsa.
+
 ## Variables de entorno
 
-Todas están explicadas en [`.env.example`](../.env.example). En Vercel van en Settings → Environment Variables. **Después de cambiar una, hay que volver a publicar** (Redeploy).
+Todas están explicadas en [`.env.example`](../.env.example). Cómo cambiarlas en Vercel y volver a publicar: [vercel.md](vercel.md).
 
 Así está producción hoy:
 
@@ -47,7 +60,7 @@ Las claves nunca se suben a GitHub: `.env.local` está excluido en `.gitignore`.
 
 | Qué falta | Dónde se hace |
 |---|---|
-| Límite por visitante para `/api/galeria` (y para `/api/oraculo/` al lanzarlo) | Vercel → Firewall |
+| Límite por visitante para `/api/galeria` (y para `/api/oraculo/mensaje` al lanzarlo) | Vercel → Firewall. Paso a paso en [vercel.md](vercel.md#3-límite-por-visitante-firewall) |
 | Mencionar la galería y Google Drive en la política de privacidad (con revisión del abogado) | `lib/content/privacidad.ts` |
 | Aprobaciones para lanzar el Oráculo | Ver [oraculo.md](oraculo.md#cómo-lanzarlo) |
 | Actualizar algunas librerías a versiones menores (`openai`, `lucide-react`, `playwright`, `vitest`, `tailwindcss`) | `package.json` |
