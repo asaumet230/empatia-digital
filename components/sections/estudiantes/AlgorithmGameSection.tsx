@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { nextStage, totals } from "@/lib/algoritmo/reglas";
 import { cn } from "@/lib/cn";
 import type { FeedPost } from "@/lib/content/estudiantes";
 import type { SectionProps } from "@/types/presentation";
@@ -33,8 +34,7 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
   const started = useRef(false);
 
   const chosen: FeedPost[] = picks.flatMap((p, i) => (p === null ? [] : [ROUNDS[i].posts[p]]));
-  const likes = chosen.reduce((sum, post) => sum + post.likes, 0);
-  const harm = chosen.reduce((sum, post) => sum + post.harm, 0);
+  const { likes, harm } = totals(chosen);
 
   // On a phone the round is taller than the screen: bring its top back into view on every change
   useEffect(() => {
@@ -102,7 +102,7 @@ export function AlgorithmGameSection({ id, index, label }: SectionProps) {
                 picked={picks[stage]}
                 likes={likes}
                 onPick={(post) => setPicks((prev) => prev.map((p, i) => (i === stage ? post : p)))}
-                onNext={() => setStage(stage + 1 < ROUNDS.length ? stage + 1 : "resultado")}
+                onNext={() => setStage(nextStage(stage))}
               />
             ) : stage === "resultado" ? (
               <ResultStep likes={likes} onNext={() => setStage("valentina")} />

@@ -2,11 +2,12 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Heart } from "lucide-react";
+import { reachedGoal } from "@/lib/algoritmo/reglas";
 import { DURATION, EASE, transition } from "@/lib/animations";
 import { formatNumber, GAME, PrimaryButton } from "./shared";
 
 export function ResultStep({ likes, onNext }: { likes: number; onNext: () => void }) {
-  const won = likes >= GAME.goal;
+  const won = reachedGoal(likes);
   return (
     <div className="flex min-h-[50svh] flex-col items-center justify-center text-center">
       <motion.p

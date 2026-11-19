@@ -37,6 +37,7 @@ lib/
   content/            todos los textos y datos de la presentación
   oraculo/            la lógica del Oráculo (ver oraculo.md)
   galeria/            revisión y envío de imágenes
+  algoritmo/          reglas del juego "Tú eres el algoritmo" (puntaje, meta, daño, orden)
   sections.ts         el orden de las diapositivas de cada sesión
 
 types/                tipos compartidos
@@ -92,6 +93,7 @@ Antes de escribir algo nuevo, revisa esta lista.
 - **Textos aparte:** los textos visibles van en `lib/content/` (o en `lib/oraculo/config/` para el Oráculo), no dentro de los componentes.
 - **Tipos estrictos:** TypeScript estricto y sin `any`.
 - **Validar lo que llega de afuera:** peticiones, variables de entorno y datos del navegador se revisan con zod.
+- **Reglas fuera de las pantallas:** la lógica que se puede probar (reglas de un juego, cálculos) va en `lib/`, con su archivo `.test.ts` al lado. Los componentes solo la usan.
 - **Archivos cortos:** ninguno pasa de unas 200 líneas. Si un componente crece, sus partes van a una subcarpeta y la lógica a un hook.
 - **Pocas dependencias:** se prefieren utilidades pequeñas propias. Por ejemplo, `cn()` en lugar de clsx.
 - **Servicios externos detrás de interfaces:** la IA (`ChatModel`), la revisión de riesgo (`RiskChecker`) y el Drive (`GalleryStore`). Así se prueban con versiones falsas y se puede cambiar de proveedor sin tocar el resto.

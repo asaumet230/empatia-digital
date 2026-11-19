@@ -4,7 +4,8 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { GAME, harmLevel, PrimaryButton, swap } from "./shared";
+import { harmLevel } from "@/lib/algoritmo/reglas";
+import { GAME, PrimaryButton, swap } from "./shared";
 
 /** The case told in pictures, one scene at a time, so the presenter can narrate it (← → also work). */
 export function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }) {

@@ -58,6 +58,7 @@ Siempre se usan códigos (E01, E02…), nunca nombres de estudiantes.
 **"¿Broma o problema?"** (unos 20 minutos)
 
 - **Juego "Tú eres el algoritmo"** (minutos 0 a 9). La clase hace de algoritmo de "Scrollia", una red social inventada. Debe juntar 40.000 «me gusta» en 6 rondas cada vez más rápidas: 10, 8, 6, 4, 4 y 4 segundos. Burlarse de Valentina siempre da más puntos. Si se acaba el tiempo, el juego elige solo la publicación que más da. En el celular, las publicaciones aparecen en carrusel.
+- **Las reglas del juego** están en `lib/algoritmo/reglas.ts` y tienen pruebas. Si alguien cambia los datos del juego y la lección deja de funcionar (por ejemplo, si no burlarse también llega a la meta), `npm test` lo avisa.
 - **Al terminar** se ven el puntaje, los mensajes de Valentina, su historia en 6 imágenes y cómo funciona un algoritmo real. Quien presenta no debe adelantar la lección.
 - **Después**, dos prompts que se usan en el mismo chat y una decisión final.
 

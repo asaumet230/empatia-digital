@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { DURATION, EASE, transition } from "@/lib/animations";
-import { GAME, harmLevel, PrimaryButton } from "./shared";
+import { harmLevel } from "@/lib/algoritmo/reglas";
+import { GAME, PrimaryButton } from "./shared";
 
 /** The twist: her messages, one by one, depending on how much the boosted posts hurt her. */
 export function ValentinaStep({ harm, onNext }: { harm: number; onNext: () => void }) {

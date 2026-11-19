@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Timer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCarousel } from "@/hooks/useCarousel";
+import { missingToGoal, mostLiked, shuffle } from "@/lib/algoritmo/reglas";
 import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { Countdown } from "./Countdown";
@@ -44,12 +45,10 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
   // Time's up: the algorithm does what algorithms do — it shows what gets the most likes
   const pickByItself = () => {
     setAuto(true);
-    const best = posts.reduce((top, post, i) => (post.likes > posts[top].likes ? i : top), 0);
-    onPick(best);
+    onPick(mostLiked(posts));
   };
 
   const post = picked === null ? null : posts[picked];
-  const missing = GAME.goal - likes;
   const topLikes = Math.max(...posts.map((p) => p.likes));
 
   return (
@@ -154,7 +153,7 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
               )}
             >
               {auto && <Timer aria-hidden="true" className="size-5" strokeWidth={2.25} />}
-              {auto ? GAME.autoPick : `+${formatNumber(post.likes)} «me gusta». ${GAME.toGoal(missing)}`}
+              {auto ? GAME.autoPick : `+${formatNumber(post.likes)} «me gusta». ${GAME.toGoal(missingToGoal(likes))}`}
             </p>
             {/* Fills up while the next round loads by itself */}
             <div aria-hidden="true" className="mt-3 h-1 overflow-hidden rounded-full bg-white/10">
@@ -169,14 +168,4 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
       </AnimatePresence>
     </div>
   );
-}
-
-/** Fisher–Yates: every order is equally likely. */
-function shuffle<T>(items: T[]): T[] {
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
 }
