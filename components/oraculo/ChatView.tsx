@@ -1,19 +1,18 @@
 "use client";
 
-import { ChevronDown, CircleCheck, UserRoundPen } from "lucide-react";
-import { Fragment, useEffect, useState, type ReactNode } from "react";
-import { Composer } from "@/components/oraculo/Composer";
+import { CircleCheck } from "lucide-react";
+import { Fragment, useEffect, useState } from "react";
+import { ChatFooter } from "@/components/oraculo/ChatFooter";
 import { ConsentDialog } from "@/components/oraculo/ConsentDialog";
-import { ErrorNotice } from "@/components/oraculo/ErrorNotice";
-import { cn } from "@/lib/cn";
 import { FinishDialog } from "@/components/oraculo/FinishDialog";
 import { MessageBubble, TypingIndicator } from "@/components/oraculo/MessageBubble";
 import { OracleHeader } from "@/components/oraculo/OracleHeader";
 import { OracleSplash } from "@/components/oraculo/OracleSplash";
+import { ProfileBadge } from "@/components/oraculo/ProfileBadge";
 import { SafetyPanel } from "@/components/oraculo/SafetyPanel";
 import type { OracleControls } from "@/hooks/useOracle";
 import { ORACLE_TEXT, PROFILE_OPTIONS } from "@/lib/oraculo/config/textos";
-import { audienceOf, type Profile } from "@/lib/oraculo/tipos";
+import { audienceOf } from "@/lib/oraculo/tipos";
 
 const t = ORACLE_TEXT.chat;
 
@@ -38,7 +37,7 @@ const RETRY_MS = 900;
  * Everything before the session is interface only.
  */
 export function ChatView({ oracle }: { oracle: OracleControls }) {
-  const { state, ask, introduce, nameSelf, back, start, send, finish, restart, dismissError } = oracle;
+  const { state, ask, back, start, finish, restart } = oracle;
   const { profile } = state;
   const started = state.phase === "chat" && profile !== null;
   // The Oráculo owes a line in the opening: at the very start, after an answer it did not understand,
@@ -130,54 +129,7 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
         </div>
       </main>
 
-      <footer className="sticky bottom-0 border-t border-o-line bg-o-bar pb-[env(safe-area-inset-bottom)]">
-        {/* Always rendered so it can fade and slide in; `invisible` takes it out of reach while hidden */}
-        <button
-          type="button"
-          onClick={() => scrollToEnd()}
-          aria-label={t.toEnd}
-          className={cn(
-            "absolute -top-16 right-4 grid size-12 place-items-center rounded-full! bg-o-user/90 text-o-user-text shadow-[0_8px_24px_-6px_rgb(0_0_0/0.45)] transition-[opacity,translate,visibility,background-color] duration-300 ease-out hover:bg-o-user sm:right-6 print:hidden",
-            away ? "visible translate-y-0 opacity-100" : "invisible translate-y-3 opacity-0",
-          )}
-        >
-          <ChevronDown aria-hidden="true" className="size-6" strokeWidth={2.5} />
-        </button>
-        <div className="mx-auto max-w-3xl space-y-3 px-4 py-3 sm:px-6">
-          {started && state.error && (
-            <ErrorNotice
-              code={state.error}
-              action={
-                state.error === "sesion_invalida" ? (
-                  <FooterButton onClick={restart}>{ORACLE_TEXT.closing.restart}</FooterButton>
-                ) : (
-                  <FooterButton onClick={dismissError}>OK</FooterButton>
-                )
-              }
-            />
-          )}
-
-          {!started ? (
-            <Composer disabled={state.phase !== "perfil"} locked={asking} onSend={introduce} />
-          ) : state.locked ? (
-            <Notice title={ORACLE_TEXT.locked.title} text={ORACLE_TEXT.locked.text}>
-              <FooterButton onClick={finish}>{t.finish}</FooterButton>
-            </Notice>
-          ) : state.limit ? (
-            <Notice title={ORACLE_TEXT.limit[state.limit]} text={ORACLE_TEXT.limit.next}>
-              <FooterButton primary onClick={finish}>
-                {ORACLE_TEXT.closing.title}
-              </FooterButton>
-              <FooterButton onClick={restart}>{ORACLE_TEXT.closing.restart}</FooterButton>
-            </Notice>
-          ) : (
-            <>
-              <Composer disabled={state.busy !== null} locked={asking} onSend={state.aliasDone ? send : nameSelf} />
-              <p className="px-4 text-xs text-o-muted">{t.remaining(state.remaining)}</p>
-            </>
-          )}
-        </div>
-      </footer>
+      <ChatFooter oracle={oracle} started={started} asking={asking} away={away} onToEnd={scrollToEnd} />
 
       {/* While the summary is written, the owl covers the chat, as on the way in */}
       {closing && (
@@ -205,51 +157,5 @@ export function ChatView({ oracle }: { oracle: OracleControls }) {
         }}
       />
     </div>
-  );
-}
-
-function ProfileBadge({ profile, onChange }: { profile: Profile; onChange: () => void }) {
-  const { label, icon: Icon } = PROFILE_OPTIONS[profile];
-  return (
-    <div className="flex justify-end">
-      <div className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-o-line bg-o-surface p-1 pl-3 text-sm shadow-sm">
-        <Icon aria-hidden="true" className="size-4 text-o-accent" />
-        <span className="font-semibold text-o-muted">{label}</span>
-        <button
-          type="button"
-          onClick={onChange}
-          className="inline-flex items-center gap-1.5 rounded-full bg-green-bright/15 px-3 py-1.5 font-semibold text-o-accent transition-colors hover:bg-green-bright/25"
-        >
-          <UserRoundPen aria-hidden="true" className="size-4" />
-          {ORACLE_TEXT.intro.change}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function Notice({ title, text, children }: { title: string; text: string; children: ReactNode }) {
-  return (
-    <div role="status" className="rounded-2xl border border-o-line bg-o-surface p-4">
-      <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-o-muted">{text}</p>
-      <div className="mt-3 flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-
-function FooterButton({ onClick, primary = false, children }: { onClick: () => void; primary?: boolean; children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={
-        primary
-          ? "rounded-full bg-green-bright px-4 py-2 text-sm font-bold text-navy-dark hover:brightness-105"
-          : "rounded-full border border-o-line px-4 py-2 text-sm font-semibold hover:bg-o-raised"
-      }
-    >
-      {children}
-    </button>
   );
 }

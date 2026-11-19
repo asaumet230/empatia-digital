@@ -1,7 +1,8 @@
 "use client";
 
-import { QrCode as QrIcon, X } from "lucide-react";
+import { QrCode as QrIcon } from "lucide-react";
 import { useRef, type ReactNode } from "react";
+import { CloseButton, Dialog } from "@/components/ui/Dialog";
 
 interface QrDialogButtonProps {
   /** Shown above the code, e.g. "Escanea para entrar". */
@@ -31,26 +32,22 @@ export function QrDialogButton({ title, url, children }: QrDialogButtonProps) {
         QR
       </button>
 
-      <dialog
-        ref={dialog}
-        aria-label={title}
-        onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
-        className="m-auto w-[min(calc(100vw-2rem),26rem)] rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      <Dialog
+
+        dialogRef={dialog}
+
+        label={title}
+
+        className="w-[min(calc(100vw-2rem),26rem)] backdrop:bg-black/70"
+
       >
         <div className="relative flex flex-col items-center p-6 text-center sm:p-8">
-          <button
-            type="button"
-            aria-label="Cerrar"
-            onClick={() => dialog.current?.close()}
-            className="absolute right-4 top-4 grid size-9 place-items-center rounded-full text-gray-light transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <X aria-hidden="true" className="size-5" strokeWidth={2} />
-          </button>
+          <CloseButton onClick={() => dialog.current?.close()} className="absolute right-4 top-4 size-9" />
           <p className="font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">{title}</p>
           <div className="mt-6 w-full max-w-72">{children}</div>
           <p className="mt-5 break-all font-mono text-sm font-semibold text-green-bright">{url}</p>
         </div>
-      </dialog>
+      </Dialog>
     </>
   );
 }

@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { useDismiss } from "@/hooks/useDismiss";
 import { DURATION, EASE, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
+import { twoDigits } from "@/lib/format";
 
 interface NavItem {
   id: string;
@@ -19,7 +20,6 @@ interface ProgressNavigationProps {
   onNavigate: (id: string) => void;
 }
 
-const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * Discreet progress indicator.
@@ -63,7 +63,7 @@ export function ProgressNavigation({ items, active, visible, onNavigate }: Progr
                     type="button"
                     onClick={() => onNavigate(item.id)}
                     aria-current={isActive ? "step" : undefined}
-                    aria-label={`${pad(i)} — ${item.label}`}
+                    aria-label={`${twoDigits(i)} — ${item.label}`}
                     className="group relative flex items-center gap-3 py-1.5 pl-3"
                   >
                     <span
@@ -81,12 +81,12 @@ export function ProgressNavigation({ items, active, visible, onNavigate }: Progr
                         isActive ? "font-bold text-green-bright" : "text-gray-muted group-hover:text-gray-text",
                       )}
                     >
-                      {pad(i)}
+                      {twoDigits(i)}
                     </span>
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "origin-right transition-all duration-500 ease-[var(--ease-out-expo)]",
+                        "origin-right transition-all duration-500 ease-out-expo",
                         isActive ? "h-0.5 w-8 bg-green-bright" : "h-px w-3 bg-gray-muted/50 group-hover:w-5",
                       )}
                     />
@@ -115,14 +115,14 @@ function MobileIndex({ items, active, onNavigate }: Omit<ProgressNavigationProps
         type="button"
         aria-expanded={open}
         aria-controls="indice-movil"
-        aria-label={`Diapositiva ${pad(active)} de ${pad(total - 1)}. Ver todas las secciones`}
+        aria-label={`Diapositiva ${twoDigits(active)} de ${twoDigits(total - 1)}. Ver todas las secciones`}
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "flex h-10 items-center gap-1.5 rounded-full border bg-navy-deep px-3.5 font-mono text-[0.6875rem] tracking-[0.2em] text-gray-muted shadow-[0_10px_30px_-10px_rgb(0_0_0/0.6)] transition-colors",
           open ? "border-green-bright/50" : "border-white/10",
         )}
       >
-        <span className="font-bold text-green-bright">{pad(active)}</span> / {pad(total - 1)}
+        <span className="font-bold text-green-bright">{twoDigits(active)}</span> / {twoDigits(total - 1)}
         <ChevronDown
           aria-hidden="true"
           className={cn("size-3.5 text-gray-light transition-transform duration-300", open && "rotate-180")}
@@ -156,7 +156,7 @@ function MobileIndex({ items, active, onNavigate }: Omit<ProgressNavigationProps
                       isActive ? "bg-green-bright/10 font-bold text-green-bright" : "text-gray-light active:bg-white/10",
                     )}
                   >
-                    <span className="font-mono text-[0.6875rem] tabular-nums tracking-[0.15em]">{pad(i)}</span>
+                    <span className="font-mono text-[0.6875rem] tabular-nums tracking-[0.15em]">{twoDigits(i)}</span>
                     {item.label}
                   </button>
                 </li>

@@ -57,7 +57,7 @@ export function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }
             <motion.div key={scene} {...swap}>
               <p className="mt-3 text-xl font-medium leading-snug text-white md:text-2xl">{current.text}</p>
               {scene === last && (
-                <p className="mt-5 rounded-2xl border border-yellow/40 bg-yellow/[0.05] p-4 text-lg font-semibold leading-snug text-yellow">
+                <p className="mt-5 rounded-2xl border border-yellow/40 bg-yellow/5 p-4 text-lg font-semibold leading-snug text-yellow">
                   {story[harmLevel(harm)]}
                 </p>
               )}
@@ -69,7 +69,7 @@ export function StoryStep({ harm, onNext }: { harm: number; onNext: () => void }
               onClick={() => setScene(scene - 1)}
               disabled={scene === 0}
               aria-label={story.prev}
-              className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/[0.04] px-4 font-semibold text-gray-light transition-colors hover:border-white/50 hover:text-white disabled:cursor-default disabled:opacity-30"
+              className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl border border-white/20 bg-white/4 px-4 font-semibold text-gray-light transition-colors hover:border-white/50 hover:text-white disabled:cursor-default disabled:opacity-30"
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
               Anterior

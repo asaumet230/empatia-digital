@@ -47,7 +47,7 @@ export default function Home() {
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:px-10">
           <h1 className="font-display text-[clamp(2.75rem,10vw,7rem)] font-extrabold leading-[0.9] tracking-[-0.04em]">
             Empat<span className="text-yellow text-glow-yellow">IA</span>
-            <span className="mt-3 block text-[0.3em] font-light uppercase tracking-[0.55em] text-gray-light [margin-right:-0.55em]">
+            <span className="mt-3 block text-[0.3em] font-light uppercase tracking-[0.55em] text-gray-light mr-[-0.55em]">
               Digital
             </span>
           </h1>

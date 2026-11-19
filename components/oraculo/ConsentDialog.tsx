@@ -83,7 +83,7 @@ function ConsentContent({ profile, starting, error, onBack, onStart }: ConsentDi
           type="checkbox"
           checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
-          className="size-6 shrink-0 accent-[var(--green)]"
+          className="size-6 shrink-0 accent-green"
         />
         {t.check}
       </label>

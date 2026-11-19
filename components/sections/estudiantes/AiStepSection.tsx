@@ -5,6 +5,7 @@ import { Section } from "@/components/presentation/Section";
 import { PollCard } from "@/components/sections/estudiantes/PollCard";
 import { PromptBox } from "@/components/sections/prompt/PromptCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { AI_STEPS, type AiStep } from "@/lib/content/estudiantes";
 import type { SectionProps } from "@/types/presentation";
@@ -32,12 +33,7 @@ function AiStepSection({ id, index, label, step }: SectionProps & { step: AiStep
           <motion.div variants={fadeUp}>
             <Eyebrow index={index}>{label}</Eyebrow>
           </motion.div>
-          <motion.h2
-            variants={fadeUp}
-            className="mt-5 font-display text-[clamp(2rem,4.5vw,3.75rem)] font-extrabold leading-none tracking-[-0.04em]"
-          >
-            {step.title}
-          </motion.h2>
+          <SlideTitle size="medium" className="mt-5">{step.title}</SlideTitle>
           <motion.p variants={fadeUp} className="mt-4 text-lg text-gray-text md:text-xl">
             {step.lead}
           </motion.p>

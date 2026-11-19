@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { Section } from "@/components/presentation/Section";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { AI_BLOCK, AI_CATEGORIES, AI_TOOLS, type AiTool } from "@/lib/content/ia-ecosistema";
+import { twoDigits } from "@/lib/format";
 import type { SectionProps } from "@/types/presentation";
 
 const shortName = (tool: AiTool) => tool.short ?? tool.name;
@@ -27,12 +29,7 @@ export function AiSummarySection({ id, index, label }: SectionProps) {
         <motion.div variants={fadeUp}>
           <Eyebrow index={index}>{label}</Eyebrow>
         </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          className="mt-6 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
-        >
-          {AI_BLOCK.summaryTitle}
-        </motion.h2>
+        <SlideTitle size="large" className="mt-6">{AI_BLOCK.summaryTitle}</SlideTitle>
 
         <ul className="mt-10 border-t border-line md:mt-12">
           {AI_CATEGORIES.map((c, i) => {
@@ -44,7 +41,7 @@ export function AiSummarySection({ id, index, label }: SectionProps) {
                 className="group grid grid-cols-[1.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-3 border-b border-line py-4 md:grid-cols-[2.5rem_minmax(0,1fr)] md:gap-x-6 md:gap-y-2 md:py-5 xl:grid-cols-[2.5rem_minmax(0,1fr)_auto]"
               >
                 <span className="font-mono text-[0.6875rem] tracking-[0.15em] text-green-bright">
-                  {String(i + 1).padStart(2, "0")}
+                  {twoDigits(i + 1)}
                 </span>
                 <span className="flex items-center gap-3 font-display text-xl font-bold tracking-[-0.02em] md:text-[1.75rem]">
                   <Icon

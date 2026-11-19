@@ -1,20 +1,15 @@
-import { ArrowRight, ArrowUpRight, Backpack, GraduationCap, House, LayoutGrid, Mail, Phone, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { BackToTop } from "@/components/ui/BackToTop";
+import { InstagramIcon } from "@/components/ui/footer/InstagramIcon";
+import { SessionEnd } from "@/components/ui/footer/SessionEnd";
 import { LOGOS } from "@/lib/constants";
-import { cn } from "@/lib/cn";
 import { SITE_FOOTER as F } from "@/lib/content/sitio";
-import { HELP_LINES } from "@/lib/oraculo/config/lineas";
 import { CONTROLLERS } from "@/lib/oraculo/config/legal";
-import { TRACKS, type TrackId } from "@/lib/sections";
-
-const TRACK_ICONS: Record<TrackId, LucideIcon> = {
-  docentes: GraduationCap,
-  estudiantes: Backpack,
-  familias: House,
-};
+import { HELP_LINES } from "@/lib/oraculo/config/lineas";
+import type { TrackId } from "@/lib/sections";
 
 const telHref = (phone: string) => `tel:${phone.replace(/\s/g, "")}`;
 
@@ -48,7 +43,7 @@ export function SiteFooter({ track }: { track?: TrackId }) {
                 <a
                   href={HELP_LINES[id].href}
                   aria-label={`${F.call} ${HELP_LINES[id].number}, ${label}`}
-                  className="group flex items-center gap-3 rounded-xl border border-white/15 bg-white/[0.04] p-1.5 pr-4 transition-colors hover:border-green-bright hover:bg-green-bright/10"
+                  className="group flex items-center gap-3 rounded-xl border border-white/15 bg-white/4 p-1.5 pr-4 transition-colors hover:border-green-bright hover:bg-green-bright/10"
                 >
                   <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-green-bright text-navy-dark transition-transform duration-300 group-hover:scale-105">
                     <Phone aria-hidden="true" className="size-4" strokeWidth={2} />
@@ -156,100 +151,5 @@ function FooterHeading({ children }: { children: ReactNode }) {
       {children}
       <span aria-hidden="true" className="mt-2.5 block h-0.5 w-8 rounded-full bg-green-bright" />
     </h2>
-  );
-}
-
-/** End of a presentation: back to the home page or straight to another session. */
-function SessionEnd({ track }: { track: TrackId }) {
-  const { session } = F;
-  const others = (Object.keys(TRACKS) as TrackId[]).filter((t) => t !== track);
-
-  return (
-    <div className="mx-auto max-w-6xl px-6 pt-12 sm:px-10">
-      <nav
-        aria-label={session.label}
-        className="rounded-3xl border border-white/10 bg-navy/60 p-6 md:p-8"
-      >
-        <div>
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-green-bright">
-            {session.eyebrow}
-          </p>
-          <p className="mt-2 font-display text-2xl font-bold tracking-[-0.02em] text-white md:text-3xl">
-            {session.title(TRACKS[track].title)}
-          </p>
-          <p className="mt-1.5 text-base text-gray-text">{session.question}</p>
-        </div>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-3">
-          <li>
-            <SessionLink href="/" icon={LayoutGrid} small={session.homeSmall} label={session.home} primary />
-          </li>
-          {others.map((t) => (
-            <li key={t}>
-              <SessionLink href={`/${t}`} icon={TRACK_ICONS[t]} small={session.otherSmall} label={TRACKS[t].title} />
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
-  );
-}
-
-interface SessionLinkProps {
-  href: string;
-  icon: LucideIcon;
-  small: string;
-  label: string;
-  primary?: boolean;
-}
-
-function SessionLink({ href, icon: Icon, small, label, primary = false }: SessionLinkProps) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "group flex h-full items-center gap-3 rounded-2xl border px-4 py-3.5 transition-[border-color,background-color,filter]",
-        primary
-          ? "border-green-bright bg-green-bright text-navy-dark hover:brightness-110"
-          : "border-white/15 text-white hover:border-green-bright hover:bg-white/[0.04]",
-      )}
-    >
-      <span
-        className={cn(
-          "grid size-10 shrink-0 place-items-center rounded-xl",
-          primary ? "bg-navy-dark/15" : "bg-white/[0.06] text-green-bright",
-        )}
-      >
-        <Icon aria-hidden="true" className="size-5" strokeWidth={1.75} />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className={cn("block text-xs", primary ? "text-navy-dark/75" : "text-gray-muted")}>{small}</span>
-        <span className="block font-display text-base font-bold leading-tight">{label}</span>
-      </span>
-      <ArrowRight
-        aria-hidden="true"
-        className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
-        strokeWidth={2}
-      />
-    </Link>
-  );
-}
-
-/** Instagram's outline glyph, drawn like the lucide icons (lucide-react no longer ships brand icons). */
-function InstagramIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-4 shrink-0 text-green-bright"
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
   );
 }

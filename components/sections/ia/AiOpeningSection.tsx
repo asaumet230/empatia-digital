@@ -67,7 +67,7 @@ export function AiOpeningSection({ id, index, label }: SectionProps) {
         </div>
 
         {/* ChatGPT at the center, the rest of the ecosystem around it */}
-        <div aria-hidden="true" className="relative mx-auto aspect-square w-full max-w-[22rem] sm:max-w-[26rem]">
+        <div aria-hidden="true" className="relative mx-auto aspect-square w-full max-w-88 sm:max-w-104">
           <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
             {CATEGORIES.map((c, i) => {
               const p = point(i);

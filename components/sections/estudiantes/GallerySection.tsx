@@ -5,6 +5,7 @@ import { ImageUp, Vote } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { PUBLIC_SITE_URL } from "@/lib/constants";
 import { GALLERY, POLL_HINT } from "@/lib/content/estudiantes";
@@ -31,12 +32,9 @@ export function GallerySection({ id, index, label }: SectionProps) {
         <motion.div variants={fadeUp}>
           <Eyebrow index={index}>{label}</Eyebrow>
         </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          className="mt-5 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
-        >
+        <SlideTitle size="large" className="mt-5">
           🖼️ {GALLERY.title}
-        </motion.h2>
+        </SlideTitle>
         <motion.p variants={fadeUp} className="mt-5 text-lg leading-snug text-gray-text md:text-2xl">
           {GALLERY.lead}
         </motion.p>
@@ -74,7 +72,7 @@ export function GallerySection({ id, index, label }: SectionProps) {
 
         <motion.div
           variants={fadeUp}
-          className="mt-6 inline-flex flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl border border-yellow/30 bg-yellow/[0.04] px-5 py-4"
+          className="mt-6 inline-flex flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl border border-yellow/30 bg-yellow/4 px-5 py-4"
         >
           <span className="flex items-center gap-2 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-yellow">
             <Vote aria-hidden="true" className="size-4" strokeWidth={1.75} />

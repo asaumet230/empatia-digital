@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Section } from "@/components/presentation/Section";
 import { PromptBox } from "@/components/sections/prompt/PromptCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { buildCampaignPrompt, PEACE, PROMPT_BUILDER } from "@/lib/content/estudiantes";
@@ -40,12 +41,7 @@ export function PromptBuilderSection({ id, index, label }: SectionProps) {
           <motion.div variants={fadeUp}>
             <Eyebrow index={index}>{label}</Eyebrow>
           </motion.div>
-          <motion.h2
-            variants={fadeUp}
-            className="mt-5 font-display text-[clamp(2rem,4.5vw,3.75rem)] font-extrabold leading-none tracking-[-0.04em]"
-          >
-            {PROMPT_BUILDER.title}
-          </motion.h2>
+          <SlideTitle size="medium" className="mt-5">{PROMPT_BUILDER.title}</SlideTitle>
           <motion.p variants={fadeUp} className="mt-4 text-lg leading-snug text-gray-text md:text-xl">
             {PROMPT_BUILDER.lead}
           </motion.p>
@@ -104,7 +100,7 @@ function Picker<T extends { id: string; label: string }>({ step, label, options,
                 "inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors duration-300 md:text-base",
                 on
                   ? "border-green-bright bg-green-bright/15 text-white"
-                  : "border-white/15 bg-white/[0.03] text-gray-light hover:border-green-bright/50 hover:text-white",
+                  : "border-white/15 bg-white/3 text-gray-light hover:border-green-bright/50 hover:text-white",
               )}
             >
               {on && <Check aria-hidden="true" className="size-4 shrink-0 text-green-bright" strokeWidth={2.75} />}
@@ -180,7 +176,7 @@ function StylePicker({ step, value, onChange }: { step: number; value: Style; on
                       "cursor-pointer rounded-xl border p-3 text-left transition-colors duration-200",
                       on
                         ? "border-green-bright bg-green-bright/15"
-                        : "border-white/10 bg-white/[0.03] hover:border-green-bright/50 hover:bg-white/[0.06]",
+                        : "border-white/10 bg-white/3 hover:border-green-bright/50 hover:bg-white/6",
                     )}
                   >
                     <span className="block text-sm font-bold text-white md:text-base">{style.label}</span>

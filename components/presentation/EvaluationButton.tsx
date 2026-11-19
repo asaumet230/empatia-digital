@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ClipboardCheck, ExternalLink, X } from "lucide-react";
+import { ClipboardCheck, ExternalLink } from "lucide-react";
 import QRCode from "qrcode";
 import { useEffect, useRef, useState } from "react";
+import { CloseButton, Dialog } from "@/components/ui/Dialog";
 import { DURATION, transition } from "@/lib/animations";
 import { EVALUATION, type EvaluationForms } from "@/lib/content/evaluacion";
 
@@ -49,24 +50,21 @@ export function EvaluationButton({ forms, visible }: { forms: EvaluationForms; v
         )}
       </AnimatePresence>
 
-      <dialog
-        ref={dialog}
-        aria-label={EVALUATION.title}
+      <Dialog
+
+        dialogRef={dialog}
+
+        label={EVALUATION.title}
+
         onClose={() => setOpen(false)}
-        onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
-        className="m-auto w-[min(calc(100vw-2rem),40rem)] rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+
+        className="w-[min(calc(100vw-2rem),40rem)] backdrop:bg-black/70"
+
       >
         <div className="relative p-5 sm:p-7">
           <div className="flex items-center justify-between gap-4">
             <p className="font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">{EVALUATION.button}</p>
-            <button
-              type="button"
-              aria-label="Cerrar"
-              onClick={() => dialog.current?.close()}
-              className="grid size-9 shrink-0 place-items-center rounded-full text-gray-light transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <X aria-hidden="true" className="size-5" strokeWidth={2} />
-            </button>
+            <CloseButton onClick={() => dialog.current?.close()} className="size-9" />
           </div>
           <ul className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4">
             {EVALUATION.forms.map(({ key, name, when }) => (
@@ -91,7 +89,7 @@ export function EvaluationButton({ forms, visible }: { forms: EvaluationForms; v
             ))}
           </ul>
         </div>
-      </dialog>
+      </Dialog>
     </>
   );
 }

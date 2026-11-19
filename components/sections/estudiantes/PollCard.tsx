@@ -12,7 +12,7 @@ export function PollCard({ poll, className }: { poll: Poll; className?: string }
     <motion.div
       variants={fadeUp}
       className={cn(
-        "rounded-3xl border border-yellow/30 bg-linear-to-b from-yellow/[0.07] to-yellow/[0.02] p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] md:p-7",
+        "rounded-3xl border border-yellow/30 bg-linear-to-b from-yellow/[0.07] to-yellow/2 p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)] md:p-7",
         className,
       )}
     >

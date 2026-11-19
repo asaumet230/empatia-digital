@@ -42,7 +42,7 @@ export function SimulatorSection({ id, index, label }: SectionProps) {
             {SIMULATOR_BLOCK.steps.map((step, i) => (
               <li
                 key={step}
-                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-3 pr-4 md:p-4"
+                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/3 p-3 pr-4 md:p-4"
               >
                 <span className="grid size-10 shrink-0 place-items-center rounded-full bg-green-bright/15 font-display text-base font-bold text-green-bright">
                   {i + 1}
@@ -110,7 +110,7 @@ export function SimulatorSection({ id, index, label }: SectionProps) {
                       className={cn(
                         "max-w-[85%] rounded-2xl px-4 py-2.5 text-[0.9375rem] leading-snug md:text-base",
                         adult
-                          ? "rounded-br-sm bg-white/[0.08] text-gray-light"
+                          ? "rounded-br-sm bg-white/8 text-gray-light"
                           : "rounded-bl-sm bg-green/15 text-white",
                         finish && "border border-yellow/60 bg-yellow/10 font-semibold text-yellow",
                       )}

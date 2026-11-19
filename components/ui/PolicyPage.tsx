@@ -41,7 +41,7 @@ export function PolicyPage({ title, version, updated, summary, sections }: Polic
 
           <section
             aria-labelledby="resumen"
-            className="mt-8 rounded-3xl border border-green-bright/30 bg-green-bright/[0.06] p-5 md:p-6"
+            className="mt-8 rounded-3xl border border-green-bright/30 bg-green-bright/6 p-5 md:p-6"
           >
             <h2 id="resumen" className="font-display text-lg font-bold">
               En pocas palabras
@@ -56,7 +56,7 @@ export function PolicyPage({ title, version, updated, summary, sections }: Polic
             </ul>
           </section>
 
-          <nav aria-label="Contenido" className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <nav aria-label="Contenido" className="mt-8 rounded-2xl border border-white/10 bg-white/3 p-5">
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-gray-light">Contenido</p>
             <ol className="mt-3 grid gap-1.5 text-sm sm:grid-cols-2">
               {sections.map((section) => (

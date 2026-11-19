@@ -51,7 +51,7 @@ export function SessionSwitcher({ track, visible = true }: SessionSwitcherProps)
           onFocus={(e) => e.target.matches(":focus-visible") && setOpen(true)}
           onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}
           className={cn(
-            "fixed left-3 top-3 z-[60] flex items-center rounded-full border bg-navy-deep p-1 shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 sm:left-5 sm:top-5",
+            "fixed left-3 top-3 z-60 flex items-center rounded-full border bg-navy-deep p-1 shadow-[0_14px_40px_-10px_rgb(0_0_0/0.85)] transition-colors duration-300 sm:left-5 sm:top-5",
             open ? "border-green-bright/50" : "border-white/15",
           )}
           initial={{ opacity: 0, y: -8 }}

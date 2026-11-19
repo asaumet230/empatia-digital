@@ -6,6 +6,7 @@ import { Section } from "@/components/presentation/Section";
 import { AiMap } from "@/components/sections/ia/AiMap";
 import { AiMapPanel } from "@/components/sections/ia/AiMapPanel";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 import { AI_BLOCK, AI_CATEGORIES, type AiToolId } from "@/lib/content/ia-ecosistema";
 import type { SectionProps } from "@/types/presentation";
@@ -56,12 +57,7 @@ export function AiMapSection({ id, index, label }: SectionProps) {
           <motion.div variants={fadeUp}>
             <Eyebrow index={index}>{label}</Eyebrow>
           </motion.div>
-          <motion.h2
-            variants={fadeUp}
-            className="mt-5 max-w-3xl font-display text-[clamp(1.75rem,3.6vw,3rem)] font-bold leading-[1.05] tracking-[-0.03em]"
-          >
-            {AI_BLOCK.mapTitle}
-          </motion.h2>
+          <SlideTitle className="mt-5 max-w-3xl">{AI_BLOCK.mapTitle}</SlideTitle>
         </motion.header>
 
         <div className="mt-14 grid items-center gap-12 md:mt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">

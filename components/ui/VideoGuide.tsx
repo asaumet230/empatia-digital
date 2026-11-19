@@ -1,8 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, ExternalLink, Info, PlayCircle, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ExternalLink, Info, PlayCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { CloseButton, Dialog } from "@/components/ui/Dialog";
 import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import type { VideoGuide as Guide } from "@/lib/content/prompt-exercise";
@@ -48,9 +49,9 @@ export function VideoGuide({ guide }: { guide: Guide }) {
             href={guide.link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex h-12 items-center gap-3 rounded-xl border border-white/15 bg-white/[0.04] py-1.5 pr-4 pl-1.5 text-sm font-semibold text-gray-light transition-colors hover:border-green-bright hover:bg-green-bright/10 hover:text-green-bright"
+            className="group inline-flex h-12 items-center gap-3 rounded-xl border border-white/15 bg-white/4 py-1.5 pr-4 pl-1.5 text-sm font-semibold text-gray-light transition-colors hover:border-green-bright hover:bg-green-bright/10 hover:text-green-bright"
           >
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white/[0.06] transition-colors group-hover:bg-green-bright/15">
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white/6 transition-colors group-hover:bg-green-bright/15">
               <ExternalLink aria-hidden="true" className="size-5" strokeWidth={2} />
             </span>
             {guide.link.label}
@@ -58,13 +59,18 @@ export function VideoGuide({ guide }: { guide: Guide }) {
         )}
       </div>
 
-      <dialog
-        ref={dialogRef}
-        aria-labelledby="video-guide-title"
+      <Dialog
+
+        dialogRef={dialogRef}
+
+        labelledBy="video-guide-title"
+
         onClose={() => setOpen(false)}
-        onClick={(e) => e.target === e.currentTarget && setOpen(false)}
+
         onKeyDown={(e) => e.stopPropagation()}
-        className="m-auto w-[min(calc(100vw-1.5rem),64rem)] max-h-[min(92svh,60rem)] overflow-y-auto rounded-3xl border border-white/10 bg-navy-deep p-0 text-white shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8)] backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+
+        className="w-[min(calc(100vw-1.5rem),64rem)] max-h-[min(92svh,60rem)] overflow-y-auto backdrop:bg-black/75"
+
       >
         {open && (
           <div>
@@ -72,14 +78,7 @@ export function VideoGuide({ guide }: { guide: Guide }) {
               <h2 id="video-guide-title" className="font-display text-lg font-bold tracking-[-0.02em] sm:text-2xl">
                 {guide.title}
               </h2>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Cerrar"
-                className="grid size-10 shrink-0 place-items-center rounded-full text-gray-light transition-colors hover:bg-white/10 hover:text-white"
-              >
-                <X aria-hidden="true" className="size-5" strokeWidth={2} />
-              </button>
+              <CloseButton onClick={() => setOpen(false)} />
             </div>
 
             <div className="px-5 py-6 sm:px-8">
@@ -101,7 +100,7 @@ export function VideoGuide({ guide }: { guide: Guide }) {
                         "flex items-center gap-4 rounded-2xl border p-3 text-left transition-colors sm:p-4",
                         on
                           ? "border-green-bright bg-green-bright/10"
-                          : "border-white/10 bg-white/[0.03] hover:border-white/30",
+                          : "border-white/10 bg-white/3 hover:border-white/30",
                       )}
                     >
                       <span
@@ -176,7 +175,7 @@ export function VideoGuide({ guide }: { guide: Guide }) {
                   <button
                     type="button"
                     onClick={() => setStep(step - 1)}
-                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 text-sm font-semibold text-gray-light transition-colors hover:border-white/40 hover:text-white"
+                    className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/15 bg-white/4 px-5 text-sm font-semibold text-gray-light transition-colors hover:border-white/40 hover:text-white"
                   >
                     <ArrowLeft aria-hidden="true" className="size-5" />
                     Volver al paso {step}
@@ -186,7 +185,7 @@ export function VideoGuide({ guide }: { guide: Guide }) {
             </div>
           </div>
         )}
-      </dialog>
+      </Dialog>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { twoDigits } from "@/lib/format";
 
 interface EyebrowProps {
   children: ReactNode;
@@ -13,7 +14,7 @@ export function Eyebrow({ children, index, className }: EyebrowProps) {
   return (
     <p className={cn("hud-label flex items-center gap-3", className)}>
       {index !== undefined && (
-        <span className="text-green-bright">{String(index).padStart(2, "0")}</span>
+        <span className="text-green-bright">{twoDigits(index)}</span>
       )}
       <span aria-hidden="true" className="h-px w-8 bg-gray-muted/50" />
       <span>{children}</span>

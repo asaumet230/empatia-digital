@@ -5,6 +5,7 @@ import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { CONFLICTS_BLOCK } from "@/lib/content/familias";
+import { twoDigits } from "@/lib/format";
 import type { SectionProps } from "@/types/presentation";
 
 /** What usually goes wrong at home, and the three things the recommendations agree on. */
@@ -45,7 +46,7 @@ export function ConflictsSection({ id, index, label }: SectionProps) {
                 <Icon aria-hidden="true" className="size-5 md:size-6" strokeWidth={1.75} />
               </span>
               <span className="text-[0.9375rem] font-semibold leading-snug text-gray-light md:text-lg">
-                <span className="mr-2 font-mono text-xs text-gray-muted">{String(i + 1).padStart(2, "0")}</span>
+                <span className="mr-2 font-mono text-xs text-gray-muted">{twoDigits(i + 1)}</span>
                 {conflict}
               </span>
             </motion.li>
@@ -60,7 +61,7 @@ export function ConflictsSection({ id, index, label }: SectionProps) {
             hidden: { opacity: 0, y: 18 },
             visible: { opacity: 1, y: 0, transition: transition(DURATION.slow, 0.2) },
           }}
-          className="mt-10 rounded-2xl border border-green-bright/30 bg-green/[0.08] p-6 md:mt-12 md:p-8"
+          className="mt-10 rounded-2xl border border-green-bright/30 bg-green/8 p-6 md:mt-12 md:p-8"
         >
           <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-green-bright">
             {CONFLICTS_BLOCK.recommendationsTitle}

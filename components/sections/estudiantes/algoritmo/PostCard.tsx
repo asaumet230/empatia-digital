@@ -36,7 +36,7 @@ export function PostCard({ post, state, trending, onBoost }: PostCardProps) {
         <span className="text-sm font-bold text-gray-light">{post.user}</span>
       </span>
 
-      <span className="relative grid aspect-[4/3] place-items-center bg-linear-to-br from-[#1d3a52] via-[#142738] to-[#2a1f3d]">
+      <span className="relative grid aspect-4/3 place-items-center bg-linear-to-br from-[#1d3a52] via-[#142738] to-[#2a1f3d]">
         {post.image ? (
           <Image src={post.image} alt="" fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
         ) : (

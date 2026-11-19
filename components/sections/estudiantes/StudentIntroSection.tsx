@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { Fragment } from "react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { fadeUp, staggerContainer } from "@/lib/animations";
 import { STUDENT_INTRO } from "@/lib/content/estudiantes";
+import { twoDigits } from "@/lib/format";
 import type { SectionProps } from "@/types/presentation";
 
 /** Wraps each keyword of the answer in a highlight. */
@@ -36,12 +38,7 @@ export function StudentIntroSection({ id, index, label }: SectionProps) {
         <motion.div variants={fadeUp}>
           <Eyebrow index={index}>{label}</Eyebrow>
         </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          className="mt-5 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
-        >
-          {STUDENT_INTRO.title}
-        </motion.h2>
+        <SlideTitle size="large" className="mt-5">{STUDENT_INTRO.title}</SlideTitle>
 
         {/* From lg up the cards share their rows (subgrid), so titles and texts start at the same height */}
         <ul className="mt-10 grid gap-4 md:mt-14 md:gap-6 lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr]">
@@ -56,7 +53,7 @@ export function StudentIntroSection({ id, index, label }: SectionProps) {
                   <Icon aria-hidden="true" className="size-6 md:size-7" strokeWidth={1.5} />
                 </span>
                 <span className="font-mono text-xs tracking-[0.15em] text-gray-muted">
-                  {String(i + 1).padStart(2, "0")}
+                  {twoDigits(i + 1)}
                 </span>
               </span>
               <h3 className="mt-6 font-display text-xl font-bold leading-tight tracking-[-0.02em] md:text-2xl">

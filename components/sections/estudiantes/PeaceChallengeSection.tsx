@@ -5,6 +5,7 @@ import { Dices } from "lucide-react";
 import { useState } from "react";
 import { Section } from "@/components/presentation/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SlideTitle } from "@/components/ui/SlideTitle";
 import { DURATION, fadeUp, staggerContainer, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { PEACE, type CampaignFormat, type CampaignTopic } from "@/lib/content/estudiantes";
@@ -39,12 +40,9 @@ export function PeaceChallengeSection({ id, index, label }: SectionProps) {
         <motion.div variants={fadeUp}>
           <Eyebrow index={index}>{label}</Eyebrow>
         </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          className="mt-5 font-display text-[clamp(2rem,5.2vw,4.25rem)] font-extrabold leading-none tracking-[-0.04em]"
-        >
+        <SlideTitle size="large" className="mt-5">
           🕊️ {PEACE.title}
-        </motion.h2>
+        </SlideTitle>
         <motion.p variants={fadeUp} className="mt-5 max-w-3xl text-lg leading-snug text-gray-text md:text-2xl">
           {PEACE.lead}
         </motion.p>

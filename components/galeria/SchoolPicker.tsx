@@ -59,7 +59,7 @@ export function SchoolPicker({ value, onChange }: { value: School | null; onChan
 
   if (value) {
     return (
-      <div className="flex items-center gap-3 rounded-2xl border border-green-bright/50 bg-green-bright/[0.08] p-4">
+      <div className="flex items-center gap-3 rounded-2xl border border-green-bright/50 bg-green-bright/8 p-4">
         <span className="grid size-10 shrink-0 place-items-center rounded-full bg-green-bright text-navy-dark">
           <Check aria-hidden="true" className="size-5" strokeWidth={2.5} />
         </span>

@@ -26,7 +26,7 @@ export function LikesCard({ value }: { value: number }) {
 
   return (
     // Compact, so the round (title, timer and the three posts) fits on a laptop screen
-    <div className="min-w-56 rounded-xl border border-white/20 bg-white/[0.06] px-3 py-1.5">
+    <div className="min-w-56 rounded-xl border border-white/20 bg-white/6 px-3 py-1.5">
       <div className="flex items-center justify-between gap-3">
         <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.08em] text-white">
           <Heart aria-hidden="true" className="size-4 fill-[#FF6B6B] text-[#FF6B6B]" strokeWidth={2} />

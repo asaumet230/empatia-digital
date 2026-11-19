@@ -52,3 +52,13 @@ export const charReveal: Variants = {
     transition: transition(DURATION.slow),
   },
 };
+
+/** Content that replaces other content in place (tabs, selected item): rises in, leaves upward. */
+export const swapVariants = (rise = 12, leave = 8) => ({
+  initial: { opacity: 0, y: rise, filter: "blur(6px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: transition(DURATION.base) },
+  exit: { opacity: 0, y: -leave, filter: "blur(6px)", transition: transition(DURATION.fast, 0, EASE.inOutQuint) },
+});
+
+/** The usual swap, shared so every panel moves the same way. */
+export const swap = swapVariants();

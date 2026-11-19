@@ -77,7 +77,7 @@ export function AlertKeyIdeaSection({ id, index, label }: SectionProps) {
             hidden: { opacity: 0, y: 16 },
             visible: { opacity: 1, y: 0, transition: transition(DURATION.slow, 0.2) },
           }}
-          className="mt-8 rounded-2xl border border-[#FF6B6B]/30 bg-[#FF6B6B]/[0.05] p-5 md:mt-10 md:p-6"
+          className="mt-8 rounded-2xl border border-[#FF6B6B]/30 bg-[#FF6B6B]/5 p-5 md:mt-10 md:p-6"
         >
           <p className="flex items-center gap-2.5 font-display text-base font-bold text-white md:text-lg">
             <span className="grid size-7 place-items-center rounded-full bg-[#FF6B6B]/15">

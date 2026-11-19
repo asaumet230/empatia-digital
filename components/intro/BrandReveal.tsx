@@ -79,7 +79,7 @@ export function BrandReveal({ ready, onStart }: BrandRevealProps) {
       {/* DIGITAL, flanked by connection lines */}
       <div aria-hidden="true" className="mt-3 flex items-center gap-4 sm:mt-5 sm:gap-6">
         <ConnectionLine side="left" />
-        <p className="font-display text-[clamp(1rem,4vw,3.25rem)] font-light uppercase tracking-[0.55em] text-gray-light [margin-right:-0.55em]">
+        <p className="font-display text-[clamp(1rem,4vw,3.25rem)] font-light uppercase tracking-[0.55em] text-gray-light mr-[-0.55em]">
           {DIGITAL.map((ch, i) => (
             <motion.span key={i} className="inline-block" variants={charReveal}>
               {ch}
@@ -127,13 +127,13 @@ function IaFrame() {
   return (
     <motion.span
       aria-hidden="true"
-      className="pointer-events-none absolute -inset-x-[0.06em] -bottom-[0.02em] -top-[0.08em]"
+      className="pointer-events-none absolute inset-x-[-0.06em] bottom-[-0.02em] top-[-0.08em]"
       variants={{
         hidden: { opacity: 0, scale: 1.25 },
         visible: { opacity: 1, scale: 1, transition: transition(DURATION.base, 0.75) },
       }}
     >
-      <span className="absolute inset-0 rounded-[0.08em] border border-green-bright/35 bg-green/[0.06]" />
+      <span className="absolute inset-0 rounded-[0.08em] border border-green-bright/35 bg-green/6" />
       <span className={`${corner} -left-1 -top-1 border-l-2 border-t-2`} />
       <span className={`${corner} -right-1 -top-1 border-r-2 border-t-2`} />
       <span className={`${corner} -bottom-1 -left-1 border-b-2 border-l-2`} />

@@ -1,8 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { copyText } from "@/lib/clipboard";
+import { useCopy } from "@/hooks/useCopy";
 import { cn } from "@/lib/cn";
 
 interface CopyButtonProps {
@@ -15,17 +14,7 @@ interface CopyButtonProps {
 
 /** Copies `text` and confirms in place for a moment. */
 export function CopyButton({ text, label = "Copiar", tone = "ghost", className }: CopyButtonProps) {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef(0);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-
-  const copy = async () => {
-    if (!(await copyText(text))) return;
-    setCopied(true);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setCopied(false), 2200);
-  };
+  const { copied, copy } = useCopy(text);
 
   return (
     <button

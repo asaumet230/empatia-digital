@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Timer } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useCarousel } from "@/hooks/useCarousel";
 import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { Countdown } from "./Countdown";
@@ -27,27 +28,7 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
   // Rounds only render after "Empezar" (on the client), so this never runs on the server.
   const [order] = useState(() => shuffle(posts.map((_, i) => i)));
   // Phone: the posts are a swipeable carousel with arrows; from sm up, a grid
-  const track = useRef<HTMLUListElement>(null);
-  const [slide, setSlide] = useState(0);
-
-  // Scrolls only the carousel, never the page
-  const goTo = (i: number) => {
-    const el = track.current;
-    const card = el?.children[i] as HTMLElement | undefined;
-    if (el && card)
-      el.scrollTo({
-        left: card.offsetLeft - el.offsetLeft - parseFloat(getComputedStyle(el).paddingLeft),
-        behavior: "smooth",
-      });
-  };
-
-  const onScroll = () => {
-    const el = track.current;
-    const card = el?.firstElementChild as HTMLElement | null;
-    if (!el || !card) return;
-    // One step = a card plus the 1rem gap
-    setSlide(Math.round(el.scrollLeft / (card.offsetWidth + 16)));
-  };
+  const { track, current: slide, goTo, onScroll } = useCarousel<HTMLUListElement>();
 
   useEffect(() => {
     next.current = onNext;
@@ -99,7 +80,7 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
         ref={track}
         onScroll={onScroll}
         className={cn(
-          "-mx-6 mt-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 [scrollbar-width:none] sm:mx-0 sm:grid sm:overflow-visible sm:px-0 md:gap-5 [&::-webkit-scrollbar]:hidden",
+          "-mx-6 mt-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 scrollbar-none sm:mx-0 sm:grid sm:overflow-visible sm:px-0 md:gap-5 [&::-webkit-scrollbar]:hidden",
           posts.length === 2 ? "sm:grid-cols-2 lg:mx-auto lg:max-w-4xl" : "sm:grid-cols-3",
         )}
       >
@@ -127,7 +108,7 @@ export function RoundStep({ round, picked, likes, onPick, onNext }: RoundStepPro
           aria-label="Publicación anterior"
           onClick={() => goTo(slide - 1)}
           disabled={slide === 0}
-          className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/25 bg-white/[0.06] px-4 font-semibold text-white transition-colors disabled:opacity-30"
+          className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/25 bg-white/6 px-4 font-semibold text-white transition-colors disabled:opacity-30"
         >
           <ArrowLeft aria-hidden="true" className="size-5" />
           Anterior

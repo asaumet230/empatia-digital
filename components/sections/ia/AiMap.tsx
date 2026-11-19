@@ -1,10 +1,12 @@
 "use client";
 
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef, type MouseEvent, type PointerEvent } from "react";
+import { categoryAngle, onMouseEnter, ORBIT, pct, polar, reveal, toolPoint } from "@/components/sections/ia/mapa/geometry";
+import { MapLinks } from "@/components/sections/ia/mapa/MapLinks";
 import { BrandIcon } from "@/components/ui/BrandIcon";
-import { DURATION, EASE, transition } from "@/lib/animations";
+import { DURATION, transition } from "@/lib/animations";
 import { cn } from "@/lib/cn";
 import { AI_TOOLS, type AiCategory, type AiToolId } from "@/lib/content/ia-ecosistema";
 
@@ -12,46 +14,8 @@ import { AI_TOOLS, type AiCategory, type AiToolId } from "@/lib/content/ia-ecosi
 /*  Radial map in two rings: category nodes (name under each) and the  */
 /*  tools of the active one on an outer arc. Only the selected tool    */
 /*  shows its name, facing outwards, so nothing collides at any size.  */
-/*  Geometry is in % of a square stage, shared by the SVG links        */
-/*  (viewBox 0..100) and the DOM nodes.                                */
+/*  Geometry: mapa/geometry.ts · lines: mapa/MapLinks.tsx.             */
 /* ------------------------------------------------------------------ */
-
-const ORBIT = 26;
-const TOOL_RING = 45;
-const TOOL_SPREAD = 24; // degrees between sibling tools on the outer ring
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-const polar = (deg: number, r: number): Point => {
-  const a = (deg * Math.PI) / 180;
-  return { x: 50 + Math.cos(a) * r, y: 50 + Math.sin(a) * r };
-};
-
-const categoryAngle = (i: number, total: number) => -90 + (360 / total) * i;
-
-/** Tools fan out on the outer ring, centred on their category's angle. */
-const toolPoint = (angle: number, j: number, count: number) =>
-  polar(angle + (j - (count - 1) / 2) * TOOL_SPREAD, TOOL_RING);
-
-const pct = (p: Point) => ({ left: `${p.x}%`, top: `${p.y}%` });
-
-const onMouseEnter = (fn: () => void) => (e: PointerEvent) => {
-  // Touch/pen select on tap instead, so a tap never toggles twice
-  if (e.pointerType === "mouse") fn();
-};
-
-const reveal = (delay: number): Variants => ({
-  hidden: { opacity: 0, scale: 0.6 },
-  visible: { opacity: 1, scale: 1, transition: transition(DURATION.slow, delay) },
-});
-
-const drawLine = (delay: number): Variants => ({
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: { pathLength: 1, opacity: 1, transition: transition(DURATION.slow, delay, EASE.outQuart) },
-});
 
 interface AiMapProps {
   categories: readonly AiCategory[];
@@ -81,76 +45,19 @@ export function AiMap({ categories, activeId, toolId, onSelectCategory, onSelect
 
   return (
     <motion.div
-      className="relative mx-auto aspect-square w-full max-w-[26rem] sm:max-w-[32rem] lg:max-w-[min(100%,72svh)]"
+      className="relative mx-auto aspect-square w-full max-w-104 sm:max-w-lg lg:max-w-[min(100%,72svh)]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.35 }}
     >
-      {/* Links */}
-      <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
-        <motion.circle
-          cx={50}
-          cy={50}
-          r={ORBIT}
-          fill="none"
-          stroke="var(--line)"
-          strokeWidth={0.2}
-          variants={drawLine(0.2)}
-        />
-        <motion.circle
-          cx={50}
-          cy={50}
-          r={TOOL_RING}
-          fill="none"
-          stroke="var(--line)"
-          strokeWidth={0.15}
-          strokeDasharray="0.4 1.2"
-          className={cn("transition-opacity duration-700", active ? "opacity-100" : "opacity-40")}
-          variants={drawLine(0.3)}
-        />
-
-        {categories.map((c, i) => {
-          const p = polar(categoryAngle(i, total), ORBIT);
-          const on = c.id === activeId;
-          return (
-            <motion.path
-              key={c.id}
-              d={`M50 50 L${p.x} ${p.y}`}
-              fill="none"
-              strokeLinecap="round"
-              className={cn(
-                "transition-[stroke,stroke-width] duration-500",
-                on ? "animate-dash-flow stroke-green-bright" : "stroke-green-bright/25",
-              )}
-              strokeWidth={on ? 0.35 : 0.2}
-              strokeDasharray={on ? "1 1.6" : undefined}
-              variants={drawLine(0.35 + i * 0.08)}
-            />
-          );
-        })}
-
-        <AnimatePresence>
-          {active &&
-            active.tools.map((t, j) => {
-              const p = toolPoint(activeAngle, j, active.tools.length);
-              const on = t.id === toolId;
-              return (
-                <motion.path
-                  key={`${active.id}-${t.id}`}
-                  d={`M${activePoint.x} ${activePoint.y} L${p.x} ${p.y}`}
-                  fill="none"
-                  strokeLinecap="round"
-                  className={cn("transition-[stroke] duration-300", on ? "stroke-white/70" : "stroke-green-bright/45")}
-                  strokeWidth={0.22}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  exit={{ opacity: 0, transition: transition(DURATION.fast) }}
-                  transition={transition(DURATION.base, 0.05 * j, EASE.outQuart)}
-                />
-              );
-            })}
-        </AnimatePresence>
-      </svg>
+      <MapLinks
+        categories={categories}
+        activeId={activeId}
+        toolId={toolId}
+        active={active}
+        activeAngle={activeAngle}
+        activePoint={activePoint}
+      />
 
       {/* Hub */}
       <motion.button
@@ -191,7 +98,7 @@ export function AiMap({ categories, activeId, toolId, onSelectCategory, onSelect
           >
             <span
               className={cn(
-                "relative grid size-12 place-items-center rounded-full border backdrop-blur-sm transition-all duration-500 sm:size-16 lg:size-[4.5rem]",
+                "relative grid size-12 place-items-center rounded-full border backdrop-blur-sm transition-all duration-500 sm:size-16 lg:size-18",
                 on
                   ? "scale-110 border-green-bright bg-green/20 text-green-bright shadow-[0_0_32px_rgb(53_201_94/0.45)]"
                   : "border-white/15 bg-navy/80 text-gray-light group-hover:border-green-bright/60",

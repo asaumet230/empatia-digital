@@ -6,6 +6,7 @@ import { useEffect, useState, type Ref } from "react";
 import { PulseDot } from "@/components/ui/PulseDot";
 import { DURATION, EASE, fadeUp, transition } from "@/lib/animations";
 import { BOOT_STEPS, BRAND } from "@/lib/constants";
+import { twoDigits } from "@/lib/format";
 import { INTRO_TIMELINE, isAtLeast } from "@/lib/intro-timeline";
 import type { IntroPhase } from "@/types/presentation";
 
@@ -83,7 +84,7 @@ export function BootSequence({ phase, sparkRef }: BootSequenceProps) {
                 <StepMarker />
                 <span className="text-gray-light">{step.label}</span>
                 <span className="text-gray-muted">
-                  {String(stepIndex + 1).padStart(2, "0")}/{String(BOOT_STEPS.length).padStart(2, "0")}
+                  {twoDigits(stepIndex + 1)}/{twoDigits(BOOT_STEPS.length)}
                 </span>
               </motion.p>
             )}
@@ -109,7 +110,7 @@ function ProgressBar({ running }: { running: boolean }) {
 
   return (
     <div className="mt-8 flex w-[min(30rem,82vw)] items-center gap-4">
-      <div className="relative h-[3px] flex-1 rounded-full bg-white/10">
+      <div className="relative h-0.75 flex-1 rounded-full bg-white/10">
         <motion.div
           className="absolute inset-0 origin-left rounded-full bg-linear-to-r from-green to-green-bright shadow-[0_0_14px_rgb(53_201_94/0.55)]"
           style={{ scaleX: progress }}
