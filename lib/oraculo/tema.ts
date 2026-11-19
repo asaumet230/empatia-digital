@@ -10,7 +10,7 @@ export type Theme = (typeof THEMES)[number];
 
 export const THEME_KEY = "oraculo:tema";
 
-/** Runs before the page paints (inline in the Oráculo layout), so a saved theme never flashes. */
+/** Runs before the page paints (inline in the root layout's <head>), so a saved theme never flashes. */
 export const THEME_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");if(t==="claro"||t==="oscuro")document.documentElement.dataset.oraculoTema=t}catch(e){}`;
 
 const listeners = new Set<() => void>();
