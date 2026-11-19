@@ -3,8 +3,9 @@
 /*  Texto entregado por el usuario el 2026-10-18, con correcciones    */
 /*  para que describa lo que la página hace de verdad: sin cookies    */
 /*  de seguimiento, pretest y postest en Google Forms, votaciones en   */
-/*  Mentimeter, alojamiento en Vercel. El Oráculo tiene su propia      */
-/*  política (/oraculo/privacidad).                                    */
+/*  Mentimeter, alojamiento en Vercel y, desde la 1.1, la galería en   */
+/*  Google Drive. El Oráculo tiene su propia política                 */
+/*  (/oraculo/privacidad).                                             */
 /* ------------------------------------------------------------------ */
 
 /** A paragraph, or a list of short points. */
@@ -18,15 +19,15 @@ export interface PolicySection {
 
 export const PRIVACY_META = {
   title: "Política de privacidad y tratamiento de datos personales",
-  version: "1.0",
-  updated: "18 de octubre de 2026",
+  version: "1.1",
+  updated: "19 de noviembre de 2026",
   site: "https://www.empatia-digital.com",
 } as const;
 
 /** Plain-language summary shown first: most readers are families and teachers. */
 export const PRIVACY_SUMMARY: readonly string[] = [
   "Esta página web no pide registro, no usa cookies de seguimiento ni de publicidad y no guarda lo que haces en ella.",
-  "Los únicos datos se recogen en los formularios del pretest y el postest (Google Forms), con la autorización que corresponda.",
+  "Los únicos datos se recogen en los formularios del pretest y el postest (Google Forms), con la autorización que corresponda, y en la galería, donde los equipos suben las imágenes que crearon (Google Drive).",
   "Los datos se usan solo para el proyecto educativo y los informes se hacen con resultados generales, sin identificar a nadie.",
   "Los datos de niños, niñas y adolescentes tienen protección especial.",
   "Puedes consultar, corregir o pedir que se borren tus datos escribiendo a contacto@fporunasonrisa.com.",
@@ -103,7 +104,7 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
     id: "que-recoge-el-sitio",
     title: "4. Qué datos recoge esta página web",
     blocks: [
-      "La página web de EmpatIA Digital es una presentación educativa. No pide registro ni inicio de sesión, no tiene formularios propios, no usa cookies de analítica, publicidad o seguimiento y no guarda en el navegador lo que la persona hace en ella.",
+      "La página web de EmpatIA Digital es una presentación educativa. No pide registro ni inicio de sesión, no tiene formularios propios (salvo la página para subir imágenes a la galería, descrita en la sección 10), no usa cookies de analítica, publicidad o seguimiento y no guarda en el navegador lo que la persona hace en ella.",
       "Como cualquier sitio en Internet, el servicio de alojamiento (Vercel) registra de forma automática datos técnicos mínimos —como la dirección IP, el tipo de navegador y la hora de la visita— para que la página funcione y se mantenga segura. Estos registros no se usan para identificar ni hacer seguimiento a las personas.",
       "La página contiene enlaces a sitios de terceros, como ChatGPT, Gemini, Claude, Tally y otras herramientas de inteligencia artificial. Al abrirlos, la persona sale de EmpatIA Digital y se aplican las políticas de privacidad de cada uno de esos sitios, que la Fundación no controla.",
     ],
@@ -225,6 +226,9 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
       "Durante las actividades presenciales podrán realizarse registros fotográficos o audiovisuales para documentar la ejecución del proyecto, elaborar informes institucionales y socializar sus resultados. Cuando las imágenes permitan identificar personas, se considerarán datos personales y su captura, uso, conservación y publicación deberán contar con el fundamento jurídico correspondiente.",
       "En el caso de niños, niñas y adolescentes se aplicarán garantías especiales, incluida la autorización del representante legal cuando corresponda y la consideración de la opinión del menor.",
       "La autorización para participar en una actividad educativa no implica autorización para divulgar públicamente imágenes, videos o testimonios identificables. Su publicación en páginas web, redes sociales o materiales promocionales estará sujeta a las autorizaciones y demás condiciones legales correspondientes.",
+      "Galería de la actividad «Creadores de paz». En la página /subir, los equipos de estudiantes pueden subir las imágenes que crearon con inteligencia artificial. Solo se recibe la imagen y el nombre del colegio; no se piden nombres, correos ni otros datos de los estudiantes. Antes del envío, la página elimina de la imagen los datos ocultos, como la ubicación.",
+      "Las imágenes se guardan en una carpeta de Google Drive de la Fundación Por Una Sonrisa, organizada por colegio, y se usan para mostrarlas y votarlas durante la sesión y para los informes del proyecto. Se conservan durante noventa (90) días desde que se suben y luego se eliminan.",
+      "La página indica que no se deben subir fotos de personas. Si una imagen permite identificar a alguien, la Fundación la eliminará.",
     ],
   },
   {
@@ -236,6 +240,7 @@ export const PRIVACY_POLICY: readonly PolicySection[] = [
         list: [
           "Vercel Inc.: aloja la página web.",
           "Google LLC (Google Forms): recibe y guarda las respuestas del pretest y el postest.",
+          "Google LLC (Google Drive): guarda las imágenes que los equipos suben a la galería.",
           "Mentimeter AB: votaciones anónimas en clase, cuando se usan.",
           "OpenAI: procesa las conversaciones del Oráculo, según se describe en su política específica.",
         ],

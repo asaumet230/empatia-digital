@@ -61,7 +61,7 @@ Las claves nunca se suben a GitHub: `.env.local` está excluido en `.gitignore`.
 | Qué falta | Dónde se hace |
 |---|---|
 | Límite por visitante para `/api/galeria` (y para `/api/oraculo/mensaje` al lanzarlo) | Vercel → Firewall. Paso a paso en [vercel.md](vercel.md#3-límite-por-visitante-firewall) |
-| Mencionar la galería y Google Drive en la política de privacidad (con revisión del abogado) | `lib/content/privacidad.ts` |
+| Borrar las imágenes de la galería 90 días después de subidas, como promete la política de privacidad | Drive de la Fundación, o una tarea automática en el script (ver [galeria.md](galeria.md#pendientes)) |
 | Aprobaciones para lanzar el Oráculo | Ver [oraculo.md](oraculo.md#cómo-lanzarlo) |
 | Actualizar algunas librerías a versiones menores (`openai`, `lucide-react`, `playwright`, `vitest`, `tailwindcss`) | `package.json` |
 
