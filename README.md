@@ -1,5 +1,7 @@
 # EmpatIA Digital
 
+[![Revisión](https://github.com/asaumet230/empatia-digital/actions/workflows/ci.yml/badge.svg)](https://github.com/asaumet230/empatia-digital/actions/workflows/ci.yml)
+
 Presentación web para la capacitación **EmpatIA Digital** de la Alcaldía de Barranquilla.
 
 Cada sesión es una página. Cada sección de la página es una diapositiva. Se avanza con el scroll, el teclado o un presentador inalámbrico.
@@ -16,7 +18,7 @@ Cada sesión es una página. Cada sección de la página es una diapositiva. Se 
 
 ## Cómo arrancarlo
 
-Necesitas Node.js 20 o superior.
+Necesitas Node.js 22 (la versión está en `.nvmrc`).
 
 ```bash
 npm install
@@ -67,6 +69,7 @@ Lee primero la de arquitectura. Las demás, según lo que vayas a tocar.
 | [Oráculo](docs/oraculo.md) | Trabajar en el chat o prepararlo para su lanzamiento |
 | [Galería](docs/galeria.md) | Configurar o cambiar la subida de imágenes |
 | [Publicación y mantenimiento](docs/mantenimiento.md) | Publicar cambios o revisar los pendientes |
+| [Vercel](docs/vercel.md) | Cambiar variables, volver a publicar o poner los límites por visitante |
 
 ## Tecnología
 

@@ -1,0 +1,71 @@
+# Automatic check on every change pushed to GitHub: lint, unit tests, production build and
+# end-to-end tests. It never deploys (Vercel does that) and uses no secrets: the end-to-end
+# tests run the Oráculo with the simulated AI, so nothing reaches OpenAI.
+name: Revisión
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch cancels the run still in progress
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  revision:
+    name: Estilo, pruebas y compilación
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Estilo (ESLint)
+        run: npm run lint -- --max-warnings=0
+
+      - name: Pruebas
+        run: npm test
+
+      - name: Compilación (también revisa los tipos)
+        run: npm run build
+
+  punta-a-punta:
+    name: Pruebas de punta a punta
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Navegadores de prueba
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Pruebas en computador, iPhone y Android
+        run: npm run test:e2e
+
+      - name: Guardar el detalle si algo falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright
+          path: |
+            test-results/
+            .playwright/
+          retention-days: 7
