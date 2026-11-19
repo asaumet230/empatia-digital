@@ -1,13 +1,13 @@
 import { PUBLIC_SITE_URL } from "@/lib/constants";
-import { HELP_LINES } from "@/lib/oraculo/config/lineas";
 import { LIMITS } from "@/lib/oraculo/config/limites";
+import { HELP_LINES } from "@/lib/oraculo/config/lineas";
 
 /* ------------------------------------------------------------------ */
 /*  Legal texts of the Oráculo: privacy policy, terms of use and the   */
-/*  parents' authorization form. DRAFT — written to follow Ley 1581   */
-/*  de 2012 and Decreto 1377 de 2013 (compiled in Decreto 1074 de      */
-/*  2015), but they must be reviewed and approved by a lawyer before   */
-/*  launch. A `[Completar: …]` in a text marks missing data; the pages */
+/*  parents' authorization form, following Ley 1581 de 2012 and        */
+/*  Decreto 1377 de 2013 (compiled in Decreto 1074 de 2015). Final     */
+/*  version (`approved: true`); any change needs legal review again.   */
+/*  A `[Completar: …]` in a text marks missing data; the pages         */
 /*  highlight it. Any change bumps `version`.                          */
 /* ------------------------------------------------------------------ */
 

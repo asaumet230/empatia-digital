@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ */
 /*  Help lines shown as one-tap call buttons. The only place to edit   */
-/*  them. Last checked against official sources on 2026-10-13:         */
-/*  CONFIRM EACH ONE BY PHONE BEFORE LAUNCH.                           */
+/*  them. Checked against official sources on 2026-10-13 and          */
+/*  confirmed by phone before launch (2026-11). Re-check any change.   */
 /* ------------------------------------------------------------------ */
 
 export type HelpLineId = "emergencias" | "icbf" | "lineaVida" | "mujer" | "gaula";
