@@ -4,7 +4,7 @@
  * Google Apps Script that saves the images the students upload at /subir into the Fundación's
  * Drive: one folder per school, inside the folder whose id is in FOLDER_ID. It runs as the
  * account that deploys it. Only the website can use it: every call must carry SECRET, the same
- * value as GALERIA_SECRET in Vercel. Setup steps: CLAUDE.md, "Subir a la galería".
+ * value as GALERIA_SECRET in Vercel. Setup steps: docs/galeria.md.
  *
  * Script properties (Project Settings → Script properties):
  *   SECRET     the same value as GALERIA_SECRET

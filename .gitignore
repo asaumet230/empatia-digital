@@ -35,6 +35,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# notas personales para asistentes de IA
+CLAUDE.local.md
 
 # vercel
 .vercel

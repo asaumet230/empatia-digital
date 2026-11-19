@@ -1,59 +1,79 @@
 # EmpatIA Digital
 
-Presentación web interactiva para la capacitación **EmpatIA Digital** (Alcaldía de Barranquilla), con una
-sesión para docentes, otra para estudiantes y otra para familias. Incluye el **Oráculo**, un chat de escucha
-y orientación con IA (en desarrollo, sin publicar).
+Presentación web para la capacitación **EmpatIA Digital** de la Alcaldía de Barranquilla.
 
-📘 **[CLAUDE.md](CLAUDE.md)**: la guía completa. Dinámica del taller, materiales, dónde se
-cambia cada cosa, el Oráculo, decisiones e historial.
+Cada sesión es una página. Cada sección de la página es una diapositiva. Se avanza con el scroll, el teclado o un presentador inalámbrico.
 
-**Publicado:** https://www.empatia-digital.com (cada push a `main` publica)
+**Sitio publicado:** https://www.empatia-digital.com
+
+## Qué incluye
+
+| Parte | Qué es | Estado |
+|---|---|---|
+| Sesiones | Tres presentaciones: docentes, estudiantes y familias | Publicadas |
+| Galería | Los estudiantes suben sus imágenes al Drive de la Fundación | Publicada |
+| Oráculo | Chat con IA de escucha y orientación sobre convivencia y ciberacoso | Oculto hasta su aprobación |
+
+## Cómo arrancarlo
+
+Necesitas Node.js 20 o superior.
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
-npm run build
-npm run lint
-npm test             # pruebas unitarias (sin costo)
-npm run test:e2e     # pruebas de punta a punta con IA simulada (sin costo)
-npm run eval:riesgo  # banco de riesgo del Oráculo contra la IA real (gasta un poco de saldo)
+npm run dev
 ```
 
-El Oráculo necesita un archivo `.env.local` (no se sube a GitHub) con `OPENAI_API_KEY` y `ORACULO_SECRET`
-(32+ caracteres al azar, por ejemplo `openssl rand -base64 48`). El Oráculo queda oculto salvo con
-`ORACULO_ACTIVO=true` (`false` lo oculta): en `.env.local` para verlo en local y en Vercel, con redeploy, para publicarlo.
+Abre http://localhost:3000.
 
-## Rutas
+Las sesiones funcionan sin configurar nada más. El Oráculo y la galería necesitan claves: copia `.env.example` como `.env.local` y complétalo. Cada variable está explicada ahí.
 
-| Ruta | Sesión |
+## Comandos
+
+| Comando | Para qué sirve |
 |---|---|
-| `/` | Inicio: elige tu sesión (con QR) |
-| `/docentes` | Mediación tecnológica y diagnóstico del aula con IA |
-| `/estudiantes` | Ciudadanía digital y creadores de paz con IA |
-| `/familias` | Hogares conectados, familias empáticas |
-| `/oraculo` | Oráculo: chat de escucha y orientación con IA |
-| `/oraculo/privacidad` · `/oraculo/terminos` · `/oraculo/autorizacion` | Privacidad, términos y autorización del Oráculo |
-| `/privacidad` · `/terminos` | Privacidad y términos del sitio |
+| `npm run dev` | Abre el sitio en modo desarrollo |
+| `npm run build` | Compila el sitio como en producción. También revisa los tipos |
+| `npm run lint` | Revisa el estilo del código |
+| `npm test` | Pruebas rápidas. No usan internet ni gastan saldo |
+| `npm run test:e2e` | Prueba el Oráculo en computador, iPhone y Android, con una IA falsa |
+| `npm run eval:riesgo` | Prueba la detección de riesgo con la IA real. Gasta un poco de saldo de OpenAI |
 
-## Estructura
+Dos detalles:
 
-```
-app/                      rutas, layout y tokens de diseño (globals.css); api/oraculo/ es el único backend
-components/presentation/  la presentación: Presentation, Intro, Section, navegación
-components/sections/      una "diapositiva" por archivo
-components/oraculo/       interfaz del Oráculo
-components/ui/            piezas reutilizables
-hooks/                    useIntroTimeline, useActiveSection, useOracle, useDismiss
-lib/content/              textos y datos de la presentación
-lib/oraculo/              lógica del Oráculo (prompts, riesgo, pase firmado, OpenAI)
-lib/sections.ts           el recorrido de cada sesión (TRACKS)
-e2e/                      pruebas de punta a punta (Playwright)
-public/assets/            logos, imágenes, videos y datos de ejemplo
-```
+- Para revisar los tipos usa `npm run build`. El comando `tsc --noEmit` falla porque Next crea algunos tipos al compilar.
+- Antes de la primera vez de `npm run test:e2e`, instala los navegadores de prueba: `npx playwright install chromium webkit`.
 
-## Agregar una diapositiva
+## Páginas del sitio
 
-1. Crea `components/sections/MiSeccion.tsx` que reciba `SectionProps` y envuelva su contenido en `<Section>`.
-2. Añádela al recorrido que corresponda en `TRACKS` (`lib/sections.ts`).
+| Dirección | Qué muestra |
+|---|---|
+| `/` | Inicio: elegir la sesión, con códigos QR |
+| `/docentes` | Sesión para docentes (2 horas) |
+| `/estudiantes` | Sesión para estudiantes (1 hora) |
+| `/familias` | Sesión para familias (2 horas) |
+| `/subir` | Subir imágenes a la galería |
+| `/oraculo` | El Oráculo. Muestra "no encontrado" mientras esté oculto |
+| `/privacidad`, `/terminos` | Política de privacidad y términos del sitio |
+| `/oraculo/privacidad`, `/oraculo/terminos`, `/oraculo/autorizacion` | Textos legales del Oráculo |
 
-La navegación, el progreso y el control por teclado (↑ ↓, PageUp/PageDown, espacio) se actualizan solos.
+## Guías
+
+Lee primero la de arquitectura. Las demás, según lo que vayas a tocar.
+
+| Guía | Léela si vas a… |
+|---|---|
+| [Arquitectura](docs/arquitectura.md) | Entender cómo está organizado el código o agregar una diapositiva |
+| [Contenido y sesiones](docs/contenido.md) | Cambiar textos, prompts o materiales, o preparar un taller |
+| [Oráculo](docs/oraculo.md) | Trabajar en el chat o prepararlo para su lanzamiento |
+| [Galería](docs/galeria.md) | Configurar o cambiar la subida de imágenes |
+| [Publicación y mantenimiento](docs/mantenimiento.md) | Publicar cambios o revisar los pendientes |
+
+## Tecnología
+
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · framer-motion · zod · OpenAI · Vitest · Playwright.
+
+Next.js 16 cambió varias cosas respecto a versiones anteriores. Su documentación está dentro del proyecto, en `node_modules/next/dist/docs/`.
+
+## Responsable
+
+**Fundación Por Una Sonrisa** (NIT 900.804.571-1) es la responsable de los datos. Contacto: contacto@fporunasonrisa.com.
